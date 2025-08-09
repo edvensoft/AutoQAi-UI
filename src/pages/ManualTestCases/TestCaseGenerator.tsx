@@ -1,16 +1,31 @@
 import { useState } from "react";
+import type { RootState } from "@/redux/store";
+
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import SendIcon from "@mui/icons-material/Send";
+import { useSelector } from "react-redux";
 
-export default function ManualTestCases() {
+export default function TestCaseGenerator() {
+	const collections = useSelector((state: RootState) => state.collections.list);
+	const activeCollectionId = useSelector(
+		(state: RootState) => state.collections.activeCollectionId,
+	);
+	const activeCollection = collections.find((c) => c.id === activeCollectionId);
 	const [input, setInput] = useState("");
-	const [messages, setMessages] = useState([]);
+	type Message = {
+		type: "user" | "system";
+		text: string;
+		loading?: boolean;
+		showCTA?: boolean;
+	};
+
+	const [messages, setMessages] = useState<Message[]>([]);
 
 	const handleSend = () => {
 		if (!input.trim()) return;
 
-		const userMessage = { type: "user", text: input };
-		const loaderMessage = {
+		const userMessage: Message = { type: "user", text: input };
+		const loaderMessage: Message = {
 			type: "system",
 			text: "Generating test cases...",
 			loading: true,
@@ -40,11 +55,20 @@ export default function ManualTestCases() {
 			<section className='bg-gray-800 max-w-full text-gray-300 p-6 rounded-lg flex flex-col md:max-w-2xl md:mx-auto items-center gap-2'>
 				<span className='text-3xl'>💬</span>
 				<p className='text-sm text-gray-400'>
-					Collection: <strong>New</strong>
+					Collection:{" "}
+					<strong>{activeCollection ? activeCollection.name : "New"}</strong>
 				</p>
 				<p className='text-center text-sm'>
 					Upload a file or describe your feature to generate test cases
 				</p>
+				{/* This is will come if there are no collections*/}
+				{collections.length === 0 && (
+					<div className='mt-2 text-center text-sm text-red-300 bg-red-900/40 rounded p-3'>
+						There are no collections. Please click on{" "}
+						<strong>Create New Collection</strong> or add a new collection by
+						clicking the button above.
+					</div>
+				)}
 			</section>
 
 			{/* Chat Area */}
@@ -66,7 +90,13 @@ export default function ManualTestCases() {
 								</p>
 							)}
 							{msg.showCTA && (
-								<button className='mt-2 text-sm underline text-white hover:text-blue-200'>
+								<button
+									className={`mt-2 text-sm underline text-white hover:text-blue-200${
+										!activeCollection
+											? " pointer-events-none opacity-50 cursor-not-allowed"
+											: ""
+									}`}
+									disabled={!activeCollection}>
 									View Test Cases
 								</button>
 							)}
@@ -76,7 +106,12 @@ export default function ManualTestCases() {
 			</section>
 
 			{/* Footer Input */}
-			<div className='w-full border-t border-gray-700 px-6 py-4 max-w-full'>
+			<div
+				className={`w-full border-t border-gray-700 px-6 py-4 max-w-full${
+					!activeCollection
+						? " pointer-events-none opacity-50 cursor-not-allowed"
+						: ""
+				}`}>
 				<div className='w-full  px-6 py-4'>
 					<div className='relative flex items-start gap-3'>
 						{/* Textarea with icon inside */}

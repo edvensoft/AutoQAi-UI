@@ -1,5 +1,6 @@
-import { createSlice } from "@reduxjs/toolkit";
+// redux/collectionsSlice.ts
 import type { PayloadAction } from "@reduxjs/toolkit";
+import  { createSlice } from "@reduxjs/toolkit";
 
 interface Collection {
   id: string;
@@ -8,10 +9,12 @@ interface Collection {
 
 interface CollectionsState {
   list: Collection[];
+  activeCollectionId: string | null;
 }
 
 const initialState: CollectionsState = {
-    list: [],
+  list: [],
+  activeCollectionId: null,
 };
 
 const collectionsSlice = createSlice({
@@ -20,10 +23,13 @@ const collectionsSlice = createSlice({
   reducers: {
     addCollection: (state, action: PayloadAction<Collection>) => {
       state.list.push(action.payload);
+      state.activeCollectionId = action.payload.id;
     },
-    // You can add more reducers like removeCollection, updateCollection, etc.
+    setActiveCollection: (state, action: PayloadAction<string | null>) => {
+      state.activeCollectionId = action.payload;
+    },
   },
 });
 
-export const { addCollection } = collectionsSlice.actions;
+export const { addCollection, setActiveCollection } = collectionsSlice.actions;
 export default collectionsSlice.reducer;
