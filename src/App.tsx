@@ -10,6 +10,7 @@ import UiAutomation from "./pages/UiAutomation";
 import ManualTestCases from "./pages/ManualTestCases";
 import DatabaseTesting from "./pages/DatabaseTesting";
 
+
 function App() {
 	return (
 		<Router>
