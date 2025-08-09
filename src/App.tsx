@@ -14,9 +14,8 @@ function App() {
 	return (
 		<Router>
 			<Routes>
-				{/* Login */}
 				<Route
-					path='/login'
+					path='*'
 					element={<Login />}
 				/>
 
