@@ -28,7 +28,7 @@ export default function CreateCollection() {
 				<h1 className='text-xl font-semibold'>Manual Test Cases</h1>
 				<button
 					onClick={openModal}
-					className='bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition'>
+					className='bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 rounded  transition'>
 					+ Create New Collection
 				</button>
 			</div>
@@ -87,7 +87,7 @@ export default function CreateCollection() {
 											}
 										}}
 										className='px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700  cursor-pointer transition'>
-										Add
+										Create
 									</button>
 								</div>
 							</div>

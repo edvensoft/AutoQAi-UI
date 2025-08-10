@@ -1,11 +1,12 @@
 import { useState } from "react";
+import ModalWithTestCases from "./components/ModalWithTestCases";
 import type { RootState } from "@/redux/store";
-
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import SendIcon from "@mui/icons-material/Send";
 import { useSelector } from "react-redux";
 
 export default function TestCaseGenerator() {
+	const [openModal, setOpenModal] = useState(false);
 	const collections = useSelector((state: RootState) => state.collections.list);
 	const activeCollectionId = useSelector(
 		(state: RootState) => state.collections.activeCollectionId,
@@ -18,7 +19,6 @@ export default function TestCaseGenerator() {
 		loading?: boolean;
 		showCTA?: boolean;
 	};
-
 	const [messages, setMessages] = useState<Message[]>([]);
 
 	const handleSend = () => {
@@ -96,7 +96,8 @@ export default function TestCaseGenerator() {
 											? " pointer-events-none opacity-50 cursor-not-allowed"
 											: ""
 									}`}
-									disabled={!activeCollection}>
+									disabled={!activeCollection}
+									onClick={() => activeCollection && setOpenModal(true)}>
 									View Test Cases
 								</button>
 							)}
@@ -140,6 +141,11 @@ export default function TestCaseGenerator() {
 					</div>
 				</div>
 			</div>
+			<ModalWithTestCases
+				open={openModal}
+				onClose={() => setOpenModal(false)}
+				collectionId={activeCollectionId}
+			/>
 		</>
 	);
 }
