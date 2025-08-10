@@ -1,15 +1,10 @@
+import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import type { RootState } from "@/redux/store";
-import { setActiveCollection } from "@/redux/collectionsSlice";
 import DownloadIcon from "@mui/icons-material/Download";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useState } from "react";
-import {
-	Dialog,
-	DialogPanel,
-	DialogTitle,
-	DialogBackdrop,
-} from "@headlessui/react";
+import type { RootState } from "@/redux/store";
+import { setActiveCollection } from "@/redux/collectionsSlice";
+import ModalWithTestCases from "./components/ModalWithTestCases";
 
 export default function TestCollections() {
 	const dispatch = useDispatch();
@@ -102,30 +97,11 @@ export default function TestCollections() {
 				)}
 			</aside>
 
-			<Dialog
+			<ModalWithTestCases
 				open={openModal}
 				onClose={() => setOpenModal(false)}
-				className='relative z-50'>
-				<DialogBackdrop className='fixed inset-0 bg-black/30' />
-				<div className='fixed inset-0 flex items-center justify-center p-4'>
-					<DialogPanel className='w-full max-w-md rounded bg-white p-6 shadow-xl'>
-						<DialogTitle className='text-lg font-semibold mb-2'>
-							Collection Details
-						</DialogTitle>
-						<div className='mb-4 text-gray-800'>
-							Collection ID:{" "}
-							<span className='font-mono text-blue-600'>
-								{activeCollectionId}
-							</span>
-						</div>
-						<button
-							className='mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition'
-							onClick={() => setOpenModal(false)}>
-							Close
-						</button>
-					</DialogPanel>
-				</div>
-			</Dialog>
+				collectionId={activeCollectionId}
+			/>
 		</>
 	);
 }
