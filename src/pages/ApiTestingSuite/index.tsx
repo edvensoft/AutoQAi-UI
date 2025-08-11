@@ -1,7 +1,58 @@
+import { useSelector } from "react-redux";
+import ApiTesingOptions from "./ApiTesingOptions";
+import type { RootState } from "@/redux/store";
+import  { useEffect, useState, type JSX } from "react";
+import ListOfApis from "./ListOfApis";
+import CodeReview from "./CodeReview";
+import TestDataReview from "./TestDataReview";
+import TestExecution from "./TestExecution";
+import ExecutionLoader from "./ExecutionLoader";
+
+
+const StepData = [
+	{
+		step: 1,
+		component: <ApiTesingOptions />
+	},
+	{
+		step: 2,
+		component: <ListOfApis />
+	},
+	{
+		step: 3,
+		component: <CodeReview />
+	},
+	{
+		step: 4,
+		component: <TestDataReview />
+	},
+	{
+		step: 5,
+		component: <TestExecution />
+	},
+	{
+		step: 6,
+		component: <ExecutionLoader />
+	},
+]
+
 export default function ApiTestingSuite() {
+
+	const apiTesingState = useSelector((state: RootState) => state.apiTesting);
+	const [component, setComponent] = useState<JSX.Element | undefined>()
+
+
+	useEffect(() => {
+		console.log('state', apiTesingState)
+		console.log('getCompo', StepData.find((item) => item.step === apiTesingState.currentStep))
+		let currntComponent = StepData.find((item) => item.step === apiTesingState.currentStep)
+		setComponent(currntComponent?.component)
+	}, [apiTesingState])
+
 	return (
-		<h2 className='text-2xl font-bold'>
-			API Testing Suite. Create you're code here
-		</h2>
+		<>
+			{component}
+		</>
+
 	);
 }

@@ -9,6 +9,11 @@ import ApiTestingSuite from "./pages/ApiTestingSuite";
 import UiAutomation from "./pages/UiAutomation";
 import ManualTestCases from "./pages/ManualTestCases";
 import DatabaseTesting from "./pages/DatabaseTesting";
+import ListOfApis from "./pages/ApiTestingSuite/ListOfApis";
+import CodeReview from "./pages/ApiTestingSuite/CodeReview";
+import TestDataReview from "./pages/ApiTestingSuite/TestDataReview";
+import TestExecution from "./pages/ApiTestingSuite/TestExecution";
+import ExecutionLoader from "./pages/ApiTestingSuite/ExecutionLoader";
 
 function App() {
 	return (
@@ -32,6 +37,26 @@ function App() {
 					<Route
 						path='/project/api-testing-suite'
 						element={<ApiTestingSuite />}
+					/>
+					<Route
+						path='/project/api-testing-suite/api-list'
+						element={<ListOfApis />}
+					/>
+					<Route
+						path='/project/api-testing-suite/code-review'
+						element={<CodeReview />}
+					/>
+					<Route
+						path='/project/api-testing-suite/test-data-review'
+						element={<TestDataReview />}
+					/>
+					<Route
+						path='/project/api-testing-suite/test-execution'
+						element={<TestExecution />}
+					/>
+					<Route
+						path='/project/api-testing-suite/execution-loader'
+						element={<ExecutionLoader />}
 					/>
 					<Route
 						path='/project/ui-automation'
