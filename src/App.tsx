@@ -9,7 +9,7 @@ import ApiTestingSuite from "./pages/ApiTestingSuite";
 import UiAutomation from "./pages/UiAutomation";
 import ManualTestCases from "./pages/ManualTestCases";
 import DatabaseTesting from "./pages/DatabaseTesting";
-
+import Index from "./pages/UiAutomation/index.jsx";
 
 function App() {
 	return (
@@ -45,6 +45,10 @@ function App() {
 					<Route
 						path='/project/database-testing'
 						element={<DatabaseTesting />}
+					/>
+					<Route
+						path='/testcases'
+						element={<Index />}
 					/>
 				</Route>
 			</Routes>
