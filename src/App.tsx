@@ -1,8 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ProjectsLayout from "./layout/ProjectsLayout";
 import MainLayout from "./layout/MainLayout";
-import Login from "./pages/Login";
-import Projects from "./pages/Projects";
+import Login from "./pages/Login/Login";
+import Projects from "./pages/Projects/Projects";
 
 // Project detail child pages
 import ApiTestingSuite from "./pages/ApiTestingSuite";
