@@ -1,17 +1,115 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import TestCaseHeader from './components/TestCaseHeader'
 import { useDispatch } from 'react-redux';
 import { nextStep } from '@/redux/apiTestingSlice';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
+import { API_URL } from '@/config';
+import { CircularProgress } from '@mui/material';
+import ExecutionLoader from './ExecutionLoader';
+import ExecutionTable from './components/ExecutionTable';
+
+
+interface Data {
+    id: string,
+    operation_id: string,
+    api_name: string,
+    api_url: string,
+    custom_instruction: string,
+    project_id: string,
+    api_header: string,
+    is_selected: boolean,
+    api_method: string,
+    language: string,
+    status: string,
+    request_body: string
+}
 
 const TestExecution = () => {
     const dispatch = useDispatch();
 
     const [selectedApis, setSelectedApis] = useState<any | []>([]);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
+    const [apiData, setApiData] = useState<Data[] | []>([])
+    const [isExecutionLoad, setIsExecutionLoad] = useState<boolean>(false)
+    const { projectId } = useParams();
+
 
 
     const handleExecuteCode = () => {
-        dispatch(nextStep())
+        // dispatch(nextStep())
+        setIsExecutionLoad(true)
+        console.log(selectedApis, 'sele')
+        const payload = {
+            // "endpoint_ids": [...selectedApis]
+            "project_id": projectId,
+            "api_endpoint_ids": [...selectedApis]
+        }
+        console.log('Payload for approval:', payload);
+        axios.post(`${API_URL}/v1/api/projects/execute-tests/`, payload)
+            .then((response) => {
+                console.log('Approval response:', response);
+                if (response.status === 200) {
+                    // alert('Selected APIs approved successfully!');
+                    setIsExecutionLoad(false)
+                    setSelectedApis([]);
+                    // getEndpointsData();
+                }
+            })
+            .catch((error) => {
+                console.error('Error approving selected APIs:', error);
+                alert('Failed to approve selected APIs. Please try again.');
+            });
+
     }
+
+    const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.checked) {
+            const updatedElements = apiData.map(item => item.id)
+            setSelectedApis([...updatedElements])
+        } else {
+            setSelectedApis([])
+        }
+    }
+
+    const handleSelection = (e: React.ChangeEvent<HTMLInputElement>, apiId: string) => {
+        if (e.target.checked) {
+            setSelectedApis([...selectedApis, apiId]);
+        } else {
+            setSelectedApis(selectedApis.filter((id: any) => id !== apiId));
+        }
+    }
+
+
+    const getEndpointsData = async () => {
+
+        try {
+            setLoading(true);
+            const response = await axios.get(`${API_URL}/v1/api/endpoints/get-endpoints/${projectId}`);
+            console.log('Fetched APIs:', response);
+            if (response?.data?.response && response?.data?.response.length > 0) {
+                // setEndPointsData(response.data.response);
+                console.log(response.data.response, 'data')
+                setApiData(response.data.response)
+            }
+        } catch (err) {
+            console.error('Error fetching users:', err);
+            setError('Failed to fetch users');
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    console.log('load',isExecutionLoad)
+
+    useEffect(() => {
+        getEndpointsData()
+    }, [])
+
+
+
+
 
     return (
         <div id="execution-content" className="max-w-7xl mx-auto">
@@ -43,60 +141,31 @@ const TestExecution = () => {
                 />
 
                 <div className="overflow-x-auto">
-                    <table className="w-full">
-                        <thead className="bg-[#0F0F23]">
-                            <tr>
-                                <th className="px-6 py-4 text-left">
-                                    <input type="checkbox" id="select-all-tests" className="w-4 h-4 text-[#3B82F6] bg-transparent border-[#374151] rounded focus:ring-[#3B82F6]" />
-                                </th>
-                                <th className="px-6 py-4 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">Test ID</th>
-                                <th className="px-6 py-4 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">Test Name</th>
-                            </tr>
-                        </thead>
-                        <tbody id="test-table-body" className="divide-y divide-[#374151]">
-                            <tr className="hover:bg-[#0F0F23]/50">
-                                <td className="px-6 py-4">
-                                    <input type="checkbox" className="test-checkbox w-4 h-4 text-[#3B82F6] bg-transparent border-[#374151] rounded focus:ring-[#3B82F6]" />
-                                </td>
-                                <td className="px-6 py-4 text-sm text-[#FFFFFF]">TEST_001</td>
-                                <td className="px-6 py-4">
-                                    <span className="text-sm text-[#FFFFFF] font-medium">User Registration Test</span>
-                                </td>
-                            </tr>
-                            <tr className="hover:bg-[#0F0F23]/50">
-                                <td className="px-6 py-4">
-                                    <input type="checkbox" className="test-checkbox w-4 h-4 text-[#3B82F6] bg-transparent border-[#374151] rounded focus:ring-[#3B82F6]" />
-                                </td>
-                                <td className="px-6 py-4 text-sm text-[#FFFFFF]">TEST_002</td>
-                                <td className="px-6 py-4">
-                                    <span className="text-sm text-[#FFFFFF] font-medium">Login Functionality</span>
-                                </td>
-                            </tr>
-                            <tr className="hover:bg-[#0F0F23]/50">
-                                <td className="px-6 py-4">
-                                    <input type="checkbox" className="test-checkbox w-4 h-4 text-[#3B82F6] bg-transparent border-[#374151] rounded focus:ring-[#3B82F6]" />
-                                </td>
-                                <td className="px-6 py-4 text-sm text-[#FFFFFF]">TEST_003</td>
-                                <td className="px-6 py-4">
-                                    <span className="text-sm text-[#FFFFFF] font-medium">Product Search</span>
-                                </td>
-                            </tr>
-                            <tr className="hover:bg-[#0F0F23]/50">
-                                <td className="px-6 py-4">
-                                    <input type="checkbox" className="test-checkbox w-4 h-4 text-[#3B82F6] bg-transparent border-[#374151] rounded focus:ring-[#3B82F6]" />
-                                </td>
-                                <td className="px-6 py-4 text-sm text-[#FFFFFF]">TEST_004</td>
-                                <td className="px-6 py-4">
-                                    <span className="text-sm text-[#FFFFFF] font-medium">Payment Processing</span>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    {
+                        loading ?
+                            <div className="h-60 flex justify-center items-center">
+                                <CircularProgress size="3rem" />
+                            </div>
+                            :
+                            <ExecutionTable
+                                apiData={apiData}
+                                tableName="test_data"
+                                selectedApis={selectedApis}
+                                handleSelectAll={handleSelectAll}
+                                totalNoApi={apiData.length}
+                                handleSelection={handleSelection}
+                            />
+                    }
                 </div>
             </div>
 
+
+
             <div id="navigation-buttons" className="mt-8 pt-6 border-t border-[#374151]">
             </div>
+            {
+                isExecutionLoad && <ExecutionLoader />
+            }
         </div>
     )
 }

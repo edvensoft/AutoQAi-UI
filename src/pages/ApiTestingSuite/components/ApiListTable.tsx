@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import ReturnValueModal from './ReturnValueModal';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -12,15 +12,28 @@ interface AdditionalActions {
     compared_value: boolean,
 }
 
-interface Data {
-    id: number,
-    api_name: string,
-    api_method: string,
-    dependent_api: string,
-    additional_actions: AdditionalActions,
-    missing_schema: string
-}
+// interface Data {
+//     id: number,
+//     api_name: string,
+//     api_method: string,
+//     dependent_api: string,
+//     additional_actions: AdditionalActions,
+//     missing_schema: string
+// }
 
+interface Data {
+    api_header: string,
+    api_method: string,
+    api_name: string,
+    api_url: string,
+    custom_instruction: string,
+    description: string | null,
+    id: number,
+    is_selected: boolean,
+    operation_id: string,
+    project_id: string,
+    request_body: string,
+}
 
 
 interface TableRowProps {
@@ -28,43 +41,49 @@ interface TableRowProps {
     index: number
 }
 
+interface TableProps {
+    data: Data[],
+    currentPage: number,
+    totalPages: number,
+    noApisPerPage: number,
+    selectedApis: any[],
+    handleSelectAll: (e: any) => void,
+    handleSelection: (e: any, apiId: number) => void
+}
+
+// const sampleData = [
+//     {
+//         id: 1,
+//         api_name: 'User Authentication',
+//         api_method: 'Post',
+//         dependent_api: 'JWT-based authentication with reference token',
+//         additional_actions: {
+//             return_value: false,
+//             compared_value: false,
+//         },
+//         missing_schema: '4000'
+//     },
+//     {
+//         id: 2,
+//         api_name: 'User Profile',
+//         api_method: 'Get',
+//         dependent_api: 'JWT-based authentication with reference token',
+//         additional_actions: {
+//             return_value: false,
+//             compared_value: true,
+//         },
+//         missing_schema: 'completed'
+//     },
+// ]
 
 
-const sampleData = [
-    {
-        id: 1,
-        api_name: 'User Authentication',
-        api_method: 'Post',
-        dependent_api: 'JWT-based authentication with reference token',
-        additional_actions: {
-            return_value: false,
-            compared_value: false,
-        },
-        missing_schema: '4000'
-    },
-    {
-        id: 2,
-        api_name: 'User Profile',
-        api_method: 'Get',
-        dependent_api: 'JWT-based authentication with reference token',
-        additional_actions: {
-            return_value: false,
-            compared_value: true,
-        },
-        missing_schema: 'completed'
-    },
-]
-
-
-const ApiListTable = () => {
+const ApiListTable = (props: TableProps) => {
+    const { currentPage, data, totalPages, noApisPerPage, handleSelection, handleSelectAll, selectedApis } = props
     const [isReturnValue, setIsReturnValue] = useState<boolean>(false)
     const [isCompareValue, setIsCompareValue] = useState<boolean>(false)
     const [isSchemaModal, setIsSchemaModal] = useState<boolean>(false)
     const [isApiMapingModal, setIsApiMapingModal] = useState<boolean>(false)
 
-
-
-    console.log('isReturn', isReturnValue)
 
 
     const handleAditionalActions = (e: React.ChangeEvent<HTMLInputElement>, action: string, id: number) => {
@@ -87,7 +106,7 @@ const ApiListTable = () => {
         } else if (modal === 'schema') {
             setIsSchemaModal(false)
 
-        }else if (modal === 'api_map') {
+        } else if (modal === 'api_map') {
             setIsApiMapingModal(false)
 
         }
@@ -98,15 +117,23 @@ const ApiListTable = () => {
         setIsSchemaModal(true)
     }
 
+    const startIndex = (currentPage - 1) * noApisPerPage;
+    const endIndex = startIndex + noApisPerPage;
+
+    const currentItems = data.slice(startIndex, endIndex);
+
 
     const TableRow = ({ item, index }: TableRowProps) => {
         return (
             <tr className="hover:bg-[#0F0F23]/50" key={item?.id}>
                 <td className="px-6 py-4">
-                    <input type="checkbox" className="api-checkbox w-4 h-4 text-[#3B82F6] bg-transparent border-[#374151] rounded focus:ring-[#3B82F6]" />
+                    <input type="checkbox"
+                        checked={selectedApis.includes(item.id)}
+                        onChange={(e) => handleSelection(e, item.id)}
+                        className="api-checkbox w-4 h-4 text-[#3B82F6] bg-transparent border-[#374151] rounded focus:ring-[#3B82F6]" />
                 </td>
                 <td className="px-6 py-4 text-sm text-[#FFFFFF]">{item?.id}</td>
-                <td className="px-6 py-4 text-sm text-[#FFFFFF]">{item?.api_name}</td>
+                <td className="px-6 py-4 text-sm w-36 text-[#FFFFFF]">{item?.api_name}</td>
                 <td className="px-6 py-4">
                     {
                         item.api_method === 'Get' ?
@@ -136,7 +163,7 @@ const ApiListTable = () => {
                     <div className="flex space-x-2">
                         <label className="flex items-center">
                             <input type="checkbox"
-                                checked={item.additional_actions.return_value}
+                                // checked={item.additional_actions.return_value}
                                 onChange={(e) => handleAditionalActions(e, 'return', item.id)}
                                 className="w-4 h-4 text-[#3B82F6] bg-transparent border-[#374151] rounded"
                             />
@@ -144,7 +171,7 @@ const ApiListTable = () => {
                         </label>
                         <label className="flex items-center">
                             <input type="checkbox"
-                                checked={item.additional_actions.compared_value}
+                                // checked={item.additional_actions.compared_value}
                                 onChange={(e) => handleAditionalActions(e, 'compare', item.id)}
                                 className="compare-values-cb w-4 h-4 text-[#3B82F6] bg-transparent border-[#374151] rounded" />
                             <span className="ml-2 text-sm text-gray-300">Compare Values</span>
@@ -153,32 +180,60 @@ const ApiListTable = () => {
                 </td>
                 <td className="px-6 py-4">
                     <div className="flex items-center space-x-2">
-                        {
+                        {/* {
                             item.missing_schema === 'completed' ?
                                 <div className='flex items-center gap-1'>
                                     <CheckCircleIcon className='text-sm text-green-400 ' />
                                     <div className="text-sm text-green-400 capitalize">
-                                        {/* <i className="fa-solid fa-check-circle"></i>  */}
-                                        {item.missing_schema}
-                                    </div>
-                                </div>
-                                :
-                                <div className='flex items-center gap-1'>
-                                    <div className="text-sm text-red-400">{item.missing_schema}</div>
-                                    <button className="add-schema-btn text-[#3B82F6] hover:text-[#2563EB]" title="Add JSON Schema"
-                                        onClick={() => handleSchema(item.id)}
-                                    >
-                                        {/* <i className="fa-solid fa-plus-circle"></i> */}
-                                        <AddCircleIcon className='text-sm' />
-                                    </button>
-                                </div>
-                        }
+                                        
+                        {item.missing_schema}
+                    </div>
+                </div>
+                :
+                <div className='flex items-center gap-1'>
+                    <div className="text-sm text-red-400">{item.missing_schema}</div>
+                    <button className="add-schema-btn text-[#3B82F6] hover:text-[#2563EB]" title="Add JSON Schema"
+                        onClick={() => handleSchema(item.id)}
+                    >
+                       
+                        <AddCircleIcon className='text-sm' />
+                    </button>
+                </div>
+                        } */}
+
+                        <div className="flex items-center space-x-2">
+                            <span className="text-sm text-red-400">400, 500</span>
+                            <button className="add-schema-btn text-brand-accent hover:text-brand-accent-dark" title="Add JSON Schema">
+                                <i className="fa-solid fa-plus-circle"></i>
+                            </button>
+                        </div>
 
                     </div>
-                </td>
-            </tr>
+                </td >
+            </tr >
         )
     }
+
+    const selectAllRef = useRef<HTMLInputElement>(null)
+
+    useEffect(() => {
+        // console.log('ss', selectAllRef.current, selectedApis.length, totalNoApi)
+        if (selectAllRef.current) {
+            if (selectedApis.length === 0) {
+                selectAllRef.current.indeterminate = false;
+                selectAllRef.current.checked = false;
+            } else if (selectedApis.length === currentItems.length) {
+                selectAllRef.current.checked = true;
+                selectAllRef.current.indeterminate = false;
+            } else {
+                selectAllRef.current.indeterminate = true;
+                selectAllRef.current.checked = false;
+            }
+        }
+
+
+    }, [selectedApis]);
+
 
     return (
         <>
@@ -186,7 +241,10 @@ const ApiListTable = () => {
                 <thead className="bg-[#0F0F23]">
                     <tr>
                         <th className="px-6 py-4 text-left">
-                            <input type="checkbox" id="select-all" className="w-4 h-4 text-[#3B82F6] bg-transparent border-[#374151] rounded focus:ring-[#3B82F6]" />
+                            <input type="checkbox" id="select-all"
+                                ref={selectAllRef}
+                                onChange={handleSelectAll}
+                                className="w-4 h-4 text-[#3B82F6] bg-transparent border-[#374151] rounded focus:ring-[#3B82F6]" />
                         </th>
                         <th className="px-6 py-4 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">API ID</th>
                         <th className="px-6 py-4 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">API Name</th>
@@ -198,7 +256,7 @@ const ApiListTable = () => {
                 </thead>
                 <tbody id="api-table-body" className="divide-y divide-[#374151]">
                     {
-                        sampleData.map((item: Data, index: number) => (
+                        currentItems.map((item: Data, index: number) => (
                             <TableRow item={item} index={index} />
                         ))
                     }
@@ -254,6 +312,8 @@ const ApiListTable = () => {
                 </tr> */}
                 </tbody>
             </table>
+
+
             {
                 isReturnValue &&
                 <ReturnValueModal onClose={closeModal} />
@@ -267,7 +327,7 @@ const ApiListTable = () => {
                 <AddSchemaModal onClose={closeModal} />
             }
 
-{
+            {
                 isApiMapingModal &&
                 <ApiMapingModal onClose={closeModal} />
             }

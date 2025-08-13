@@ -1,19 +1,33 @@
 import React, { useEffect, useRef, useState } from 'react'
 import CodeEditorModal from './CodeEditorModal'
+import { API_URL } from '@/config'
+import axios from 'axios'
 
 interface Data {
     id: string,
     operation_id: string,
     api_name: string,
-    apiPath: string,
-    language: string,
+    api_url: string,
+    custom_instruction: string,
+    project_id: string,
+    api_header: string,
+    is_selected: boolean,
     api_method: string,
-    status: boolean,
+    language: string,
+    status: string,
+    request_body: string
 }
 
 
 interface TableRowProps {
     item: Data
+}
+
+interface CodeData {
+    code: string,
+    file_name: string,
+    id: number,
+    status: string
 }
 
 interface TableProps {
@@ -28,10 +42,41 @@ interface TableProps {
 const TestCaseTable = (props: TableProps) => {
     const { apiData, tableName, selectedApis, handleSelectAll, totalNoApi, handleSelection } = props
     const [isViewCodeModal, setIsViewCodeModal] = useState<boolean>(false)
+    const [codeData, setCodeData] = useState<CodeData | null>(null)
+
+    function objectToPropertiesFromObject(obj: Record<string, string>): string {
+        return Object.entries(obj)
+            .map(([key, value]) => `${key}=${value}`)
+            .join('\n');
+    }
 
 
     const handleCodeView = (id: string) => {
-        setIsViewCodeModal(true)
+        // setIsViewCodeModal(true)
+        if (id) {
+            if (tableName === "code_review") {
+                axios.get(`${API_URL}/v1/api/endpoints/get-test-case/${id}/`).then((response) => {
+                    console.log('Code response:', response);
+                    setCodeData(response.data.response[0]);
+                    setIsViewCodeModal(true)
+                });
+            } else if (tableName === "test_data") {
+                axios.get(`${API_URL}/v1/api/endpoints/get-test-data/${id}/`).then((response) => {
+                    console.log('Code response:', response);
+                    let customizeData: CodeData = {
+                        code: objectToPropertiesFromObject(response.data.response[0].data),
+                        file_name: response.data.response[0].file_name,
+                        id: response.data.response[0].id,
+                        status: response.data.response[0].status
+                    }
+                    setCodeData(customizeData);
+                    setIsViewCodeModal(true)
+                });
+            }
+
+
+
+        }
     }
 
     const handleClose = () => {
@@ -72,11 +117,11 @@ const TestCaseTable = (props: TableProps) => {
                         className="code-checkbox w-4 h-4 text-[#3B82F6] bg-transparent border-[#374151] rounded focus:ring-[#3B82F6]"
                     />
                 </td>
-                <td className="px-6 py-4 text-sm text-[#FFFFFF]">{item.operation_id}</td>
-                <td className="px-6 py-4">
+                <td className="px-6 py-4 text-sm text-[#FFFFFF]">{item.id}</td>
+                <td className="px-6 py-4 ">
                     <button
-                        className="text-sm cursor-pointer text-[#3B82F6] hover:text-[#2563EB] font-medium open-code-editor" data-api-id="API_001" data-api-name="User Authentication"
-                        onClick={() => handleCodeView(item.operation_id)}
+                        className="text-sm cursor-pointer truncate text-[#3B82F6] hover:text-[#2563EB] font-medium open-code-editor" data-api-id="API_001" data-api-name="User Authentication"
+                        onClick={() => handleCodeView(item.id)}
                     >
                         {item.api_name}
                     </button>
@@ -89,13 +134,19 @@ const TestCaseTable = (props: TableProps) => {
                 }
 
                 <td className="px-6 py-4">
-                    <span className="px-2 py-1 text-xs font-medium bg-yellow-600 text-white rounded">Pending Review</span>
+                    {
+                        item.status === 'approved' ?
+                            <span className="px-2 py-1 text-xs font-medium truncate bg-green-600 text-white rounded">Approved</span>
+                            :
+                            <span className="px-2 py-1 text-xs font-medium truncate bg-yellow-600 text-white rounded">Pending Review</span>
+
+                    }
                 </td>
                 <td className="px-6 py-4">
                     <div className="flex space-x-2">
                         <button
                             className="open-code-editor cursor-pointer bg-[#3B82F6] hover:bg-[#2563EB] text-white p-2 rounded transition-colors group relative" data-api-id="API_001" data-api-name="User Authentication" title="View Code"
-                            onClick={() => handleCodeView(item.operation_id)}
+                            onClick={() => handleCodeView(item.id)}
                         >
                             <i className="fa-solid fa-eye"></i>
                             <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
@@ -220,7 +271,7 @@ const TestCaseTable = (props: TableProps) => {
                 </tbody>
             </table>
             {
-                isViewCodeModal && <CodeEditorModal onClose={handleClose} />
+                isViewCodeModal && <CodeEditorModal language={tableName === "code_review" ? 'java' : 'plaintext'} data={codeData} onClose={handleClose} />
             }
         </>
     )

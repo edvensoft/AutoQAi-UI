@@ -39,25 +39,25 @@ function App() {
 						element={<ApiTestingSuite />}
 					/>
 					<Route
-						path='/project/api-testing-suite/api-list'
+						path='/project/api-testing-suite/api-list/:projectId'
 						element={<ListOfApis />}
 					/>
 					<Route
-						path='/project/api-testing-suite/code-review'
+						path='/project/api-testing-suite/code-review/:projectId'
 						element={<CodeReview />}
 					/>
 					<Route
-						path='/project/api-testing-suite/test-data-review'
+						path='/project/api-testing-suite/test-data-review/:projectId'
 						element={<TestDataReview />}
 					/>
 					<Route
-						path='/project/api-testing-suite/test-execution'
+						path='/project/api-testing-suite/test-execution/:projectId'
 						element={<TestExecution />}
 					/>
-					<Route
+					{/* <Route
 						path='/project/api-testing-suite/execution-loader'
 						element={<ExecutionLoader />}
-					/>
+					/> */}
 					<Route
 						path='/project/ui-automation'
 						element={<UiAutomation />}

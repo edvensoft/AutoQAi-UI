@@ -17,7 +17,7 @@ const TestCaseHeader = (props: TestHeaderProps) => {
             <div className="flex justify-between items-center">
                 <h2 className="text-xl font-semibold text-[#FFFFFF]">{title}</h2>
                 {
-                    // selectedApis.length > 0 &&
+                    selectedApis.length > 0 &&
                     <div id="approve-button-container" className="">
                         <button id="approve-selected-btn"
                             // className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg transition-colors flex items-center space-x-2"

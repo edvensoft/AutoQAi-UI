@@ -1,111 +1,144 @@
 import { nextStep, prevStep } from "@/redux/apiTestingSlice";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import TestCaseHeader from "./components/TestCaseHeader";
 import TestCaseTable from "./components/TestCaseTable";
+import axios from 'axios'
+import { API_URL } from "@/config";
+import { useNavigate, useParams } from "react-router-dom";
+import { Box, CircularProgress } from "@mui/material";
 
 interface Data {
   id: string,
   operation_id: string,
   api_name: string,
-  apiPath: string,
+  api_url: string,
+  custom_instruction: string,
+  project_id: string,
+  api_header: string,
+  is_selected: boolean,
   api_method: string,
   language: string,
-  status: boolean,
-  code: string
+  status: string,
+  request_body: string
 }
 
-const sampleData: Data[] = [
-  {
-    id: '001',
-    operation_id: '001',
-    api_name: 'getUserProfile',
-    language: 'java',
-    apiPath: '/api/user/profile',
-    api_method: 'GET',
-    status: true,
-    code: `async function getUserProfile(req, res) {try {
-        const userId = req.params.id;
-        const user = await User.findById(userId);
-        
-        if (!user) {
-            return res.status(404).json({
-                error: 'User not found'
-            });
-        }
-        
-        return res.status(200).json({
-            success: true,
-            data: {
-                id: user.id,
-                name: user.name,
-                email: user.email,
-                profile: user.profile
-            }
-        });
-    } catch (error) {
-         return res.status(500).json({
-            error: 'Internal server error'
-        });
-    }
-}`
-  },
+// const sampleData: Data[] = [
+//   {
+//     id: '001',
+//     operation_id: '001',
+//     api_name: 'getUserProfile',
+//     language: 'java',
+//     apiPath: '/api/user/profile',
+//     api_method: 'GET',
+//     status: true,
+//     code: `async function getUserProfile(req, res) {try {
+//         const userId = req.params.id;
+//         const user = await User.findById(userId);
 
-  {
-    id: '002',
-    operation_id: '002',
-    api_name: 'createOrder',
-    language: 'java',
-    api_method: 'POST',
-    apiPath: '/api/v1/orders',
-    status: true,
-    code: `async function getUserProfile(req, res) {try {
-        const userId = req.params.id;
-        const user = await User.findById(userId);
-        
-        if (!user) {
-            return res.status(404).json({
-                error: 'User not found'
-            });
-        }
-        
-        return res.status(200).json({
-            success: true,
-            data: {
-                id: user.id,
-                name: user.name,
-                email: user.email,
-                profile: user.profile
-            }
-        });
-    } catch (error) {
-         return res.status(500).json({
-            error: 'Internal server error'
-        });
-    }
-}`
-  },
-]
+//         if (!user) {
+//             return res.status(404).json({
+//                 error: 'User not found'
+//             });
+//         }
+
+//         return res.status(200).json({
+//             success: true,
+//             data: {
+//                 id: user.id,
+//                 name: user.name,
+//                 email: user.email,
+//                 profile: user.profile
+//             }
+//         });
+//     } catch (error) {
+//          return res.status(500).json({
+//             error: 'Internal server error'
+//         });
+//     }
+// }`
+//   },
+
+//   {
+//     id: '002',
+//     operation_id: '002',
+//     api_name: 'createOrder',
+//     language: 'java',
+//     api_method: 'POST',
+//     apiPath: '/api/v1/orders',
+//     status: true,
+//     code: `async function getUserProfile(req, res) {try {
+//         const userId = req.params.id;
+//         const user = await User.findById(userId);
+
+//         if (!user) {
+//             return res.status(404).json({
+//                 error: 'User not found'
+//             });
+//         }
+
+//         return res.status(200).json({
+//             success: true,
+//             data: {
+//                 id: user.id,
+//                 name: user.name,
+//                 email: user.email,
+//                 profile: user.profile
+//             }
+//         });
+//     } catch (error) {
+//          return res.status(500).json({
+//             error: 'Internal server error'
+//         });
+//     }
+// }`
+//   },
+// ]
 
 
 const CodeReview = () => {
   const dispatch = useDispatch();
   const [selectedApis, setSelectedApis] = useState<any | []>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [apiData, setApiData] = useState<Data[] | []>([])
+  const { projectId } = useParams();
 
+const navigate = useNavigate();
 
   const handleBack = () => {
-    dispatch(prevStep())
+    // dispatch(prevStep())
+    navigate(`/project/api-testing-suite/api-list/${projectId}`)
+    
   }
   const handleNext = () => {
-    dispatch(nextStep())
+    // dispatch(nextStep())
+    navigate(`/project/api-testing-suite/test-data-review/${projectId}`)
   }
   const handleApproveCode = () => {
-
+    console.log(selectedApis, 'sele')
+    const payload = {
+      "endpoint_ids": [...selectedApis]
+    }
+    console.log('Payload for approval:', payload);
+    axios.put(`${API_URL}/v1/api/endpoints/update-test-case-status/`, payload)
+      .then((response) => {
+        console.log('Approval response:', response);
+        if (response.status === 200) {
+          alert('Selected APIs approved successfully!');
+          setSelectedApis([]);
+          getEndpointsData(); 
+        }
+      })
+      .catch((error) => {
+        console.error('Error approving selected APIs:', error);
+        alert('Failed to approve selected APIs. Please try again.');
+      });
   }
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
-      const updatedElements = sampleData.map(item => item.id)
+      const updatedElements = apiData.map(item => item.id)
       setSelectedApis([...updatedElements])
     } else {
       setSelectedApis([])
@@ -119,6 +152,30 @@ const CodeReview = () => {
       setSelectedApis(selectedApis.filter((id: any) => id !== apiId));
     }
   }
+
+  const getEndpointsData = async () => {
+
+    try {
+      setLoading(true);
+      const response = await axios.get(`${API_URL}/v1/api/endpoints/get-endpoints/${projectId}/?status_from=1`);
+      console.log('Fetched APIs:', response);
+      if (response?.data?.response && response?.data?.response.length > 0) {
+        // setEndPointsData(response.data.response);
+        console.log(response.data.response, 'data')
+        setApiData(response.data.response)
+      }
+    } catch (err) {
+      console.error('Error fetching users:', err);
+      setError('Failed to fetch users');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    getEndpointsData()
+  }, [])
+
 
   return (
     <div id="code-review-content" className="max-w-7xl mx-auto">
@@ -149,14 +206,21 @@ const CodeReview = () => {
 
         />
         <div className="overflow-x-auto">
-          <TestCaseTable
-            apiData={sampleData}
-            tableName="code_review"
-            selectedApis={selectedApis}
-            handleSelectAll={handleSelectAll}
-            totalNoApi={sampleData.length}
-            handleSelection={handleSelection}
-          />
+          {
+            loading ?
+              <div className="h-60 flex justify-center items-center">
+                <CircularProgress size="3rem" />
+              </div>
+              :
+              <TestCaseTable
+                apiData={apiData}
+                tableName="code_review"
+                selectedApis={selectedApis}
+                handleSelectAll={handleSelectAll}
+                totalNoApi={apiData.length}
+                handleSelection={handleSelection}
+              />
+          }
         </div>
       </div>
 
