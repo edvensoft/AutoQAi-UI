@@ -33,10 +33,11 @@ const Header = () => {
 
 			{/* User Info */}
 			<div className="flex items-center space-x-3">
-				<span className="text-sm text-gray-200">Elena Voyage</span>
-				<div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
+				<div className="w-8 h-8 bg-violet-500 rounded-full flex items-center justify-center text-white font-semibold">
 					EV
 				</div>
+				<span className="text-sm text-gray-200">Elena Voyage</span>
+				
 			</div>
 		</header>
 	);
