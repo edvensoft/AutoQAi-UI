@@ -18,7 +18,7 @@
 
 import { useEffect, useState } from "react";
 
-type MappingFields = Record<string, string[]>; // or replace `any[]` with the exact type of your values
+type MappingFields = Record<string|undefined, string|undefined>; // or replace `any[]` with the exact type of your values
 
 const useMapping = (mappingFields: MappingFields) => {
   const [selectedFields, setSelectedFields] = useState<string[]>([]); 
@@ -30,7 +30,7 @@ const useMapping = (mappingFields: MappingFields) => {
     if(Object.entries(mappingFields).length){
           let selected = Object.entries(mappingFields)
       .map(([_, value]) => value) // value is an array here
-      .flat();
+      
       console.log(selected,"selected*")
        setSelectedFields(selected);
     }
