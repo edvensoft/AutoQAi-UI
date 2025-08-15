@@ -51,7 +51,8 @@ export default function ApiTestingSuite() {
 
 	return (
 		<>
-			{component}
+			<ApiTesingOptions />
+			{/* {component} */}
 		</>
 
 	);

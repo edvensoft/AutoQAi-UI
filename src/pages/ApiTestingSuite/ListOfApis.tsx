@@ -5,7 +5,7 @@ import CustomeCodeIcon from '@/assets/customeIcons/CustomeCodeIcon';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { API_URL } from '@/config';
-import { CircularProgress, TablePagination } from '@mui/material';
+import { Backdrop, CircularProgress, TablePagination } from '@mui/material';
 import TestCaseHeader from './components/TestCaseHeader';
 
 interface Data {
@@ -28,12 +28,14 @@ const ListOfApis = () => {
     const [allApis, setAllApis] = React.useState([]);
     const [error, setError] = React.useState(null);
     const [loading, setLoading] = React.useState(false);
+    const [isGeneratingCode, setIsGeneratingCode] = React.useState(false);
+
     const [noApisPerPage, setNoApisPerPage] = useState(10)
     // const noApisPerPage = 10;
     const [currentPage, setCurrentPage] = React.useState(1);
     const [totalPages, setTotalPages] = React.useState(0);
     const navigate = useNavigate();
-    const { projectId } = useParams();;
+    const { projectId } = useParams();
     const [selectedApis, setSelectedApis] = React.useState<any | []>([])
 
 
@@ -120,12 +122,13 @@ const ListOfApis = () => {
         console.log('Updated Data:', updatedData, payload);
 
         try {
-            setLoading(true);
+            setIsGeneratingCode(true);
             const response = await axios.post(`${API_URL}/v1/api/endpoints/generate-test-cases/`, payload);
             console.log('Code Generation Response:', response);
             if (response?.status === 200) {
-                alert('Code generated successfully!');
+                // alert('Code generated successfully!');
                 setSelectedApis([]);
+                setIsGeneratingCode(false)
                 navigate(`/project/api-testing-suite/code-review/${projectId}`)
                 // navigate(`/api-code-review/${id}/${encodeURIComponent(projectTitle)}`);
 
@@ -224,6 +227,14 @@ const ListOfApis = () => {
                     }
 
                 </div>
+
+                <Backdrop
+                    sx={(theme) => ({ color: '#3b82f6', zIndex: theme.zIndex.drawer + 1 })}
+                    open={isGeneratingCode}
+                // onClick={handleClose}
+                >
+                    <CircularProgress color="inherit" />
+                </Backdrop>
             </div>
         </div>
     )
