@@ -16,23 +16,27 @@
 
 // export default useMapping
 
+interface ValidRecords{
+  selected:string[]|null;
+  mappedFields:string[]|null;
+}
+
 import { useEffect, useState } from "react";
 
-type MappingFields = Record<string|undefined, string|undefined>; // or replace `any[]` with the exact type of your values
+type MappingFields = Record<string|undefined, string|undefined>; 
 
 const useMapping = (mappingFields: MappingFields) => {
-  const [selectedFields, setSelectedFields] = useState<string[]>([]); 
+  const [selectedFields, setSelectedFields] = useState<ValidRecords>({selected:[],mappedFields:[]}); 
   
-  // Replace `any[]` with the actual type if known
+
 
   useEffect(() => {
-    console.log("inside-useEffect")
     if(Object.entries(mappingFields).length){
           let selected = Object.entries(mappingFields)
-      .map(([_, value]) => value) // value is an array here
+      .map(([_, value]) => value);
       
-      console.log(selected,"selected*")
-       setSelectedFields(selected);
+    let mappedFields= Object.entries(mappingFields).filter(([_,value])=>!value).map((field)=>field[0]);
+       setSelectedFields({selected,mappedFields});
     }
   
   }, [mappingFields]);
