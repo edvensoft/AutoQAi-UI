@@ -1,4 +1,3 @@
-import ColumnMapping from "./ColumnMapping";
 import TestCaseOptions from "./TestCaseOptions";
 
 

@@ -7,7 +7,7 @@ import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import CheckIcon from "@mui/icons-material/Check";
 import useMapping from "./Hooks/useMapping";
 import { useLocation, useNavigate } from "react-router-dom";
-import { keyframes } from "@emotion/react";
+
 
 
 
@@ -38,6 +38,7 @@ let options = [
 
 const requiredFields = options.map((option, i) => i === 0 ? null : option?.label).filter((label) => label);
 const requiredKeys = options.map((option, i) => i === 0 ? null : option?.key).filter((key) => key);
+let defaultObj={ "test_id": "", "pre_condition": "", "steps": "", "expected_result": "", "description": "" }
 
 
 const ColumnMapping: React.FC = () => {
@@ -53,7 +54,7 @@ const ColumnMapping: React.FC = () => {
    ...rest
   } = location.state || {};
 
-  const [mappings, setMappings] = useState<Record<string, string>>({ "test_id": "", "pre_condition": "", "steps": "", "expected_result": "", "description": "" });
+const [mappings, setMappings] = useState<Record<string, string>>({});
   const { selectedFields } = useMapping(mappings);
 
 
@@ -71,6 +72,8 @@ const ColumnMapping: React.FC = () => {
   }, [headers])
 
   const allRequiredMapped = Object.values(mappings).every((field) => field);
+  console.log(allRequiredMapped,mappings,"mappings")
+
 
   const hasAnySelection = Object.values(mappings).some(Boolean);
 
