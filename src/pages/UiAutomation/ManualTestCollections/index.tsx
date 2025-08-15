@@ -1,4 +1,5 @@
 
+import { useNavigate } from "react-router-dom";
 
 const ManualTestCollections = () => {
   const collections = [
@@ -6,6 +7,7 @@ const ManualTestCollections = () => {
     { title: "Payment Flow", cases: 8 },
   ];
 
+const navigate = useNavigate();
   return (
     <div className="flex justify-center items-start bg-[#0E0E17] w-full max-w-5xl">
       <div className="bg-[#151526] p-6 rounded-lg border border-gray-700 w-full">
@@ -25,7 +27,7 @@ const ManualTestCollections = () => {
           ))}
         </div>
 
-        <button className="bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-md">
+        <button onClick={() => navigate("/project/testcases")} className="bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-md">
           Back
         </button>
       </div>
