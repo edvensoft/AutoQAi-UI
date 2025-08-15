@@ -13,6 +13,7 @@ import Loader from "./pages/UiAutomation/Loader/Loader.jsx";
 import Execution from "./pages/UiAutomation/UploadCases/Execution.jsx";
 import ReportPage from "./pages/UiAutomation/UploadCases/Report.jsx";
 import ColumnMapping from "./pages/UiAutomation/ColumnMapping/index.js";
+import RecentReports from "./pages/RecentReports";
 
 function App() {
 	return (
@@ -36,6 +37,10 @@ function App() {
 					<Route
 						path='/project/api-testing-suite'
 						element={<ApiTestingSuite />}
+					/>
+					<Route
+						path='/project/recent-reports'
+						element={<RecentReports />}
 					/>
 					<Route
 						path='/project/ui-automation'
