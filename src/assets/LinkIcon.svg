@@ -1,0 +1,17 @@
+<!-- LinkIcon-A.svg
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4B5563" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M10.5 13.5a4 4 0 0 0 5.657 0l2-2a4 4 0 0 0-5.657-5.657l-1 1"/>
+  <path d="M13.5 10.5a4 4 0 0 0-5.657 0l-2 2a4 4 0 0 0 5.657 5.657l1-1"/>
+</svg> -->
+<!-- LinkIcon-A.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" 
+     width="24" height="24" 
+     viewBox="0 0 24 24" 
+     fill="none" 
+     stroke="#3B82F6" 
+     stroke-width="1.8" 
+     stroke-linecap="round" 
+     stroke-linejoin="round">
+  <path d="M10.5 13.5a4 4 0 0 0 5.657 0l2-2a4 4 0 0 0-5.657-5.657l-1 1"/>
+  <path d="M13.5 10.5a4 4 0 0 0-5.657 0l-2 2a4 4 0 0 0 5.657 5.657l1-1"/>
+</svg>
