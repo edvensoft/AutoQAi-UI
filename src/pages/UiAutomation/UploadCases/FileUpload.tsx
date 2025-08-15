@@ -10,6 +10,7 @@ import TaskIcon from "@mui/icons-material/Task";
 import ClearIcon from "@mui/icons-material/Clear";
 import * as XLSX from "xlsx";
 import { useNavigate } from 'react-router-dom';
+import { useParams } from "react-router-dom";
 
 // =================== Types ===================
 interface FormValues {
@@ -64,7 +65,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
     const [webBooks, setWebBooks] = useState<WorkbookState | null>(null);
     const [showSheetSelector, setShowSheetSelector] = useState(false);
     const navigate = useNavigate();
-
+    const {projectId}=useParams()
     // ---------- Memoized values ----------
     const isError = useMemo(
       () => Object.values(formErrors).some((error) => !!error),
@@ -90,7 +91,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
       hasValue,
       onSave: () => {
         if (template) {
-          navigate("/project/ui-automation/loader", { state: { formValues } });
+          navigate(`/project/ui-automation/loader/${projectId}`, { state: { formValues } });
         }
         console.log("Save clicked", formValues, webBooks);
       },
@@ -119,7 +120,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
 
         if (!headers.length) return;
 
-        navigate("/project/ui-automation/column-mapping", {
+        navigate(`/project/ui-automation/column-mapping/${projectId}`, {
           state: {
             ...formValues,
             rows: parsedRows,
