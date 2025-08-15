@@ -2,153 +2,111 @@ import React, { useState, useEffect } from "react";
 import type { ChangeEvent } from "react";
 import ViewColumnIcon from "@mui/icons-material/ViewColumn";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import CollectionsBookmarkIcon from "@mui/icons-material/CollectionsBookmark";
 import EditIcon from "@mui/icons-material/Edit";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import CheckIcon from "@mui/icons-material/Check";
 import useMapping from "./Hooks/useMapping";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Pencil, Trash2 } from 'lucide-react';
+import { keyframes } from "@emotion/react";
 
-const labelMap = {
-  test_id: ['id', 'test id', 'testcase id'],
-  pre_condition: ['precondition', 'pre condition', 'pre-condition'],
-  steps: ['steps', 'test steps', 'procedure'],
-  expected_result: ['expected result', 'result', 'expected'],
-  description: ['description', 'testcase description', 'desc'],
-  test_data: ['testdata', 'test data', 'input data'],
-};
 
-const normalize = (str) =>
-  str.toLowerCase().replace(/[\s_-]+/g, '').trim();
 
-const requiredFields = ["Test Case Name", "Test Steps", "Expected Result", "Test Data", "Precondition"];
+let options = [
+  { label: "Select Mapping...", value: "" },
+  {
+    key: "test_id",
+    label: "Test ID",
+  },
+  {
+    key: "description",
+    label: "Description",
+  },
+  {
+    key: "steps",
+    label: "Steps",
+  },
+  {
+    key: "expected_result",
+    label: "Expected Result",
+  },
+  {
+    key: "pre_condition",
+    label: "Pre Condition",
+  },
 
-const matchBackendField = (header) => {
-  const normalizedHeader = normalize(header);
-  for (let field of requiredFields) {
-    const aliases = labelMap[field] || [];
-    if (
-      aliases.some((alias) => normalizedHeader.includes(normalize(alias)))
-    ) {
-      return field;
-    }
-  }
-  return ''; // No match
-};
+]
+
+const requiredFields = options.map((option, i) => i === 0 ? null : option?.label).filter((label) => label);
+const requiredKeys = options.map((option, i) => i === 0 ? null : option?.key).filter((key) => key);
+
 
 const ColumnMapping: React.FC = () => {
-  // const [mappings, setMappings] = useState<Record<string, string>>({});
   const [saved, setSaved] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
-
-  // const [requiredFields, requiredFields] = useState(false);
-  const [options, setOptions] = useState([]);
   const location = useLocation();
   const navigate = useNavigate();
   const {
-    file,
+   file,
+   rows,
     headers = [],
-    sheetName = '',
-    headerStarts = '',
-    mappings: passedMappings = {},
+   ...rest
   } = location.state || {};
-const [mappings, setMappings] = useState<Record<string, string>>(() => {
-    const initial = {};
-    headers.forEach((header) => {
-      if (passedMappings[header]) {
-        initial[header] = passedMappings[header];
-      } else {
-        initial[header] = matchBackendField(header);
-      }
-    });
-    return initial;
-  });
-    const { selectedFields } = useMapping(mappings);
 
-  //   const handleChange = (header, selectedBackendField) => {
-  //   setMappings({ ...mappings, [header]: selectedBackendField });
-  // };
+  const [mappings, setMappings] = useState<Record<string, string>>({ "test_id": "", "pre_condition": "", "steps": "", "expected_result": "", "description": "" });
+  const { selectedFields } = useMapping(mappings);
 
 
   useEffect(() => {
     if (!file || headers.length === 0) {
-      // toast.error('Missing file or h eader data. Please upload again.');
       navigate('/upload');
     }
-  }, [file, headers, navigate]);
+  }, [file]);
 
+  useEffect(() => {
+    if (headers?.length)
+      setMappings(Object.fromEntries(headers.map((header: string) => {
+        return [header, ""];
+      })))
+  }, [headers])
 
-  // const options = [
-  //   { value: "", label: "Select mapping..." },
-  //   { value: "Test Case Name", label: "Test Case Name" },
-  //   { value: "Test Steps", label: "Test Steps" },
-  //   { value: "Expected Result", label: "Expected Result" },
-  //   { value: "Test Data", label: "Test Data" },
-  //   { value: "Precondition", label: "Precondition" },
-  // ];
-
-
-  const allRequiredMapped = requiredFields.every((field) => Object.values(mappings).includes(field));
+  const allRequiredMapped = Object.values(mappings).every((field) => field);
 
   const hasAnySelection = Object.values(mappings).some(Boolean);
 
-  const handleChange = (field: string) => (e: ChangeEvent<HTMLSelectElement>) => {
+  const handleChange = (field: string, e: ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
-
-    // prevent duplicate mapping selection
-    if (Object.values(mappings).includes(value) && value !== mappings[field] && value !== "") {
+    if (
+      Object.values(mappings).includes(value) &&
+      value !== mappings[field] &&
+      value !== ""
+    ) {
       setError(`"${value}" has already been selected in another field.`);
       return;
     }
 
     setError("");
-    setSuccess(false); // hide success banner on any change
-    setSaved(false);   // require saving again after change
+    setSuccess(false);
+    setSaved(false);
     setMappings((prev) => ({ ...prev, [field]: value }));
   };
 
+
   const handleSave = () => {
     if (!file) {
-      // toast.error('❌ No file found to upload.');
       return;
     }
 
-    const selectedFields = Object.values(mappings).filter(
-      (v) => v && v !== 'Ignore'
-    );
-    const uniqueValues = new Set(selectedFields);
-
-    if (selectedFields.length !== uniqueValues.size) {
-      // toast.error('⚠️ Each backend field should be mapped uniquely.');
-      return;
-    }
-
-    const backendMapping = {};
-    Object.entries(mappings).forEach(([header, backendField]) => {
-      if (backendField && backendField !== 'Ignore') {
-        backendMapping[backendField] = header;
-      }
-    });
-    const requiredFields = ['test_id', 'steps', 'expected_result', 'test_data'];
-
-    requiredFields.forEach((field) => {
-      if (!backendMapping[field]) {
-        backendMapping[field] = ''; // Assign empty string if not mapped
-      }
-    });
-    if (Object.values(backendMapping).length === 0) {
-      // toast.error('❌ No valid mappings found.');
-      return;
-    }
-
-    navigate('/customloader', {
-      state: {
+let column_mapping=Object.fromEntries(Object.entries(mappings).map(([keyframes,value])=>[value,keyframes]))
+let formValues={
         file,
-        sheet_name: sheetName,
-        header_starts: headerStarts,
-        column_mapping: backendMapping,
+       ...rest,
+        column_mapping,
+      }
+
+    navigate('/project/ui-automation/loader', {
+      state: {
+       formValues
       },
     });
   };
@@ -186,16 +144,19 @@ const [mappings, setMappings] = useState<Record<string, string>>(() => {
 
         {/* Required Fields */}
         <div className="mb-2 text-white font-semibold">Required Fields</div>
+     
         <div className="bg-[#0d0d1a] p-4 rounded-md flex flex-wrap gap-2 mb-6 border border-gray-700">
           {requiredFields.map((field) => {
-            const ok = selectedFields?.includes(field);
+
+            const ok = selectedFields?.includes(options.filter((option) => option.label === field)[0]?.key);
             return (
               <span
                 key={field}
                 className={
-                  ok
-                    ? "bg-green-500/20 border border-green-500 text-green-500 px-3 py-1 rounded-full text-sm"
-                    : "bg-red-500/20 border border-red-500 text-red-500 px-3 py-1 rounded-full text-sm"
+                  field === "Pre Condition" ? "bg-blue-500/20 border border-blue-500 text-blue-500 px-3 py-1 rounded-full text-sm" :
+                    ok
+                      ? "bg-green-500/20 border border-green-500 text-green-500 px-3 py-1 rounded-full text-sm"
+                      : "bg-red-500/20 border border-red-500 text-red-500 px-3 py-1 rounded-full text-sm"
                 }
               >
                 {field} *
@@ -203,15 +164,14 @@ const [mappings, setMappings] = useState<Record<string, string>>(() => {
             );
           })}
         </div>
-
         {/* Mapping Fields */}
-        {headers.map((item) => {
-          const selectedValue = mappings[item.field] || "";
+        {headers.map((item:string) => {
+          const selectedValue = mappings[item]==="Select Mapping..."?null:  mappings[item];
           const showCheck = !!selectedValue;
 
           return (
             <div
-              key={item.field}
+              key={item}
               className="mb-6 bg-[#0d0d1a] border border-gray-700 rounded-lg p-4 flex items-center justify-between"
             >
               <div className="w-[70%] flex items-center justify-between">
@@ -222,7 +182,7 @@ const [mappings, setMappings] = useState<Record<string, string>>(() => {
                   </div>
                   <div>
                     <div className="text-white font-semibold">{item}</div>
-                    <div className="text-gray-400 text-sm">{item.col}</div>
+                    <div className="text-gray-400 text-sm">{item}</div>
                   </div>
                 </div>
 
@@ -230,31 +190,34 @@ const [mappings, setMappings] = useState<Record<string, string>>(() => {
                 <div className="flex items-center gap-2 w-[50%]">
                   <div className="relative flex-1">
                     <select
-                      value={mappings[item]}
-                      onChange={(e) => handleChange(header, e.target.value)}
+                      value={selectedValue}
+                      onChange={(e) => handleChange(item, e)}
                       disabled={saved && !!selectedValue}
                       className="appearance-none w-full bg-[#141428] border border-gray-600 text-white text-sm px-4 py-2 rounded-md pr-8"
                     >
-                      {requiredFields.map((option) => (
-                        <option key={option} value={option}>
-                          {option.replace(/_/g, ' ')}
+                      {options.map((option) => (
+                        <option key={option.key} value={option.key}>
+                          {option.label}
                         </option>
                       ))}
                     </select>
+                    
                     <KeyboardArrowDownIcon className="absolute right-3 top-2.5 text-gray-400 w-4 h-4 pointer-events-none" />
+                   
+                    {showCheck && (
+                      <span className="absolute right-[-10%] top-2.5 inline-flex items-center justify-center w-5 h-5 rounded-full bg-green-500">
+                        <CheckIcon className="w-3.5 h-3.5 text-black bg-green" style={{ fontSize: "15px" }} />
+                      </span>
+                    )}
                   </div>
 
                   {/* Filled green check */}
-                  {showCheck && (
-                    <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-green-500">
-                      <CheckIcon className="w-3.5 h-3.5 text-white" />
-                    </span>
-                  )}
+
 
                   {/* Edit (after saved) */}
                   {showCheck && saved && (
                     <button
-                      onClick={() => { setMappings((p) => ({ ...p, [item.field]: "" })); setSaved(false); setSuccess(false); }}
+                      onClick={() => { setMappings((p) => ({ ...p, [item]: "" })); setSaved(false); setSuccess(false); }}
                       className="text-white bg-blue-600 hover:bg-blue-500 text-xs font-medium px-2 py-1 rounded-md flex items-center gap-1"
                     >
                       <EditIcon className="w-4 h-4" /> Edit
@@ -268,7 +231,7 @@ const [mappings, setMappings] = useState<Record<string, string>>(() => {
 
         {/* Success banner (exact style of first image) */}
         {success && (
-          <div className="max-w-5xl mx-auto mb-4">
+          <div className="mb-4">
             <div className="flex items-start gap-3 p-4 rounded-md border border-green-600 bg-green-900/30">
               <span className="mt-0.5 inline-flex items-center justify-center w-6 h-6 rounded-full bg-green-500">
                 <CheckIcon className="w-4 h-4 text-white" />
@@ -282,7 +245,6 @@ const [mappings, setMappings] = useState<Record<string, string>>(() => {
             </div>
           </div>
         )}
-
         {/* Footer buttons */}
         <div className="flex justify-between mt-6">
           <button className="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-500 flex items-center gap-2">
@@ -290,12 +252,12 @@ const [mappings, setMappings] = useState<Record<string, string>>(() => {
           </button>
 
           <button
-            disabled={!allRequiredMapped || !saved}
+            disabled={!allRequiredMapped}
             onClick={() => {
-              if (allRequiredMapped && saved) setSuccess(true);
+              if (allRequiredMapped) handleSave()
             }}
             className={`px-4 py-2 rounded-md flex items-center gap-2
-              ${!allRequiredMapped || !saved
+              ${!allRequiredMapped
                 ? "bg-blue-600/60 text-white/80 cursor-not-allowed"
                 : "bg-blue-600 text-white hover:bg-blue-500"}`}
           >

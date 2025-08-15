@@ -21,13 +21,16 @@ function Loader() {
     hasSubmitted.current = true;
 
     const submitStandardFile = async () => {
-      const formData = new FormData();
+    
+             const formData = new FormData();
       Object.entries(formValues).map(([keyframes,value])=>{
         formData.append(keyframes,value);
       })
       // formData.append('file', f);
       formData.append('llm', '1');
       formData.append('is_custom_test_case', '0');
+      
+
 
       try {
         const response = await axios.post('http://13.203.56.29/api/testcases/', formData);

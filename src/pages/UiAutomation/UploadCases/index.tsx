@@ -24,10 +24,10 @@ export default function UploadCases({ setTestCase }: UploadCasesProps) {
   const [isEnable, setIsEnable] = useState<boolean>(false);  
   const uploadRef = useRef<FileUploadRef | null>(null);
   const navigate = useNavigate();
-
+  console.log(template,"checking")
   // This will be passed to FileUpload so it can control button state
   const setEnable = ({ isError, hasValue }: { isError: boolean; hasValue: boolean }) => {
-    console.log(isError,hasValue,"checking")
+  
     setIsEnable(!isError && hasValue);
   };
 
@@ -48,7 +48,7 @@ export default function UploadCases({ setTestCase }: UploadCasesProps) {
 
   const handleTemplateSelect = (selected: string) => {
     setTemplate(selected);
-    setTestCase(selected);
+    // setTestCase(selected);
   };
 
  
