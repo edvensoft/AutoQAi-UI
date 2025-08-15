@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import type { ChangeEvent } from "react";
 import ViewColumnIcon from "@mui/icons-material/ViewColumn";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -7,12 +7,12 @@ import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import CheckIcon from "@mui/icons-material/Check";
 import useMapping from "./Hooks/useMapping";
 import { useLocation, useNavigate } from "react-router-dom";
-import { keyframes } from "@emotion/react";
+
 
 
 
 let options = [
-  { label: "Select Mapping...", value: "" },
+  { label: "Select Mapping...", value: "",key:"" },
   {
     key: "test_id",
     label: "Test ID",
@@ -38,6 +38,7 @@ let options = [
 
 const requiredFields = options.map((option, i) => i === 0 ? null : option?.label).filter((label) => label);
 const requiredKeys = options.map((option, i) => i === 0 ? null : option?.key).filter((key) => key);
+let defaultObj={ "test_id": "", "pre_condition": "", "steps": "", "expected_result": "", "description": "" }
 
 
 const ColumnMapping: React.FC = () => {
@@ -53,7 +54,7 @@ const ColumnMapping: React.FC = () => {
    ...rest
   } = location.state || {};
 
-  const [mappings, setMappings] = useState<Record<string, string>>({ "test_id": "", "pre_condition": "", "steps": "", "expected_result": "", "description": "" });
+const [mappings, setMappings] = useState<Record<string, string>>({});
   const { selectedFields } = useMapping(mappings);
 
 
@@ -63,6 +64,8 @@ const ColumnMapping: React.FC = () => {
     }
   }, [file]);
 
+
+
   useEffect(() => {
     if (headers?.length)
       setMappings(Object.fromEntries(headers.map((header: string) => {
@@ -70,7 +73,8 @@ const ColumnMapping: React.FC = () => {
       })))
   }, [headers])
 
-  const allRequiredMapped = Object.values(mappings).every((field) => field);
+  const allRequiredMapped =requiredKeys.every((key)=>Object.values(mappings)?.includes(key));
+
 
   const hasAnySelection = Object.values(mappings).some(Boolean);
 
@@ -93,16 +97,24 @@ const ColumnMapping: React.FC = () => {
 
 
   const handleSave = () => {
+     console.log("inside")
     if (!file) {
       return;
     }
-
-let column_mapping=Object.fromEntries(Object.entries(mappings).map(([keyframes,value])=>[value,keyframes]))
-let formValues={
-        file,
-       ...rest,
-        column_mapping,
-      }
+   
+    let mappedvalues=Object.values(mappings);
+    let missedValues=requiredKeys?.filter((key)=>!mappedvalues?.includes(key));
+    let column_mapping = Object.fromEntries(Object.entries(mappings).map(([keyframes, value]) => [value, keyframes]));
+    if (missedValues.length > 0) {
+      missedValues.forEach((key) => {
+        column_mapping[key] = ""
+      })
+    }
+    let formValues = {
+      file,
+      ...rest,
+      column_mapping,
+    }
 
     navigate('/project/ui-automation/loader', {
       state: {
@@ -147,8 +159,8 @@ let formValues={
      
         <div className="bg-[#0d0d1a] p-4 rounded-md flex flex-wrap gap-2 mb-6 border border-gray-700">
           {requiredFields.map((field) => {
-
-            const ok = selectedFields?.includes(options.filter((option) => option.label === field)[0]?.key);
+         const key = options.find(option => option.label === field)?.key ?? "";
+          const ok = selectedFields?.selected?.includes(key) ?? false;
             return (
               <span
                 key={field}
@@ -204,7 +216,7 @@ let formValues={
                     
                     <KeyboardArrowDownIcon className="absolute right-3 top-2.5 text-gray-400 w-4 h-4 pointer-events-none" />
                    
-                    {showCheck && (
+                    {!selectedFields?.mappedFields?.includes(item) && (
                       <span className="absolute right-[-10%] top-2.5 inline-flex items-center justify-center w-5 h-5 rounded-full bg-green-500">
                         <CheckIcon className="w-3.5 h-3.5 text-black bg-green" style={{ fontSize: "15px" }} />
                       </span>
@@ -246,18 +258,20 @@ let formValues={
           </div>
         )}
         {/* Footer buttons */}
-        <div className="flex justify-between mt-6">
-          <button className="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-500 flex items-center gap-2">
+        <div className="flex justify-between mt-6" >
+          <button className="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-500 flex items-center gap-2" onClick={()=>{
+          navigate("/testcases",{state:{from:"column-mapping"}})
+        }}>
             <ArrowBackIosNewIcon className="w-4 h-4" /> Back
           </button>
 
           <button
-            disabled={!allRequiredMapped}
+            disabled={ !selectedFields?.mappedFields?.length?false:!allRequiredMapped}
             onClick={() => {
-              if (allRequiredMapped) handleSave()
+              if (!selectedFields?.mappedFields?.length||allRequiredMapped) handleSave()
             }}
             className={`px-4 py-2 rounded-md flex items-center gap-2
-              ${!allRequiredMapped
+              ${!selectedFields?.mappedFields?.length?false:!allRequiredMapped
                 ? "bg-blue-600/60 text-white/80 cursor-not-allowed"
                 : "bg-blue-600 text-white hover:bg-blue-500"}`}
           >

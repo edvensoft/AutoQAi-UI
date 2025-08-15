@@ -1,12 +1,14 @@
 import LinkIcon  from '../../assets/LinkIcon.svg';
 import FolderIcon  from '../../assets/FolderIcon.png';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import UploadCases from './UploadCases';
 import ManualTestCollections from './ManualTestCollections';
+import { useLocation } from 'react-router-dom';
 
 export default function TestCaseOptions() {
   const [testCase, setTestCase] = useState("");
+  const location=useLocation();
 
   const options = [
     {
@@ -27,6 +29,13 @@ export default function TestCaseOptions() {
       description: "Select from existing manual test case collections",
     },
   ];
+
+  useEffect(() => {
+    if(location?.state?.from==="column-mapping"){
+      setTestCase("Upload Cases");
+    }    
+  }, [])
+  
 
   return (
     <>

@@ -13,6 +13,7 @@ import Loader from "./pages/UiAutomation/Loader/Loader.jsx";
 import Execution from "./pages/UiAutomation/UploadCases/Execution.jsx";
 import ReportPage from "./pages/UiAutomation/UploadCases/Report.jsx";
 import ColumnMapping from "./pages/UiAutomation/ColumnMapping/index.js";
+import RecentReports from "./pages/RecentReports";
 import ListOfApis from "./pages/ApiTestingSuite/ListOfApis";
 import CodeReview from "./pages/ApiTestingSuite/CodeReview";
 import TestDataReview from "./pages/ApiTestingSuite/TestDataReview";
@@ -41,6 +42,10 @@ function App() {
 					<Route
 						path='/project/api-testing-suite'
 						element={<ApiTestingSuite />}
+					/>
+					<Route
+						path='/project/recent-reports'
+						element={<RecentReports />}
 					/>
 					<Route
 						path='/project/api-testing-suite/api-list/:projectId'

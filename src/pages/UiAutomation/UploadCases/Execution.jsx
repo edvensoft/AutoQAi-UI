@@ -21,11 +21,11 @@ const Execution = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-white to-purple-100 flex flex-col items-center justify-center px-4">
-      <div className="bg-white shadow-xl rounded-2xl p-10 w-full max-w-xl text-center">
+    <div className="bg-gradient-to-br from-black-100 via-black to-black-100 flex flex-col items-center justify-center px-4">
+      <div className="bg-black shadow-xl border border-gray-500 rounded-2xl p-10 w-full max-w-xl text-center">
         <CheckCircle className="mx-auto text-green-500 animate-bounce mb-4" size={48} />
-        <h2 className="text-2xl font-bold text-gray-800 mb-2">Execution Completed Successfully</h2>
-        <p className="text-gray-600 mb-8">All test cases have been executed. You can now view the detailed report.</p>
+        <h2 className="text-2xl font-bold text-white-800 mb-2">Execution Completed Successfully</h2>
+        <p className="text-gray-400 mb-8">All test cases have been executed. You can now view the detailed report.</p>
 
         <div className="flex flex-col items-center gap-4">
           <button
@@ -36,7 +36,10 @@ const Execution = () => {
           </button>
 
           <button
-            onClick={() => navigate('/upload')}
+            onClick={() => {
+              navigate("/testcases",{state:{from:"column-mapping"}})
+              // navigate('/upload')
+            }}
             className="inline-flex items-center gap-2 px-5 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition"
           >
             <ArrowLeft size={18} />

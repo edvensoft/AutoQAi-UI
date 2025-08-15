@@ -2,11 +2,18 @@ import DescriptionIcon from "@mui/icons-material/Description";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { Settings } from "lucide-react";
-import { useState, useRef, type JSX } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useRef, type JSX, createContext } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import FileUpload from "./FileUpload";
 import StandardTemplate from "./StandardTemplate";
 import type { FileUploadRef } from "./FileUpload";
+
+interface MyContextType {
+  template: string;
+  setTemplate: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export const UploadTestCaseContext = createContext<MyContextType | undefined>(undefined);
 
 interface UploadCasesProps {
    setTestCase: (val:string) => void;
@@ -24,7 +31,8 @@ export default function UploadCases({ setTestCase }: UploadCasesProps) {
   const [isEnable, setIsEnable] = useState<boolean>(false);  
   const uploadRef = useRef<FileUploadRef | null>(null);
   const navigate = useNavigate();
-  console.log(template,"checking")
+  const location=useLocation();
+ 
   // This will be passed to FileUpload so it can control button state
   const setEnable = ({ isError, hasValue }: { isError: boolean; hasValue: boolean }) => {
   
@@ -54,7 +62,8 @@ export default function UploadCases({ setTestCase }: UploadCasesProps) {
  
 
   return (
-    <div className="bg-[#1A1B2E] rounded-lg p-8 w-full max-w-5xl border border-white/20 shadow-lg">
+    <UploadTestCaseContext.Provider value={{template,setTemplate}}>
+       <div className="bg-[#1A1B2E] rounded-lg p-8 w-full max-w-5xl border border-white/20 shadow-lg">
       <h1 className="text-white text-2xl font-semibold mb-4">Upload Test Cases</h1>
       <h2 className="text-white text-lg font-medium mb-2">Select Template Type</h2>
       <p className="text-gray-400 mb-8">
@@ -90,7 +99,19 @@ export default function UploadCases({ setTestCase }: UploadCasesProps) {
       {/* Navigation Buttons */}
       <div className="flex justify-between">
         <button
-          onClick={() => navigate("/testcases")}
+            onClick={() => {
+              setTestCase("");
+              if (location?.state?.from) {
+                navigate(location.pathname, {
+                  state: {
+                    ...location?.state, // keep existing state
+                    from: "", // add or update
+                  },
+                  replace: true, // prevents adding a new entry to history
+                });
+              }
+              
+            }}
           className="flex items-center gap-2 bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-md"
         >
           <ArrowBackIcon /> Back
@@ -115,5 +136,7 @@ export default function UploadCases({ setTestCase }: UploadCasesProps) {
         </button>
       </div>
     </div>
+    </UploadTestCaseContext.Provider>
+   
   );
 }
