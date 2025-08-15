@@ -12,7 +12,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 
 let options = [
-  { label: "Select Mapping...", value: "",key:"" },
+  { label: "Select Mapping...",key:"" },
+  {label:"Test Data", key:"test_data"},
   {
     key: "test_id",
     label: "Test ID",
@@ -73,7 +74,7 @@ const [mappings, setMappings] = useState<Record<string, string>>({});
       })))
   }, [headers])
 
-  const allRequiredMapped =requiredKeys.every((key)=>Object.values(mappings)?.includes(key));
+  const allRequiredMapped =requiredKeys.every((key)=>key==="test_data"?true:Object.values(mappings)?.includes(key));
 
 
   const hasAnySelection = Object.values(mappings).some(Boolean);

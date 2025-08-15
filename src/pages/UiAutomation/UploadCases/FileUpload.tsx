@@ -73,8 +73,8 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
 
     const hasValue = useMemo(
       () =>
-        Object.values(formValues).every(
-          (value) => value !== null && value !== ""
+        Object.entries(formValues).every(
+          ([key,value]) => template==="Standard Template"&&(key==="sheet_name"||key==="header_starts")?true:value !== null && value !== ""
         ),
       [formValues]
     );
@@ -131,7 +131,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
 console.log(webBooks,"webbooks")
     // ---------- Validation ----------
     const validateExcelSheetName = (name: string): string | null => {
-      if (!name.trim()) return "Sheet name cannot be empty or only spaces.";
+      // if (!name.trim()) return "Sheet name cannot be empty or only spaces.";
       if (name.length > 31) return "Sheet name cannot exceed 31 characters.";
       if (/[\\\/\?\*\[\]:]/.test(name))
         return "Sheet name cannot contain \\ / ? * [ ] : characters.";

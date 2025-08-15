@@ -59,7 +59,7 @@ export default function UploadCases({ setTestCase }: UploadCasesProps) {
     // setTestCase(selected);
   };
 
- 
+      console.log(isEnable,"isEnable")
 
   return (
     <UploadTestCaseContext.Provider value={{template,setTemplate}}>
@@ -97,7 +97,9 @@ export default function UploadCases({ setTestCase }: UploadCasesProps) {
       <hr className="my-6 border-gray-700" />
 
       {/* Navigation Buttons */}
+   
       <div className="flex justify-between">
+        
         <button
             onClick={() => {
               setTestCase("");
@@ -131,6 +133,7 @@ export default function UploadCases({ setTestCase }: UploadCasesProps) {
             !isEnable ? "bg-gray-500 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-500 text-white"
           }`}
         >
+        
           {template === "Standard Template" ? "Save & Execute" : "Next"}
           {template !== "Standard Template" && <ArrowForwardIcon />}
         </button>
