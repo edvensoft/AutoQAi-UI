@@ -91,14 +91,21 @@ const ListOfApis = () => {
         try {
             setLoading(true);
             // const response = await axios.get(`${API_URL}/v1/api/projects/get-apis/0dded977-6d16-4f8b-bff0-12771a92f08d/`);
-            const response = await axios.get(`${API_URL}/v1/api/projects/get-apis/${projectId}/`);
+            // const response = await axios.get(`${API_URL}/v1/api/projects/get-apis/${projectId}/`);
 
-            console.log('Fetched APIs:', response);
-            if (response?.data?.response && response?.data?.response.length > 0) {
-                setAllApis(response.data.response);
-                setTotalPages(Math.ceil(response.data.response.length / noApisPerPage));
-            }
-            // navigate('/api-code-review');
+            axios.get(`${API_URL}/v1/api/projects/get-apis/${projectId}/`).then((response)=>{
+                console.log('Fetched APIs:', response);
+            }).catch(e=>{
+                console.log('Fetched APIs:', e);
+                setError(e.response.data.error)
+            })
+
+            // console.log('Fetched APIs:', response);
+            // if (response?.data?.response && response?.data?.response.length > 0) {
+            //     setAllApis(response.data.response);
+            //     setTotalPages(Math.ceil(response.data.response.length / noApisPerPage));
+            // }
+            
         } catch (err) {
             console.error('Error fetching users:', err);
             setError('Failed to fetch users');
@@ -184,6 +191,12 @@ const ListOfApis = () => {
                         loading ?
                             <div className="h-60 flex justify-center items-center">
                                 <CircularProgress size="3rem" />
+                            </div>
+                            :
+                            error ?
+                            <div className='flex justify-center items-center h-40'>
+                                
+                                <h3 className='text-red-500'>{error}</h3>
                             </div>
                             :
                             <>

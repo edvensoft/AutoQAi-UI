@@ -1,25 +1,46 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ModalWithTestCases from "./components/ModalWithTestCases";
 import type { RootState } from "@/redux/store";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import SendIcon from "@mui/icons-material/Send";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { API_URL } from "@/config";
+import { setTestCases } from "@/redux/collectionsSlice";
+
+// type TestCases = {
+// 	id: string;
+// 	test_case_id: string;
+// 	name: string;
+// 	steps: string;
+// 	expected_output: string;
+// }
 
 export default function TestCaseGenerator() {
 	const [openModal, setOpenModal] = useState(false);
+	// const [testCases, setTestCases] = useState<TestCases[]>([])
+
 	const collections = useSelector((state: RootState) => state.collections.list);
+	const testCases = useSelector((state: RootState) => state.collections.testCases);
+
 	const activeCollectionId = useSelector(
 		(state: RootState) => state.collections.activeCollectionId,
 	);
 	const activeCollection = collections.find((c) => c.id === activeCollectionId);
 	const [input, setInput] = useState("");
+	const dispatch = useDispatch();
+
+
 	type Message = {
 		type: "user" | "system";
 		text: string;
 		loading?: boolean;
 		showCTA?: boolean;
+		error?: string | '';
 	};
 	const [messages, setMessages] = useState<Message[]>([]);
+
+
 
 	const handleSend = () => {
 		if (!input.trim()) return;
@@ -34,20 +55,144 @@ export default function TestCaseGenerator() {
 		setMessages((prev) => [...prev, userMessage, loaderMessage]);
 		setInput("");
 
+
+		const formData = new FormData();
+
+		formData.append('collection_id', '0c32be2e-c485-4aa2-b3fa-3783ab831e4a');
+		formData.append('user_message', input);
+		formData.append('filepath', 'null');
+
+
+
+		// for (const [key, value] of formData.entries()) {
+		// 	console.log(`${key}: ${value}`);
+		// }
+
+		axios.post(`${API_URL}/v1/api/test-cases/generate-test-cases/`, formData).then(
+			response => {
+				console.log('res', response)
+				setMessages((prev) => {
+					const updated = [...prev];
+					// Replace loader
+					updated[updated.length - 1] = {
+						type: "system",
+						text: "Test cases generated successfully! Click to view and edit.",
+						showCTA: true,
+					};
+					return updated;
+				});
+				dispatch(setTestCases(response.data.response.test_cases))
+			}
+		).catch(e => {
+			console.log('err', e)
+			if (e.status === 500) {
+				setMessages((prev) => {
+					const updated = [...prev];
+					// Replace loader
+					updated[updated.length - 1] = {
+						type: "system",
+						text: "Test cases generated successfully! Click to view and edit.",
+						error: 'Please try after some time',
+					};
+					return updated;
+				});
+			} else {
+				setMessages((prev) => {
+					const updated = [...prev];
+					// Replace loader
+					updated[updated.length - 1] = {
+						type: "system",
+						text: "Test cases generated successfully! Click to view and edit.",
+						error: e.response.data,
+					};
+					return updated;
+				});
+			}
+
+		})
+
+
 		// Simulate API delay
-		setTimeout(() => {
-			setMessages((prev) => {
-				const updated = [...prev];
-				// Replace loader
-				updated[updated.length - 1] = {
-					type: "system",
-					text: "Test cases generated successfully! Click to view and edit.",
-					showCTA: true,
-				};
-				return updated;
-			});
-		}, 2000); // 2-second delay
+		// setTimeout(() => {
+		// 	setMessages((prev) => {
+		// 		const updated = [...prev];
+		// 		// Replace loader
+		// 		updated[updated.length - 1] = {
+		// 			type: "system",
+		// 			text: "Test cases generated successfully! Click to view and edit.",
+		// 			showCTA: true,
+		// 		};
+		// 		return updated;
+		// 	});
+		// }, 2000); // 2-second delay
 	};
+
+	const getChatByCollection = () => {
+		const userMessage: Message = { type: "user", text: 'Generating' };
+		const loaderMessage: Message = {
+			type: "system",
+			text: "Generating test cases...",
+			loading: true,
+		};
+		setMessages(() => [userMessage, loaderMessage]);
+
+		axios.get(`${API_URL}/v1/api/test-cases/get-chat/${activeCollectionId}/`).then(
+			response => {
+				console.log('responseChats', response)
+				if (response.status === 200) {
+					setMessages((prev) => {
+						const updated = [...prev];
+						//replace message
+						updated[updated.length - 2] = {
+							type: "user",
+							text: response.data.response.user_message,
+							// showCTA: true,
+						};
+						// Replace loader
+						updated[updated.length - 1] = {
+							type: "system",
+							text: "Test cases generated successfully! Click to view and edit.",
+							showCTA: true,
+						};
+						return updated;
+					});
+					dispatch(setTestCases(response.data.response.test_cases))
+				}
+			}
+		).catch(err => {
+			console.log('error', err)
+			if (err.response.data.error === "No test cases found for this collection") {
+				console.log('incoming')
+				setMessages((prev) => {
+					const updated = [...prev];
+					//replace message
+					updated[updated.length - 2] = {
+						type: "user",
+						text: '',
+						// error: 'No test cases found for this collection',
+					};
+
+					// Replace loader
+					updated[updated.length - 1] = {
+						type: "system",
+						text: "Test cases generated successfully! Click to view and edit.",
+						error: "No test cases found for this collection",
+					};
+					return updated;
+				});
+			}
+			// 
+		})
+	}
+
+	console.log('mess', messages, activeCollectionId)
+
+	useEffect(() => {
+		if (activeCollectionId) {
+			getChatByCollection()
+
+		}
+	}, [activeCollectionId])
 
 	return (
 		<>
@@ -76,14 +221,18 @@ export default function TestCaseGenerator() {
 				{messages.map((msg, index) => (
 					<div
 						key={index}
-						className={`flex ${
-							msg.type === "user" ? "justify-end" : "justify-start"
-						}`}>
-						<div
-							className={`p-3 rounded max-w-xs ${
-								msg.type === "user" ? "bg-gray-700 text-right" : "bg-blue-700"
+						className={`flex ${msg.type === "user" ? "justify-end" : "justify-start"
 							}`}>
-							<p>{msg.text}</p>
+						<div
+							className={`p-3 rounded max-w-xs ${msg.type === "user" && msg.text === '' ?'bg-inherit':msg.type === "user"?"bg-gray-700 text-right" : "bg-blue-700"
+								}`}>
+							{
+								msg.error?.length > 0 ?
+									<p className="text-red-500">{msg.error}</p>
+									:
+									<p>{msg.text}</p>
+							}
+
 							{msg.loading && (
 								<p className='text-xs text-gray-300 animate-pulse mt-1'>
 									⏳ Loading...
@@ -91,16 +240,16 @@ export default function TestCaseGenerator() {
 							)}
 							{msg.showCTA && (
 								<button
-									className={`mt-2 text-sm underline text-white hover:text-blue-200${
-										!activeCollection
-											? " pointer-events-none opacity-50 cursor-not-allowed"
-											: ""
-									}`}
+									className={`mt-2 text-sm underline text-white hover:text-blue-200${!activeCollection
+										? " pointer-events-none opacity-50 cursor-not-allowed"
+										: ""
+										}`}
 									disabled={!activeCollection}
 									onClick={() => activeCollection && setOpenModal(true)}>
 									View Test Cases
 								</button>
 							)}
+
 						</div>
 					</div>
 				))}
@@ -108,11 +257,10 @@ export default function TestCaseGenerator() {
 
 			{/* Footer Input */}
 			<div
-				className={`w-full border-t border-gray-700 px-6 py-4 max-w-full${
-					!activeCollection
-						? " pointer-events-none opacity-50 cursor-not-allowed"
-						: ""
-				}`}>
+				className={`w-full border-t border-gray-700 px-6 py-4 max-w-full${!activeCollection
+					? " pointer-events-none opacity-50 cursor-not-allowed"
+					: ""
+					}`}>
 				<div className='w-full  px-6 py-4'>
 					<div className='relative flex items-start gap-3'>
 						{/* Textarea with icon inside */}
@@ -143,6 +291,8 @@ export default function TestCaseGenerator() {
 			</div>
 			<ModalWithTestCases
 				open={openModal}
+				// testCases={testCases}
+				// setTestCases={setTestCases}
 				onClose={() => setOpenModal(false)}
 				collectionId={activeCollectionId}
 			/>

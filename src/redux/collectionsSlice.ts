@@ -7,13 +7,23 @@ interface Collection {
   name: string;
 }
 
+type TestCases = {
+	id: string;
+	test_case_id: string;
+	name: string;
+	steps: string;
+	expected_output: string;
+}
+
 interface CollectionsState {
   list: Collection[];
+  testCases:TestCases[],
   activeCollectionId: string | null;
 }
 
 const initialState: CollectionsState = {
   list: [],
+  testCases:[],
   activeCollectionId: null,
 };
 
@@ -24,6 +34,13 @@ const collectionsSlice = createSlice({
     addCollection: (state, action: PayloadAction<Collection>) => {
       state.list.push(action.payload);
       state.activeCollectionId = action.payload.id;
+
+    },
+    setCollections:(state, action: PayloadAction<Collection[]>)=>{
+      state.list = action.payload;
+    },
+    setTestCases:(state, action: PayloadAction<TestCases[]>)=>{
+      state.testCases = action.payload;
     },
     setActiveCollection: (state, action: PayloadAction<string | null>) => {
       state.activeCollectionId = action.payload;
@@ -31,5 +48,5 @@ const collectionsSlice = createSlice({
   },
 });
 
-export const { addCollection, setActiveCollection } = collectionsSlice.actions;
+export const { addCollection, setActiveCollection,setCollections,setTestCases } = collectionsSlice.actions;
 export default collectionsSlice.reducer;

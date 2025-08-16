@@ -3,7 +3,7 @@ import CustomeLinkIcon from '@/assets/customeIcons/CustomeLinkIcon'
 import CustomeTerminalIcon from '@/assets/customeIcons/CustomeTerminalIcon'
 import CustomeUploadIcon from '@/assets/customeIcons/CustomeUploadIcon'
 import React, { useRef, useState, type DragEvent } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 const ApiTesingOptions = () => {
     const [activeFormate, setActiveFormate] = useState<number | null>(null)
@@ -15,6 +15,8 @@ const ApiTesingOptions = () => {
 
     const uploadRef = useRef<HTMLInputElement>(null);
     const navigate = useNavigate();
+
+    const { projectId } = useParams();
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 
@@ -108,7 +110,8 @@ const ApiTesingOptions = () => {
         } else if ((activeFormate === 0 || activeFormate === 2) && url) {
             console.log('url submit')
             console.log('validate url', validateUrl(url))
-            navigate(`/project/api-testing-suite/api-list/${'e2c9d5d5-1a93-4c78-b7ad-47a284a4ce84'}`)
+            navigate(`/project/api-testing-suite/api-list/${projectId}`)
+            // navigate(`/project/api-testing-suite/api-list/${'e2c9d5d5-1a93-4c78-b7ad-47a284a4ce84'}`)
 
         } else if ((activeFormate === 0) && !url) {
             alert('Please provide JSON end point to proceed...')
