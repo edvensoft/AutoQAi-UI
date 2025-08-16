@@ -707,7 +707,7 @@ const Projects = () => {
         {projects.map((project) => (
           <div
             key={project.id}
-            onClick={() => navigate("/project/ui-automation")}
+            onClick={() => navigate(`/project/ui-automation/${project.id}`)}
             className="bg-[#1e1e2e] rounded-lg p-5 shadow border border-gray-700 flex flex-col justify-between 
             hover:border-blue-500 hover:-translate-y-1 transition-all duration-200 cursor-pointer"
           >

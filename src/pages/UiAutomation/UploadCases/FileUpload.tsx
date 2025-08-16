@@ -10,6 +10,7 @@ import TaskIcon from "@mui/icons-material/Task";
 import ClearIcon from "@mui/icons-material/Clear";
 import * as XLSX from "xlsx";
 import { useNavigate } from 'react-router-dom';
+import { useParams } from "react-router-dom";
 
 // =================== Types ===================
 interface FormValues {
@@ -64,7 +65,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
     const [webBooks, setWebBooks] = useState<WorkbookState | null>(null);
     const [showSheetSelector, setShowSheetSelector] = useState(false);
     const navigate = useNavigate();
-
+    const {projectId}=useParams()
     // ---------- Memoized values ----------
     const isError = useMemo(
       () => Object.values(formErrors).some((error) => !!error),
@@ -73,8 +74,8 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
 
     const hasValue = useMemo(
       () =>
-        Object.values(formValues).every(
-          (value) => value !== null && value !== ""
+        Object.entries(formValues).every(
+          ([key,value]) => template==="Standard Template"&&(key==="sheet_name"||key==="header_starts")?true:value !== null && value !== ""
         ),
       [formValues]
     );
@@ -90,7 +91,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
       hasValue,
       onSave: () => {
         if (template) {
-          navigate("/project/ui-automation/loader", { state: { formValues } });
+          navigate(`/project/ui-automation/loader/${projectId}`, { state: { formValues } });
         }
         console.log("Save clicked", formValues, webBooks);
       },
@@ -119,7 +120,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
 
         if (!headers.length) return;
 
-        navigate("/project/ui-automation/column-mapping", {
+        navigate(`/project/ui-automation/column-mapping/${projectId}`, {
           state: {
             ...formValues,
             rows: parsedRows,
@@ -131,7 +132,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
 console.log(webBooks,"webbooks")
     // ---------- Validation ----------
     const validateExcelSheetName = (name: string): string | null => {
-      if (!name.trim()) return "Sheet name cannot be empty or only spaces.";
+      // if (!name.trim()) return "Sheet name cannot be empty or only spaces.";
       if (name.length > 31) return "Sheet name cannot exceed 31 characters.";
       if (/[\\\/\?\*\[\]:]/.test(name))
         return "Sheet name cannot contain \\ / ? * [ ] : characters.";
