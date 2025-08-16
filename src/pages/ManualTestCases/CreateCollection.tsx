@@ -8,10 +8,14 @@ import { useState } from "react";
 
 import { useDispatch } from "react-redux";
 import { addCollection } from "../../redux/collectionsSlice";
+import axios from "axios";
+import { API_URL } from "@/config";
 
 export default function CreateCollection() {
 	const [isOpen, setIsOpen] = useState(false);
 	const [collectionName, setCollectionName] = useState("");
+	const [inputError, setInputError] = useState("");
+
 	const dispatch = useDispatch();
 
 	function closeModal() {
@@ -20,6 +24,38 @@ export default function CreateCollection() {
 
 	function openModal() {
 		setIsOpen(true);
+	}
+
+	function handleCreateCollection() {
+		if (!collectionName) {
+			setInputError("Please enter collection name")
+		}
+
+		if (collectionName.trim()) {
+			let payload = {
+				"user_id": "1",
+				"project_id": "0c32be2e-c485-4aa2-b3fa-3783ab831e4a",
+				"name": collectionName
+			}
+			axios.post(`${API_URL}/v1/api/test-cases/create-collection/`, payload).then(
+				(resp) => {
+					console.log('resp', resp)
+					if (resp.data) {
+						console.log('resp', resp)
+						dispatch(
+							addCollection({
+								id: resp.data.collection_id,
+								name: collectionName.trim(),
+							}),
+						);
+
+						setCollectionName("");
+						setIsOpen(false)
+					}
+				}
+			)
+		}
+
 	}
 
 	return (
@@ -59,10 +95,14 @@ export default function CreateCollection() {
 									id='collection-name'
 									name='collection-name'
 									value={collectionName}
+									onFocus={() => setInputError('')}
 									onChange={(e) => setCollectionName(e.target.value)}
 									placeholder='Enter a name for your test collection'
-									className='w-full p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500'
+									className={`w-full p-2 rounded border ${inputError.length > 0 ? 'border-red-500' : 'border-gray-300 '} focus:outline-none mb-0 focus:ring-2 focus:ring-blue-500`}
 								/>
+								{
+									inputError.length > 0 && <p className="text-red-500">{inputError}</p>
+								}
 
 								{/* Action Buttons */}
 								<div className='flex justify-end gap-3 pt-2'>
@@ -74,18 +114,7 @@ export default function CreateCollection() {
 									</button>
 									<button
 										type='button'
-										onClick={() => {
-											if (collectionName.trim()) {
-												dispatch(
-													addCollection({
-														id: Date.now().toString(),
-														name: collectionName.trim(),
-													}),
-												);
-												setCollectionName("");
-												setIsOpen(false);
-											}
-										}}
+										onClick={handleCreateCollection}
 										className='px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700  cursor-pointer transition'>
 										Create
 									</button>

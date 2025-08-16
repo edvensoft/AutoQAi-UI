@@ -40,7 +40,7 @@ function App() {
 				{/* Project details with sidebar */}
 				<Route element={<MainLayout />}>
 					<Route
-						path='/project/api-testing-suite'
+						path='/project/api-testing-suite/:projectId'
 						element={<ApiTestingSuite />}
 					/>
 					<Route
