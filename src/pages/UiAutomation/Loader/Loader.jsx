@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { API_URL } from '@/config';
 // import { toast } from 'react-toastify';
@@ -7,6 +7,7 @@ import { API_URL } from '@/config';
 function Loader() {
   const location = useLocation();
   const navigate = useNavigate();
+  const {projectId}=useParams()
   const hasSubmitted = useRef(false);
 
   useEffect(() => {
@@ -30,7 +31,7 @@ function Loader() {
       })
       // formData.append('file', f);
       // formData.append("test_data","")
-      formData.append("project_id","e2c9d5d5-1a93-4c78-b7ad-47a284a4ce84")
+      formData.append("project_id",projectId)
       formData.append('llm', '1');
       formData.append('is_custom_test_case', formValues?.column_mapping?"1":"0");
       
@@ -41,7 +42,7 @@ function Loader() {
         const testResult = response.data; // make sure your API returns the test data
 
         // toast.success('✅ File uploaded successfully!');
-        navigate('/project/ui-automation/execution', { state: { testResult } }); // pass result to execution
+        navigate(`/project/ui-automation/execution/${projectId}`, { state: { testResult } }); // pass result to execution
       } catch (error) {
         // toast.error('❌ Upload failed!');
         // navigate('/');

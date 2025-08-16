@@ -6,13 +6,14 @@ import EditIcon from "@mui/icons-material/Edit";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import CheckIcon from "@mui/icons-material/Check";
 import useMapping from "./Hooks/useMapping";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 
 
 
 let options = [
-  { label: "Select Mapping...", value: "",key:"" },
+  { label: "Select Mapping...",key:"" },
+  {label:"Test Data", key:"test_data"},
   {
     key: "test_id",
     label: "Test ID",
@@ -56,6 +57,7 @@ const ColumnMapping: React.FC = () => {
 
 const [mappings, setMappings] = useState<Record<string, string>>({});
   const { selectedFields } = useMapping(mappings);
+  const {projectId}=useParams()
 
 
   useEffect(() => {
@@ -73,7 +75,7 @@ const [mappings, setMappings] = useState<Record<string, string>>({});
       })))
   }, [headers])
 
-  const allRequiredMapped =requiredKeys.every((key)=>Object.values(mappings)?.includes(key));
+  const allRequiredMapped =requiredKeys.every((key)=>key==="test_data"?true:Object.values(mappings)?.includes(key));
 
 
   const hasAnySelection = Object.values(mappings).some(Boolean);
@@ -116,7 +118,7 @@ const [mappings, setMappings] = useState<Record<string, string>>({});
       column_mapping,
     }
 
-    navigate('/project/ui-automation/loader', {
+    navigate(`/project/ui-automation/loader/${projectId}`, {
       state: {
        formValues
       },

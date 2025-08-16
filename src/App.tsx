@@ -44,7 +44,7 @@ function App() {
 						element={<ApiTestingSuite />}
 					/>
 					<Route
-						path='/project/recent-reports'
+						path='/project/recent-reports/:projectId'
 						element={<RecentReports />}
 					/>
 					<Route
@@ -68,23 +68,23 @@ function App() {
 						element={<ExecutionLoader />}
 					/> */}
 					<Route
-						path='/project/ui-automation'
+						path='/project/ui-automation/:projectId'
 						element={<UiAutomation />}
 					/>
 						<Route
-						path='/project/ui-automation/loader'
+						path='/project/ui-automation/loader/:projectId'
 						element={<Loader />}
 					/>
 					<Route
-						path='/project/ui-automation/execution'
+						path='/project/ui-automation/execution/:projectId'
 						element={<Execution />}
 					/>
 					<Route
-						path='/project/ui-automation/report'
+						path='/project/ui-automation/report/:projectId'
 						element={<ReportPage />}
 					/>
 						<Route
-						path='/project/ui-automation/column-mapping'
+						path='/project/ui-automation/column-mapping/:projectId'
 						element={<ColumnMapping />}
 					/>
 					<Route
@@ -96,7 +96,7 @@ function App() {
 						element={<DatabaseTesting />}
 					/>
 					<Route
-						path='/testcases'
+						path='/testcases/:projectId'
 						element={<Index />}
 					/>
 				</Route>
