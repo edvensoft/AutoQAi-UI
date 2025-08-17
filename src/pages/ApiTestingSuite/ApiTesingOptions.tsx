@@ -7,7 +7,7 @@ import type { RootState } from '@/redux/store'
 import axios from 'axios'
 import React, { useRef, useState, type DragEvent } from 'react'
 import { useSelector } from 'react-redux'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, } from 'react-router-dom'
 
 const ApiTesingOptions = () => {
     const [activeFormate, setActiveFormate] = useState<number | null>(null)
@@ -107,7 +107,7 @@ const ApiTesingOptions = () => {
 
 
     const handleSubmit = () => {
-        // setIsSubmitting(true)
+        setIsSubmitting(true)
         if (activeFormate === 1 && file) {
             console.log('file submit')
 
@@ -168,8 +168,12 @@ const ApiTesingOptions = () => {
             const url = match[2];
             try {
                 const parsed = new URL(url);
+                if (parsed) { return true }
+                else {
+                    return false
+                }
 
-                return true
+                // return true
             } catch (e) {
 
                 return false

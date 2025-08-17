@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect,  useState } from 'react'
 import TestCaseHeader from './components/TestCaseHeader'
-import { useDispatch, useSelector } from 'react-redux';
-import { nextStep } from '@/redux/apiTestingSlice';
-import { useNavigate, useParams } from 'react-router-dom';
+import {  useSelector } from 'react-redux';
+// import { nextStep } from '@/redux/apiTestingSlice';
+import { useNavigate, } from 'react-router-dom';
 import axios from 'axios';
 import { API_URL } from '@/config';
 import { CircularProgress } from '@mui/material';
@@ -27,7 +27,7 @@ interface Data {
 }
 
 const TestExecution = () => {
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
 
     const [selectedApis, setSelectedApis] = useState<any | []>([]);
     const [loading, setLoading] = useState<boolean>(false);
@@ -151,6 +151,10 @@ const TestExecution = () => {
                         loading ?
                             <div className="h-60 flex justify-center items-center">
                                 <CircularProgress size="3rem" />
+                            </div>
+                            : error && error.length >0 ?
+                            <div className="h-60 flex justify-center items-center">
+                                <div className="text-red-500">{error}</div>
                             </div>
                             :
                             <ExecutionTable

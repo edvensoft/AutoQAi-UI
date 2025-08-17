@@ -18,7 +18,7 @@ import ListOfApis from "./pages/ApiTestingSuite/ListOfApis";
 import CodeReview from "./pages/ApiTestingSuite/CodeReview";
 import TestDataReview from "./pages/ApiTestingSuite/TestDataReview";
 import TestExecution from "./pages/ApiTestingSuite/TestExecution";
-import ExecutionLoader from "./pages/ApiTestingSuite/ExecutionLoader";
+
 
 function App() {
 	return (

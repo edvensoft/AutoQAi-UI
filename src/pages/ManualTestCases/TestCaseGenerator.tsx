@@ -21,7 +21,7 @@ export default function TestCaseGenerator() {
 	// const [testCases, setTestCases] = useState<TestCases[]>([])
 
 	const collections = useSelector((state: RootState) => state.collections.list);
-	const testCases = useSelector((state: RootState) => state.collections.testCases);
+	// const testCases = useSelector((state: RootState) => state.collections.testCases);
 
 	const activeCollectionId = useSelector(
 		(state: RootState) => state.collections.activeCollectionId,

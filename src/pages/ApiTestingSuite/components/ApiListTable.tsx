@@ -1,16 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react'
-import AddCircleIcon from '@mui/icons-material/AddCircle';
+// import AddCircleIcon from '@mui/icons-material/AddCircle';
 import ReturnValueModal from './ReturnValueModal';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+// import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CompareValuesModal from './CompareValuesModal';
 import AddSchemaModal from './AddSchemaModal';
 import ApiMapingModal from './ApiMapingModal';
 
 
-interface AdditionalActions {
-    return_value: boolean,
-    compared_value: boolean,
-}
+// interface AdditionalActions {
+//     return_value: boolean,
+//     compared_value: boolean,
+// }
 
 // interface Data {
 //     id: number,
@@ -78,7 +78,7 @@ interface TableProps {
 
 
 const ApiListTable = (props: TableProps) => {
-    const { currentPage, data, totalPages, noApisPerPage, handleSelection, handleSelectAll, selectedApis } = props
+    const { currentPage, data, noApisPerPage, handleSelection, handleSelectAll, selectedApis } = props
     const [isReturnValue, setIsReturnValue] = useState<boolean>(false)
     const [isCompareValue, setIsCompareValue] = useState<boolean>(false)
     const [isSchemaModal, setIsSchemaModal] = useState<boolean>(false)
@@ -113,9 +113,9 @@ const ApiListTable = (props: TableProps) => {
 
     }
 
-    const handleSchema = (id: number) => {
-        setIsSchemaModal(true)
-    }
+    // const handleSchema = (id: number) => {
+    //     setIsSchemaModal(true)
+    // }
 
     const startIndex = (currentPage - 1) * noApisPerPage;
     const endIndex = startIndex + noApisPerPage;
@@ -123,7 +123,7 @@ const ApiListTable = (props: TableProps) => {
     const currentItems = data.slice(startIndex, endIndex);
 
 
-    const TableRow = ({ item, index }: TableRowProps) => {
+    const TableRow = ({ item }: TableRowProps) => {
         return (
             <tr className="hover:bg-[#0F0F23]/50" key={item?.id}>
                 <td className="px-6 py-4">

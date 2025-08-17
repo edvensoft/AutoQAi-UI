@@ -1,9 +1,9 @@
-import { nextStep, prevStep } from '@/redux/apiTestingSlice';
+// import { nextStep, prevStep } from '@/redux/apiTestingSlice';
 import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import TestCaseHeader from './components/TestCaseHeader';
 import TestCaseTable from './components/TestCaseTable';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { API_URL } from '@/config';
 import { CircularProgress } from '@mui/material';
@@ -98,7 +98,7 @@ interface Data {
 // ]
 
 const TestDataReview = () => {
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
     const [selectedApis, setSelectedApis] = useState<any | []>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
@@ -241,15 +241,20 @@ const TestDataReview = () => {
                                 <CircularProgress size="3rem" />
                             </div>
                             :
-                            <TestCaseTable
-                                apiData={apiData}
-                                tableName="test_data"
-                                selectedApis={selectedApis}
-                                handleSelectAll={handleSelectAll}
-                                totalNoApi={apiData.length}
-                                handleSelection={handleSelection}
-                                approve={handleApproveCode}
-                            />
+                            error && error.length > 0 ?
+                                <div className="h-60 flex justify-center items-center">
+                                    <div className="text-red-500">{error}</div>
+                                </div>
+                                :
+                                <TestCaseTable
+                                    apiData={apiData}
+                                    tableName="test_data"
+                                    selectedApis={selectedApis}
+                                    handleSelectAll={handleSelectAll}
+                                    totalNoApi={apiData.length}
+                                    handleSelection={handleSelection}
+                                    approve={handleApproveCode}
+                                />
                     }
                 </div>
             </div>

@@ -1,9 +1,9 @@
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { CheckCircleIcon, ExclamationCircleIcon, TrashIcon } from "@heroicons/react/24/solid";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch} from "react-redux";
 import { setProjectId } from "@/redux/appSlice";
 import { setActiveCollection } from "@/redux/collectionsSlice";
 

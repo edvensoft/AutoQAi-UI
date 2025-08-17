@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import ApiTesingOptions from "./ApiTesingOptions";
 import type { RootState } from "@/redux/store";
-import  { useEffect, useState, type JSX } from "react";
+import  { useEffect, } from "react";
 import ListOfApis from "./ListOfApis";
 import CodeReview from "./CodeReview";
 import TestDataReview from "./TestDataReview";
@@ -39,14 +39,14 @@ const StepData = [
 export default function ApiTestingSuite() {
 
 	const apiTesingState = useSelector((state: RootState) => state.apiTesting);
-	const [component, setComponent] = useState<JSX.Element | undefined>()
+	// const [component, setComponent] = useState<JSX.Element | undefined>()
 
 
 	useEffect(() => {
 		console.log('state', apiTesingState)
 		console.log('getCompo', StepData.find((item) => item.step === apiTesingState.currentStep))
-		let currntComponent = StepData.find((item) => item.step === apiTesingState.currentStep)
-		setComponent(currntComponent?.component)
+		// let currntComponent = StepData.find((item) => item.step === apiTesingState.currentStep)
+		// setComponent(currntComponent?.component)
 	}, [apiTesingState])
 
 	return (

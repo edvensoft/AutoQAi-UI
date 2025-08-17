@@ -10,9 +10,9 @@ import TaskIcon from "@mui/icons-material/Task";
 import ClearIcon from "@mui/icons-material/Clear";
 import * as XLSX from "xlsx";
 import { useNavigate } from 'react-router-dom';
-import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
-import type { RootState } from "@/redux/store";
+// import { useParams } from "react-router-dom";
+// import { useSelector } from "react-redux";
+// import type { RootState } from "@/redux/store";
 
 // =================== Types ===================
 interface FormValues {
@@ -68,7 +68,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
     const [showSheetSelector, setShowSheetSelector] = useState(false);
     const navigate = useNavigate();
     // const {projectId}=useParams()
-    const projectId = useSelector((state: RootState) => state.appState.project_id);
+    // const projectId = useSelector((state: RootState) => state.appState.project_id);
 
     // ---------- Memoized values ----------
     const isError = useMemo(

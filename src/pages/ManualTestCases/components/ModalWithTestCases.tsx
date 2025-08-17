@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import SaveIcon from "@mui/icons-material/Save";
-import DeleteIcon from "@mui/icons-material/Delete";
+import React from "react";
+// import SaveIcon from "@mui/icons-material/Save";
+// import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import {
@@ -12,7 +12,7 @@ import {
 import TableRowWithEdit from "./TableRowWithEdit";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "@/redux/store";
-import { addTestCases, setTestCases } from "@/redux/collectionsSlice";
+import { addTestCases } from "@/redux/collectionsSlice";
 
 
 // type TestCases = {
