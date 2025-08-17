@@ -3,10 +3,11 @@ import CloseIcon from '@mui/icons-material/Close';
 
 interface ModalProps {
     onClose: (modal: string) => void
+    setApiMappingStatus: React.Dispatch<React.SetStateAction<any>>,
 }
 
 
-const ApiMapingModal = ({ onClose }: ModalProps) => {
+const ApiMapingModal = ({ onClose, setApiMappingStatus }: ModalProps) => {
     return (
         <Portal>
             <div id="api-mapping-modal" className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -14,7 +15,7 @@ const ApiMapingModal = ({ onClose }: ModalProps) => {
                     <div className="flex justify-between items-center mb-6">
                         <h3 className="text-xl font-semibold text-[#FFFFFF]">Variable Mapping</h3>
                         <button className=" cursor-pointer text-gray-400 hover:text-white"
-                        onClick={() => onClose('api_map')}
+                            onClick={() => onClose('api_map')}
                         >
                             {/* <i className="fa-solid fa-times"></i> */}
                             <CloseIcon />
@@ -55,7 +56,7 @@ const ApiMapingModal = ({ onClose }: ModalProps) => {
                                 <div className="space-y-3 max-h-40 overflow-y-auto">
                                     <div className=" flex items-center space-x-3">
                                         <div className="flex-1">
-                                            <input type="text" value="userId"  className="w-full bg-[#1A1A2E] border border-[#374151] rounded px-3 py-2 text-sm text-gray-300" />
+                                            <input type="text" value="userId" className="w-full bg-[#1A1A2E] border border-[#374151] rounded px-3 py-2 text-sm text-gray-300" />
                                         </div>
                                         <i className="fa-solid fa-arrow-left text-[#3B82F6]"></i>
                                         <div className="flex-1">
@@ -71,7 +72,7 @@ const ApiMapingModal = ({ onClose }: ModalProps) => {
 
                                     <div className=" flex items-center space-x-3">
                                         <div className="flex-1">
-                                            <input type="text" value="authToken" className="w-full bg-[#1A1A2E] border border-[#374151] rounded px-3 py-2 text-sm text-gray-300" />
+                                            <input type="text" className="w-full bg-[#1A1A2E] border border-[#374151] rounded px-3 py-2 text-sm text-gray-300" />
                                         </div>
                                         <i className="fa-solid fa-arrow-left text-[#3B82F6]"></i>
                                         <div className="flex-1">
@@ -87,7 +88,7 @@ const ApiMapingModal = ({ onClose }: ModalProps) => {
 
                                     <div className=" flex items-center space-x-3">
                                         <div className="flex-1">
-                                            <input type="text" value="sessionId"  className="w-full bg-[#1A1A2E] border border-[#374151] rounded px-3 py-2 text-sm text-gray-300" />
+                                            <input type="text" className="w-full bg-[#1A1A2E] border border-[#374151] rounded px-3 py-2 text-sm text-gray-300" />
                                         </div>
                                         <i className="fa-solid fa-arrow-left text-[#3B82F6]"></i>
                                         <div className="flex-1">
@@ -118,12 +119,18 @@ const ApiMapingModal = ({ onClose }: ModalProps) => {
                     </div>
 
                     <div className="flex justify-end space-x-3">
-                        <button 
-                        className=" cursor-pointer bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-lg transition-colors"
-                        onClick={() => onClose('api_map')}
-                        
+                        <button
+                            className=" cursor-pointer bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-lg transition-colors"
+                            onClick={() => {
+                                setApiMappingStatus((prev) => ({ ...prev, status: false }))
+                                onClose('api_map')
+                            }}
+
                         >Cancel</button>
-                        <button id="save-mapping" className="bg-[#3B82F6] hover:bg-[#2563EB] text-white px-6 py-2 rounded-lg transition-colors">Save Mapping</button>
+                        <button id="save-mapping"
+                            className="bg-[#3B82F6] hover:bg-[#2563EB] text-white px-6 py-2 rounded-lg transition-colors"
+                            onClick={() => setApiMappingStatus((prev) => ({ ...prev, status: true }))}
+                        >Save Mapping</button>
                     </div>
                 </div>
             </div>
