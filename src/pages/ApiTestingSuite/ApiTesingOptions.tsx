@@ -2,7 +2,11 @@ import CustomeFileCodeIcon from '@/assets/customeIcons/CustomeFileCodeIcon'
 import CustomeLinkIcon from '@/assets/customeIcons/CustomeLinkIcon'
 import CustomeTerminalIcon from '@/assets/customeIcons/CustomeTerminalIcon'
 import CustomeUploadIcon from '@/assets/customeIcons/CustomeUploadIcon'
+import { API_URL } from '@/config'
+import type { RootState } from '@/redux/store'
+import axios from 'axios'
 import React, { useRef, useState, type DragEvent } from 'react'
+import { useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 
 const ApiTesingOptions = () => {
@@ -16,7 +20,10 @@ const ApiTesingOptions = () => {
     const uploadRef = useRef<HTMLInputElement>(null);
     const navigate = useNavigate();
 
-    const { projectId } = useParams();
+    // const { projectId } = useParams();
+
+    const projectId = useSelector((state: RootState) => state.appState.project_id);
+
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 
@@ -83,8 +90,8 @@ const ApiTesingOptions = () => {
         // console.log('validate url',validateUrl(value))
     }
 
-     const handleCurlCommndPaste = (event: React.ClipboardEvent<HTMLTextAreaElement>) => {
-        
+    const handleCurlCommndPaste = (event: React.ClipboardEvent<HTMLTextAreaElement>) => {
+
         const clipboardData = event.clipboardData || (window as any).clipboardData;
         const text = clipboardData.getData('text');
         setCurlCommand(text)
@@ -110,7 +117,25 @@ const ApiTesingOptions = () => {
         } else if ((activeFormate === 0 || activeFormate === 2) && url) {
             console.log('url submit')
             console.log('validate url', validateUrl(url))
-            navigate(`/project/api-testing-suite/api-list/${projectId}`)
+            // navigate(`/project/api-testing-suite/api-list/${projectId}`)
+            if (activeFormate === 0) {
+                const formData = new FormData()
+                formData.append('project_id', projectId)
+                formData.append('type', '1')
+                formData.append('url', url)
+
+                axios.post(`${API_URL}/v1/api/projects/add-api-doc/`, formData).then(
+                    respons => {
+                        if (respons.status === 200) {
+                            navigate(`/project/api-testing-suite/api-list/`)
+
+                        }
+
+                    }
+                )
+
+            }
+
             // navigate(`/project/api-testing-suite/api-list/${'e2c9d5d5-1a93-4c78-b7ad-47a284a4ce84'}`)
 
         } else if ((activeFormate === 0) && !url) {
@@ -125,7 +150,7 @@ const ApiTesingOptions = () => {
         }
     }
 
-   
+
 
 
 
@@ -252,8 +277,8 @@ const ApiTesingOptions = () => {
                         <input
                             type="url"
                             id="swagger-url"
-                            
-                            className={`w-full bg-brand-bg border border-[#374151] rounded-lg p-3 text-white focus:outline-none focus:ring-2 ${error.length>0 ? 'focus:ring-red-500':'focus:ring-[#3b82f6]'} `}
+
+                            className={`w-full bg-brand-bg border border-[#374151] rounded-lg p-3 text-white focus:outline-none focus:ring-2 ${error.length > 0 ? 'focus:ring-red-500' : 'focus:ring-[#3b82f6]'} `}
                             placeholder="https://api.example.com/swagger.json"
                             onChange={handleUrlChange}
                         />
@@ -267,7 +292,7 @@ const ApiTesingOptions = () => {
                     activeFormate === 1 &&
                     <div className="mb-6">
                         <label className="block text-sm font-medium text-white mb-2">Upload Postman Collection</label>
-                        <div className={`border-2 border-dashed ${error.length > 0? 'border-red-500':'border-[#374151]'} rounded-lg p-8 text-center`}
+                        <div className={`border-2 border-dashed ${error.length > 0 ? 'border-red-500' : 'border-[#374151]'} rounded-lg p-8 text-center`}
                             onDrop={handleDrop}
                             onDragOver={handleDragOver}
 
@@ -301,7 +326,7 @@ const ApiTesingOptions = () => {
                                 </div>
                             </div>
                         }
-                        {error.length >0 && (
+                        {error.length > 0 && (
                             <div className="mt-4 text-center text-red-500">
                                 <p>{error}</p>
                             </div>
@@ -314,12 +339,12 @@ const ApiTesingOptions = () => {
                     <div className="mb-6">
                         <label className="block text-sm font-medium text-white mb-2">Postman Documentation JSON Endpoint</label>
                         <input type="url" id="postman-doc-url"
-                            className={`w-full bg-brand-bg border border-[#374151] rounded-lg p-3 text-white focus:outline-none focus:ring-2 ${error.length >0 ? 'focus:ring-red-500' :'focus:ring-[#3b82f6]'} `} 
+                            className={`w-full bg-brand-bg border border-[#374151] rounded-lg p-3 text-white focus:outline-none focus:ring-2 ${error.length > 0 ? 'focus:ring-red-500' : 'focus:ring-[#3b82f6]'} `}
                             placeholder="https://documenter.getpostman.com/view/..."
                             onChange={handleUrlChange}
                         />
                         {
-                            error.length >0 && <p className='text-red-500'>{error}</p>
+                            error.length > 0 && <p className='text-red-500'>{error}</p>
                         }
                     </div>
                 }
@@ -327,7 +352,7 @@ const ApiTesingOptions = () => {
                     <div className="mb-6">
                         <label className="block text-sm font-medium text-white mb-2">cURL Command</label>
                         <textarea id="curl-command" rows={8}
-                            className={`w-full bg-brand-bg border border-[#374151] rounded-lg p-3 text-white focus:outline-none focus:ring-2 ${error.length >0 ? 'focus:ring-red-500':'focus:ring-[#3b82f6]'} font-mono text-sm`}
+                            className={`w-full bg-brand-bg border border-[#374151] rounded-lg p-3 text-white focus:outline-none focus:ring-2 ${error.length > 0 ? 'focus:ring-red-500' : 'focus:ring-[#3b82f6]'} font-mono text-sm`}
                             placeholder="curl -X GET 'https://api.example.com/endpoint' \
   -H 'Authorization: Bearer token' \
   -H 'Content-Type: application/json' \
@@ -340,7 +365,7 @@ const ApiTesingOptions = () => {
 
                         </textarea>
                         {
-                            error.length>0 && <p className='text-red-500'>{error}</p>
+                            error.length > 0 && <p className='text-red-500'>{error}</p>
                         }
                     </div>
                 }

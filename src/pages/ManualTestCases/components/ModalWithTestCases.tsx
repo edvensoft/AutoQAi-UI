@@ -12,7 +12,7 @@ import {
 import TableRowWithEdit from "./TableRowWithEdit";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "@/redux/store";
-import { setTestCases } from "@/redux/collectionsSlice";
+import { addTestCases, setTestCases } from "@/redux/collectionsSlice";
 
 
 // type TestCases = {
@@ -46,23 +46,19 @@ const ModalWithTestCases: React.FC<ModalWithTestCasesProps> = ({
 	const testCases = useSelector((state: RootState) => state.collections.testCases);
 	const dispatch = useDispatch();
 
-
+console.log('testcase',testCases)
 	const handleAddTestCase = () => {
-		const payLoad = {
-			"collection_id": "77e794fd-a90c-4edc-9317-77804f5feb6c",
-			"test_case_chat_id": "3a6ec988-dd92-4871-81c0-46f4328c57f6",
-			"name": "User Signup Test Case",
-			"steps": "1. Open signup page\n2. Enter details\n3. Click submit",
-			"expected_output": "User should be registered successfully"
-		}
+		
 		const emptyTestCase = {
-			id: `id-${Date.now()}-${Math.floor(Math.random() * 10000)}`,
-			test_case_id: 'new',
+			// id: `${Date.now()}-${Math.floor(Math.random() * 10000)}`,
+			id:'new',
+			test_case_id: '',
 			name: '',
 			steps: '',
 			expected_output: ''
 		}
-		dispatch(setTestCases([{...emptyTestCase}]))
+		// dispatch(setTestCases([{...emptyTestCase}]))
+		dispatch(addTestCases(emptyTestCase))
 		// setTestCases((prev) => [...prev, emptyTestCase])
 	}
 
@@ -71,8 +67,10 @@ const ModalWithTestCases: React.FC<ModalWithTestCasesProps> = ({
 		<Dialog
 			open={open}
 			onClose={onClose}
-			className='relative z-50'>
-			<DialogBackdrop className='fixed inset-0 bg-black/30' />
+			className='relative z-50'
+			
+		>
+			<DialogBackdrop className='fixed  inset-0 bg-black/30' />
 			<div className='fixed inset-0 flex items-center justify-center p-4'>
 				<DialogPanel className='w-full max-w-full lg:max-w-5xl rounded bg-[#1A1A2E] p-6 shadow-xl'>
 					<div className='flex w-full justify-between items-center mb-2 border-b border-gray-700 pb-2'>
@@ -87,7 +85,7 @@ const ModalWithTestCases: React.FC<ModalWithTestCasesProps> = ({
 						</IconButton>
 					</div>
 
-					<div className='p-6 text-white'>
+					<div className='p-6 text-white '>
 						{/* Add Test Case Button */}
 						<div className='mb-4'>
 							<button className='bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md flex items-center gap-2'

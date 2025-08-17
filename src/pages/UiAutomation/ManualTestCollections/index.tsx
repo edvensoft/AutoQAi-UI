@@ -27,7 +27,7 @@ const navigate = useNavigate();
           ))}
         </div>
 
-        <button onClick={() => navigate("/project/testcases")} className="bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-md">
+        <button onClick={() => navigate("/testcases")} className="bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-md">
           Back
         </button>
       </div>

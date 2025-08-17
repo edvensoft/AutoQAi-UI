@@ -2,6 +2,10 @@ import { API_URL } from "@/config";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { useSelector } from "react-redux";
+// import type { RootState } from '@/redux/store';
+// import RootState from '../../redux/store'
+
 
 const reports = [
   {
@@ -94,18 +98,23 @@ const reportResponse = {
 };
 
 export default function RecentReports() {
-  const { projectId } = useParams();
-  const [recentReports,setRecentReports]=useState([])
+  // const { projectId } = useParams();
+  // const projectId = useSelector((state: import("../../redux/store").RootState) => state.appState.project_id);
+  const projectId = useSelector((state) => state.appState.project_id);
+  // console.log('proje',projectId)
+  const [recentReports, setRecentReports] = useState([])
 
   useEffect(() => {
     axios
       .get(
-        `${API_URL}/v1/api/projects/${"fce9e73a-9b1f-4cb0-81e2-34506b33edf0"}/reports/`
+        // `${API_URL}/v1/api/projects/${"fce9e73a-9b1f-4cb0-81e2-34506b33edf0"}/reports/`
+        `${API_URL}/v1/api/projects/${projectId}/reports/`
+
       )
       .then((response) => {
-        if(response?.data?.response?.results?.length){
+        if (response?.data?.response?.results?.length) {
           setRecentReports(response.data.response.results);
-        }else{
+        } else {
           setRecentReports(reportResponse?.response?.results);
         }
       });
@@ -148,32 +157,32 @@ export default function RecentReports() {
               </tr>
             </thead>
             <tbody>
-              {recentReports.map((report) =>{
-                let statusColor=report?.status==="completed"?"bg-green-100 text-green-800":report?.status==="failed"?"bg-red-100 text-red-800":report?.status==="processing"?"bg-yellow-100 text-yellow-800":""
+              {recentReports.map((report) => {
+                let statusColor = report?.status === "completed" ? "bg-green-100 text-green-800" : report?.status === "failed" ? "bg-red-100 text-red-800" : report?.status === "processing" ? "bg-yellow-100 text-yellow-800" : ""
                 return (
-                <tr
-                  key={report.id}
-                  className="border-b border-gray-800 hover:bg-gray-800"
-                >
-                  <td className="py-3 px-4 text-blue-500 font-medium cursor-pointer hover:underline">
-                    {report?.id}
-                  </td>
-                  <td className="py-3 px-4 font-semibold">
-                    {report?.executedBy}
-                  </td>
-                  <td className="py-3 px-4 text-gray-400">
-                    {report?.executed_at?.split(".")[0].replace("T"," ")}
-                  </td>
-                  <td className="py-3 px-4">
-                    <span
-                      className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${statusColor}`}
-                    >
-                      {report?.status?.charAt(0)?.toUpperCase() + report?.status?.slice(1)?.toLowerCase()}
-                    </span>
-                  </td>
-                </tr>
-              )
-              } )}
+                  <tr
+                    key={report.id}
+                    className="border-b border-gray-800 hover:bg-gray-800"
+                  >
+                    <td className="py-3 px-4 text-blue-500 font-medium cursor-pointer hover:underline">
+                      {report?.id}
+                    </td>
+                    <td className="py-3 px-4 font-semibold">
+                      {report?.executedBy}
+                    </td>
+                    <td className="py-3 px-4 text-gray-400">
+                      {report?.executed_at?.split(".")[0].replace("T", " ")}
+                    </td>
+                    <td className="py-3 px-4">
+                      <span
+                        className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${statusColor}`}
+                      >
+                        {report?.status?.charAt(0)?.toUpperCase() + report?.status?.slice(1)?.toLowerCase()}
+                      </span>
+                    </td>
+                  </tr>
+                )
+              })}
             </tbody>
           </table>
         </div>

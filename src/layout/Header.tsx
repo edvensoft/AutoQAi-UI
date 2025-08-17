@@ -18,8 +18,13 @@
 
 // export default Header;
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
+
+	const navigate = useNavigate();
+
+
 	return (
 		<header
 			className="fixed top-0 left-0 w-full flex justify-between items-center px-4 py-2 
@@ -27,7 +32,9 @@ const Header = () => {
 			style={{ height: "3rem" }} // consistent height for layout calculations
 		>
 			{/* Logo / Brand */}
-			<div className="flex items-center space-x-2">
+			<div className="flex items-center cursor-pointer space-x-2"
+				onClick={() => navigate('/projects')}
+			>
 				<span className="font-bold text-xl text-white">AutoQAi</span>
 			</div>
 
@@ -37,7 +44,7 @@ const Header = () => {
 					EV
 				</div>
 				<span className="text-sm text-gray-200">Elena Voyage</span>
-				
+
 			</div>
 		</header>
 	);

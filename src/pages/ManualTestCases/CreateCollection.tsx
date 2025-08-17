@@ -6,15 +6,19 @@ import {
 } from "@headlessui/react";
 import { useState } from "react";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addCollection } from "../../redux/collectionsSlice";
 import axios from "axios";
 import { API_URL } from "@/config";
+import type { RootState } from "@/redux/store";
 
 export default function CreateCollection() {
 	const [isOpen, setIsOpen] = useState(false);
 	const [collectionName, setCollectionName] = useState("");
 	const [inputError, setInputError] = useState("");
+    const projectId = useSelector((state: RootState) => state.appState.project_id);
+    const userId = useSelector((state: RootState) => state.appState.user_id);
+
 
 	const dispatch = useDispatch();
 
@@ -33,8 +37,8 @@ export default function CreateCollection() {
 
 		if (collectionName.trim()) {
 			let payload = {
-				"user_id": "1",
-				"project_id": "0c32be2e-c485-4aa2-b3fa-3783ab831e4a",
+				"user_id": userId,
+				"project_id": projectId,
 				"name": collectionName
 			}
 			axios.post(`${API_URL}/v1/api/test-cases/create-collection/`, payload).then(

@@ -7,6 +7,8 @@ import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import CheckIcon from "@mui/icons-material/Check";
 import useMapping from "./Hooks/useMapping";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/redux/store";
 
 
 
@@ -57,7 +59,9 @@ const ColumnMapping: React.FC = () => {
 
 const [mappings, setMappings] = useState<Record<string, string>>({});
   const { selectedFields } = useMapping(mappings);
-  const {projectId}=useParams()
+  // const {projectId}=useParams()
+    const projectId = useSelector((state: RootState) => state.appState.project_id);
+
 
 
   useEffect(() => {
@@ -118,7 +122,12 @@ const [mappings, setMappings] = useState<Record<string, string>>({});
       column_mapping,
     }
 
-    navigate(`/project/ui-automation/loader/${projectId}`, {
+    // navigate(`/project/ui-automation/loader/${projectId}`, {
+    //   state: {
+    //    formValues
+    //   },
+    // });
+    navigate(`/project/ui-automation/loader/`, {
       state: {
        formValues
       },

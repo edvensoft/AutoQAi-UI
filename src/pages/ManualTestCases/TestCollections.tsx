@@ -20,18 +20,21 @@ export default function TestCollections() {
 	const dispatch = useDispatch();
 	const [selectAll, setSelectAll] = useState(false);
 	const collections = useSelector((state: RootState) => state.collections.list);
-	// const testCases = useSelector((state: RootState) => state.collections.testCases);
+	const testCases = useSelector((state: RootState) => state.collections.testCases);
+	
 
 	const activeCollectionId = useSelector(
 		(state: RootState) => state.collections.activeCollectionId,
 	);
+    const projectId = useSelector((state: RootState) => state.appState.project_id);
+
 
 	// const [testCases, setTestCases] = useState<TestCases[]>([])
 
 	const [openModal, setOpenModal] = useState(false);
 
 	const getCollections = () => {
-		axios.get(`${API_URL}/v1/api/test-cases/get-collections/0c32be2e-c485-4aa2-b3fa-3783ab831e4a/`).then(
+		axios.get(`${API_URL}/v1/api/test-cases/get-collections/${projectId}/`).then(
 			response => {
 				console.log('colle', response)
 				if (response.status === 200) {
@@ -54,12 +57,13 @@ export default function TestCollections() {
 	const handleView = (id: string) => {
 		// 
 		// 
-		axios.get(`${API_URL}/v1/api/test-cases/get-test-cases/${id}/`).then(res => {
-			console.log('res', res)
-			// setTestCases(res.data.test_cases)
-			setOpenModal(true)
+		setOpenModal(true)
+		// axios.get(`${API_URL}/v1/api/test-cases/get-test-cases/${id}/`).then(res => {
+		// 	console.log('res', res)
+		// 	// setTestCases(res.data.test_cases)
+		// 	setOpenModal(true)
 
-		})
+		// })
 	}
 
 	const deleteCollection = () => {
@@ -153,7 +157,7 @@ export default function TestCollections() {
 											<p className='font-semibold leading-4'>
 												{collection.name}
 											</p>
-											<p className='text-sm text-gray-400'>Test Cases: 4</p>
+											<p className='text-sm text-gray-400'>Test Cases: {testCases.length}</p>
 										</div>
 									</div>
 									<button

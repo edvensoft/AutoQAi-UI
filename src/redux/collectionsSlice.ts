@@ -13,6 +13,7 @@ type TestCases = {
 	name: string;
 	steps: string;
 	expected_output: string;
+  test_case_chat_id?:string
 }
 
 interface CollectionsState {
@@ -39,8 +40,14 @@ const collectionsSlice = createSlice({
     setCollections:(state, action: PayloadAction<Collection[]>)=>{
       state.list = action.payload;
     },
+    addTestCases:(state, action: PayloadAction<TestCases>)=>{
+      state.testCases.push(action.payload);
+    },
     setTestCases:(state, action: PayloadAction<TestCases[]>)=>{
       state.testCases = action.payload;
+    },
+    deleteTestCaseById:(state, action: PayloadAction<string>)=>{
+      state.testCases = state.testCases.filter(item=>item.id !== action.payload);
     },
     setActiveCollection: (state, action: PayloadAction<string | null>) => {
       state.activeCollectionId = action.payload;
@@ -48,5 +55,5 @@ const collectionsSlice = createSlice({
   },
 });
 
-export const { addCollection, setActiveCollection,setCollections,setTestCases } = collectionsSlice.actions;
+export const { addCollection, setActiveCollection,setCollections,setTestCases,addTestCases,deleteTestCaseById } = collectionsSlice.actions;
 export default collectionsSlice.reducer;

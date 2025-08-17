@@ -130,7 +130,7 @@ const ApiListTable = (props: TableProps) => {
                     <input type="checkbox"
                         checked={selectedApis.includes(item.id)}
                         onChange={(e) => handleSelection(e, item.id)}
-                        className="api-checkbox w-4 h-4 text-[#3B82F6] bg-transparent border-[#374151] rounded focus:ring-[#3B82F6]" />
+                        className="api-checkbox w-4 h-4 cursor-pointer text-[#3B82F6] bg-transparent border-[#374151] rounded focus:ring-[#3B82F6]" />
                 </td>
                 <td className="px-6 py-4 text-sm text-[#FFFFFF]">{item?.id}</td>
                 <td className="px-6 py-4 text-sm w-36 text-[#FFFFFF]">{item?.api_name}</td>
@@ -145,7 +145,7 @@ const ApiListTable = (props: TableProps) => {
                 </td>
                 <td className="px-6 py-4">
                     <div className="relative">
-                        <input type="text" className="dependent-api-input bg-[#0F0F23] border border-[#374151] rounded-lg px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:ring-2 focus:ring-[#3B82F6] w-full" placeholder="Type to search APIs..."
+                        <input type="text" className="dependent-api-input cursor-pointer bg-[#0F0F23] border border-[#374151] rounded-lg px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:ring-2 focus:ring-[#3B82F6] w-full" placeholder="Type to search APIs..."
                         // autocomplete="off" 
                         />
                         <div className="dependent-api-suggestions hidden absolute top-full left-0 right-0 bg-[#1A1A2E] border border-[#374151] rounded-lg mt-1 max-h-40 overflow-y-auto z-10">
@@ -165,7 +165,7 @@ const ApiListTable = (props: TableProps) => {
                             <input type="checkbox"
                                 // checked={item.additional_actions.return_value}
                                 onChange={(e) => handleAditionalActions(e, 'return', item.id)}
-                                className="w-4 h-4 text-[#3B82F6] bg-transparent border-[#374151] rounded"
+                                className="w-4 h-4 text-[#3B82F6] cursor-pointer bg-transparent border-[#374151] rounded"
                             />
                             <span className="ml-2 text-sm text-gray-300">Return Values</span>
                         </label>
@@ -173,7 +173,7 @@ const ApiListTable = (props: TableProps) => {
                             <input type="checkbox"
                                 // checked={item.additional_actions.compared_value}
                                 onChange={(e) => handleAditionalActions(e, 'compare', item.id)}
-                                className="compare-values-cb w-4 h-4 text-[#3B82F6] bg-transparent border-[#374151] rounded" />
+                                className="compare-values-cb w-4 h-4 cursor-pointer text-[#3B82F6] bg-transparent border-[#374151] rounded" />
                             <span className="ml-2 text-sm text-gray-300">Compare Values</span>
                         </label>
                     </div>
@@ -203,7 +203,7 @@ const ApiListTable = (props: TableProps) => {
 
                         <div className="flex items-center space-x-2">
                             <span className="text-sm text-red-400">400, 500</span>
-                            <button className="add-schema-btn text-brand-accent hover:text-brand-accent-dark" title="Add JSON Schema">
+                            <button className="add-schema-btn cursor-pointer text-brand-accent hover:text-brand-accent-dark" title="Add JSON Schema">
                                 <i className="fa-solid fa-plus-circle"></i>
                             </button>
                         </div>
@@ -244,7 +244,7 @@ const ApiListTable = (props: TableProps) => {
                             <input type="checkbox" id="select-all"
                                 ref={selectAllRef}
                                 onChange={handleSelectAll}
-                                className="w-4 h-4 text-[#3B82F6] bg-transparent border-[#374151] rounded focus:ring-[#3B82F6]" />
+                                className="w-4 h-4 text-[#3B82F6] cursor-pointer bg-transparent border-[#374151] rounded focus:ring-[#3B82F6]" />
                         </th>
                         <th className="px-6 py-4 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">API ID</th>
                         <th className="px-6 py-4 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">API Name</th>

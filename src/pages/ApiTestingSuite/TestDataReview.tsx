@@ -1,12 +1,13 @@
 import { nextStep, prevStep } from '@/redux/apiTestingSlice';
 import React, { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import TestCaseHeader from './components/TestCaseHeader';
 import TestCaseTable from './components/TestCaseTable';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { API_URL } from '@/config';
 import { CircularProgress } from '@mui/material';
+import type { RootState } from '@/redux/store';
 
 
 interface Data {
@@ -102,38 +103,68 @@ const TestDataReview = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const [apiData, setApiData] = useState<Data[] | []>([])
-    const { projectId } = useParams();
+    // const { projectId } = useParams();
+    const projectId = useSelector((state: RootState) => state.appState.project_id);
 
     const navigate = useNavigate();
 
     const handleBack = () => {
         // dispatch(prevStep())
-        navigate(`/project/api-testing-suite/code-review/${projectId}`)
+        // navigate(`/project/api-testing-suite/code-review/${projectId}`)
+        navigate(`/project/api-testing-suite/code-review/`)
+
     }
     const handleNext = () => {
         // dispatch(nextStep())
-        navigate(`/project/api-testing-suite/test-execution/${projectId}`)
+        // navigate(`/project/api-testing-suite/test-execution/${projectId}`)
+        navigate(`/project/api-testing-suite/test-execution/`)
+
 
     }
-    const handleApproveCode = () => {
+    const handleApproveCode = (id) => {
         console.log(selectedApis, 'sele')
-        const payload = {
-            "endpoint_ids": [...selectedApis]
+        if (id) {
+            const payload = {
+                "endpoint_ids": [id]
+            }
+            console.log('Payload for approval:', payload);
+            axios.put(`${API_URL}/v1/api/endpoints/update-test-data-status/`, payload)
+                .then((response) => {
+                    console.log('Approval response:', response);
+                    if (response.status === 200) {
+                        alert('Selected APIs approved successfully!');
+                        setSelectedApis([]);
+                        navigate(`/project/api-testing-suite/test-execution/`)
+
+                        // getEndpointsData();
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error approving selected APIs:', error);
+                    alert('Failed to approve selected APIs. Please try again.');
+                });
+        } else {
+            const payload = {
+                "endpoint_ids": [...selectedApis]
+            }
+            console.log('Payload for approval:', payload);
+            axios.put(`${API_URL}/v1/api/endpoints/update-test-data-status/`, payload)
+                .then((response) => {
+                    console.log('Approval response:', response);
+                    if (response.status === 200) {
+                        alert('Selected APIs approved successfully!');
+                        setSelectedApis([]);
+                        navigate(`/project/api-testing-suite/test-execution/`)
+
+                        // getEndpointsData();
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error approving selected APIs:', error);
+                    alert('Failed to approve selected APIs. Please try again.');
+                });
         }
-        console.log('Payload for approval:', payload);
-        axios.put(`${API_URL}/v1/api/endpoints/update-test-data-status/`, payload)
-            .then((response) => {
-                console.log('Approval response:', response);
-                if (response.status === 200) {
-                    alert('Selected APIs approved successfully!');
-                    setSelectedApis([]);
-                    getEndpointsData();
-                }
-            })
-            .catch((error) => {
-                console.error('Error approving selected APIs:', error);
-                alert('Failed to approve selected APIs. Please try again.');
-            });
+
     }
 
     const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -157,7 +188,7 @@ const TestDataReview = () => {
 
         try {
             setLoading(true);
-            const response = await axios.get(`${API_URL}/v1/api/endpoints/get-endpoints/${decodeURIComponent(projectId)}/?status_from=2`);
+            const response = await axios.get(`${API_URL}/v1/api/endpoints/get-endpoints/${projectId}/?status_from=2`);
             console.log('Fetched APIs:', response);
             if (response?.data?.response && response?.data?.response.length > 0) {
                 // setEndPointsData(response.data.response);
@@ -198,7 +229,7 @@ const TestDataReview = () => {
                 <TestCaseHeader
                     title="Generated Test Data"
                     submitBtnText="Approve Data"
-                    submitBtnClass="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg transition-colors flex items-center space-x-2"
+                    submitBtnClass="bg-green-600 cursor-pointer hover:bg-green-700 text-white px-6 py-2 rounded-lg transition-colors flex items-center space-x-2"
                     submitBtnIcon={<i className="fa-solid fa-check"></i>}
                     submitBtnClick={handleApproveCode}
                     selectedApis={selectedApis}
@@ -217,6 +248,7 @@ const TestDataReview = () => {
                                 handleSelectAll={handleSelectAll}
                                 totalNoApi={apiData.length}
                                 handleSelection={handleSelection}
+                                approve={handleApproveCode}
                             />
                     }
                 </div>
@@ -225,14 +257,14 @@ const TestDataReview = () => {
 
             <div id="navigation-buttons" className="flex justify-between items-center mt-8 pt-6 border-t border-[#374151]">
                 <button id="back-btn"
-                    className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg transition-colors flex items-center space-x-2"
+                    className="bg-gray-600 cursor-pointer hover:bg-gray-700 text-white px-6 py-3 rounded-lg transition-colors flex items-center space-x-2"
                     onClick={handleBack}
                 >
                     <i className="fa-solid fa-arrow-left"></i>
                     <span>Back</span>
                 </button>
                 <button id="next-btn"
-                    className="bg-[#3B82F6] hover:bg-[#2563EB] text-white px-6 py-3 rounded-lg transition-colors flex items-center space-x-2"
+                    className="bg-[#3B82F6] cursor-pointer hover:bg-[#2563EB] text-white px-6 py-3 rounded-lg transition-colors flex items-center space-x-2"
                     onClick={handleNext}
                 >
                     <span>Next</span>

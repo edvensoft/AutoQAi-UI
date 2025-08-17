@@ -3,6 +3,9 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { CheckCircleIcon, ExclamationCircleIcon, TrashIcon } from "@heroicons/react/24/solid";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setProjectId } from "@/redux/appSlice";
+import { setActiveCollection } from "@/redux/collectionsSlice";
 
 const API_BASE_URL = "http://13.203.56.29/v1/api/projects";
 const userId = 1; // Replace with actual user ID from auth
@@ -14,6 +17,11 @@ const Projects = () => {
   const [newProject, setNewProject] = useState({ name: "", description: "", image: null });
   const [projectToDelete, setProjectToDelete] = useState(null);
   const navigate = useNavigate();
+
+
+  const dispatch = useDispatch();
+
+
 
   // ✅ Fetch projects once on mount
   useEffect(() => {
@@ -30,7 +38,7 @@ const Projects = () => {
           updated: p.updated_at ? p.updated_at.split("T")[0] : "-",
           image: p.image || "",
         }));
-       
+
         setProjects(transformed);
       } catch (err) {
         console.error("Error fetching projects:", err);
@@ -50,13 +58,17 @@ const Projects = () => {
       formData.append("description", newProject.description);
       if (newProject.image) formData.append("image", newProject.image);
 
-      const response= await axios.post(`${API_BASE_URL}/create-project/`, formData, {
+      const response = await axios.post(`${API_BASE_URL}/create-project/`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      console.log('creat',response);
-      navigate(`/project/api-testing-suite/${response.data.project_id}`)
-      
-      
+      console.log('creat', response);
+      // navigate(`/project/api-testing-suite/${response.data.project_id}`)
+      dispatch(setProjectId(response.data.project_id))
+      dispatch(setActiveCollection(null))
+      navigate(`/project/manual-test-cases/`)
+
+
+
       // Refresh project list after adding new one
       // const res = await axios.get(`${API_BASE_URL}/get-projects/${userId}/`);
       // setProjects(
@@ -120,7 +132,13 @@ const Projects = () => {
         {projects.map((project) => (
           <div
             key={project.id}
-            onClick={() => navigate(`/project/api-testing-suite/api-list/${project.id}`)}
+            onClick={() => {
+              // navigate(`/project/api-testing-suite/api-list/${project.id}`)
+              dispatch(setProjectId(project.id))
+              dispatch(setActiveCollection(null))
+
+              navigate(`/project/manual-test-cases/`)
+            }}
             className="bg-[#1e1e2e] rounded-lg p-5 shadow border border-gray-700 flex flex-col justify-between 
             hover:border-blue-500 hover:-translate-y-1 transition-all duration-200 cursor-pointer"
           >
