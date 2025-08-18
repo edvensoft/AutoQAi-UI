@@ -18,12 +18,12 @@ interface ModalProps {
     language: string
 }
 
-;
+
 
 const CodeEditorModal = ({ onClose, data, language }: ModalProps) => {
     const [isEditable, setIsEditable] = useState<boolean>(false)
     const [editData, setEditData] = useState<any | null>(data.code)
-    const [currentData, setCurrentData] = useState<any | null>(data.code)
+    // const [currentData, setCurrentData] = useState<any | null>(data.code)
 
     console.log('inco', data, language)
 
@@ -59,16 +59,16 @@ const CodeEditorModal = ({ onClose, data, language }: ModalProps) => {
                             </div>
                         </div>
                         <div className="flex items-center space-x-3">
-                            <button id="copy-code-btn" className="bg-[#8B5CF6] hover:bg-[#8B5CF6]/80 text-white px-4 py-2 rounded-lg transition-colors">
+                            <button id="copy-code-btn" className="bg-[#8B5CF6] cursor-pointer hover:bg-[#8B5CF6]/80 text-white px-4 py-2 rounded-lg transition-colors">
                                 <i className="fa-solid fa-copy mr-2"></i>Copy
                             </button>
                             {
                                 isEditable ? <>
-                                    <button id="save-code-btn" className=" bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors">
+                                    <button id="save-code-btn" className=" bg-green-600 cursor-pointer hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors">
                                         <i className="fa-solid fa-save mr-2"></i>Save
                                     </button>
                                     <button id="cancel-edit-btn"
-                                        className=" bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors"
+                                        className=" bg-gray-600 hover:bg-gray-700 cursor-pointer text-white px-4 py-2 rounded-lg transition-colors"
                                         // onClick={() => setIsEditable(false)}
                                         onClick={handleCancelEdit}
                                     >
@@ -76,7 +76,7 @@ const CodeEditorModal = ({ onClose, data, language }: ModalProps) => {
                                     </button>
                                 </>
                                     : <button id="edit-code-btn"
-                                        className="bg-[#3B82F6] hover:bg-[#2563EB] text-white px-4 py-2 rounded-lg transition-colors"
+                                        className="bg-[#3B82F6] hover:bg-[#2563EB] cursor-pointer text-white px-4 py-2 rounded-lg transition-colors"
                                         onClick={onEdit}
                                     >
                                         <i className="fa-solid fa-edit mr-2"></i>Edit
@@ -86,7 +86,7 @@ const CodeEditorModal = ({ onClose, data, language }: ModalProps) => {
 
 
                             <button id="close-editor-btn"
-                                className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors"
+                                className="bg-gray-600 hover:bg-gray-700 cursor-pointer text-white px-4 py-2 rounded-lg transition-colors"
                                 onClick={() => onClose()}
                             >
                                 <i className="fa-solid fa-times mr-2"></i>Close

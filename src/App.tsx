@@ -45,27 +45,27 @@ function App() {
 				{/* Project details with sidebar */}
 				<Route element={<MainLayout />}>
 					<Route
-						path='/project/api-testing-suite'
+						path='/project/api-testing-suite/'
 						element={<ApiTestingSuite />}
 					/>
 					<Route
-						path='/project/recent-reports/:projectId'
+						path='/project/api-testing-suite/recent-reports/'
 						element={<RecentReports />}
 					/>
 					<Route
-						path='/project/api-testing-suite/api-list/:projectId'
+						path='/project/api-testing-suite/api-list/'
 						element={<ListOfApis />}
 					/>
 					<Route
-						path='/project/api-testing-suite/code-review/:projectId'
+						path='/project/api-testing-suite/code-review/'
 						element={<CodeReview />}
 					/>
 					<Route
-						path='/project/api-testing-suite/test-data-review/:projectId'
+						path='/project/api-testing-suite/test-data-review/'
 						element={<TestDataReview />}
 					/>
 					<Route
-						path='/project/api-testing-suite/test-execution/:projectId'
+						path='/project/api-testing-suite/test-execution/'
 						element={<TestExecution />}
 					/>
 					{/* <Route
@@ -73,23 +73,23 @@ function App() {
 						element={<ExecutionLoader />}
 					/> */}
 					<Route
-						path='/project/ui-automation/:projectId'
+						path='/project/ui-automation/'
 						element={<UiAutomation />}
 					/>
 						<Route
-						path='/project/ui-automation/loader/:projectId'
+						path='/project/ui-automation/loader/'
 						element={<Loader />}
 					/>
 					<Route
-						path='/project/ui-automation/execution/:projectId'
+						path='/project/ui-automation/execution/'
 						element={<Execution />}
 					/>
 					<Route
-						path='/project/ui-automation/report/:projectId'
+						path='/project/ui-automation/report/'
 						element={<ReportPage />}
 					/>
 						<Route
-						path='/project/ui-automation/column-mapping/:projectId'
+						path='/project/ui-automation/column-mapping/'
 						element={<ColumnMapping />}
 					/>
 					<Route
@@ -101,7 +101,7 @@ function App() {
 						element={<DatabaseTesting />}
 					/>
 					<Route
-						path='/testcases/:projectId'
+						path='/testcases/'
 						element={<Index />}
 					/>
 				</Route>

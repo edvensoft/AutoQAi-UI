@@ -1,13 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect,  useState } from 'react'
 import TestCaseHeader from './components/TestCaseHeader'
-import { useDispatch } from 'react-redux';
-import { nextStep } from '@/redux/apiTestingSlice';
-import { useParams } from 'react-router-dom';
+import {  useSelector } from 'react-redux';
+// import { nextStep } from '@/redux/apiTestingSlice';
+import { useNavigate, } from 'react-router-dom';
 import axios from 'axios';
 import { API_URL } from '@/config';
 import { CircularProgress } from '@mui/material';
 import ExecutionLoader from './ExecutionLoader';
 import ExecutionTable from './components/ExecutionTable';
+import type { RootState } from '@/redux/store';
 
 
 interface Data {
@@ -26,14 +27,17 @@ interface Data {
 }
 
 const TestExecution = () => {
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
 
     const [selectedApis, setSelectedApis] = useState<any | []>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const [apiData, setApiData] = useState<Data[] | []>([])
     const [isExecutionLoad, setIsExecutionLoad] = useState<boolean>(false)
-    const { projectId } = useParams();
+    // const { projectId } = useParams();
+
+    const projectId = useSelector((state: RootState) => state.appState.project_id);
+    const navigate = useNavigate();
 
 
 
@@ -54,6 +58,8 @@ const TestExecution = () => {
                     // alert('Selected APIs approved successfully!');
                     setIsExecutionLoad(false)
                     setSelectedApis([]);
+                    navigate(`/project/api-testing-suite/recent-reports/`)
+
                     // getEndpointsData();
                 }
             })
@@ -101,7 +107,7 @@ const TestExecution = () => {
         }
     }
 
-    console.log('load',isExecutionLoad)
+    console.log('load', isExecutionLoad)
 
     useEffect(() => {
         getEndpointsData()
@@ -134,7 +140,7 @@ const TestExecution = () => {
                 <TestCaseHeader
                     title="Test Cases for Execution"
                     submitBtnText="Execute Tests"
-                    submitBtnClass="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg transition-colors flex items-center space-x-2"
+                    submitBtnClass="bg-green-600 cursor-pointer hover:bg-green-700 text-white px-6 py-2 rounded-lg transition-colors flex items-center space-x-2"
                     submitBtnClick={handleExecuteCode}
                     submitBtnIcon={<i className="fa-solid fa-play"></i>}
                     selectedApis={selectedApis}
@@ -145,6 +151,10 @@ const TestExecution = () => {
                         loading ?
                             <div className="h-60 flex justify-center items-center">
                                 <CircularProgress size="3rem" />
+                            </div>
+                            : error && error.length >0 ?
+                            <div className="h-60 flex justify-center items-center">
+                                <div className="text-red-500">{error}</div>
                             </div>
                             :
                             <ExecutionTable

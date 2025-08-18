@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import type { ChangeEvent } from "react";
 import ViewColumnIcon from "@mui/icons-material/ViewColumn";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -6,7 +6,9 @@ import EditIcon from "@mui/icons-material/Edit";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import CheckIcon from "@mui/icons-material/Check";
 import useMapping from "./Hooks/useMapping";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+// import { useSelector } from "react-redux";
+// import type { RootState } from "@/redux/store";
 
 
 
@@ -39,7 +41,7 @@ let options = [
 
 const requiredFields = options.map((option, i) => i === 0 ? null : option?.label).filter((label) => label);
 const requiredKeys = options.map((option, i) => i === 0 ? null : option?.key).filter((key) => key);
-let defaultObj={ "test_id": "", "pre_condition": "", "steps": "", "expected_result": "", "description": "" }
+// let defaultObj={ "test_id": "", "pre_condition": "", "steps": "", "expected_result": "", "description": "" }
 
 
 const ColumnMapping: React.FC = () => {
@@ -57,7 +59,9 @@ const ColumnMapping: React.FC = () => {
 
 const [mappings, setMappings] = useState<Record<string, string>>({});
   const { selectedFields } = useMapping(mappings);
-  const {projectId}=useParams()
+  // const {projectId}=useParams()
+    // const projectId = useSelector((state: RootState) => state.appState.project_id);
+
 
 
   useEffect(() => {
@@ -78,7 +82,7 @@ const [mappings, setMappings] = useState<Record<string, string>>({});
   const allRequiredMapped =requiredKeys.every((key)=>key==="test_data"?true:Object.values(mappings)?.includes(key));
 
 
-  const hasAnySelection = Object.values(mappings).some(Boolean);
+  // const hasAnySelection = Object.values(mappings).some(Boolean);
 
   const handleChange = (field: string, e: ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
@@ -118,7 +122,12 @@ const [mappings, setMappings] = useState<Record<string, string>>({});
       column_mapping,
     }
 
-    navigate(`/project/ui-automation/loader/${projectId}`, {
+    // navigate(`/project/ui-automation/loader/${projectId}`, {
+    //   state: {
+    //    formValues
+    //   },
+    // });
+    navigate(`/project/ui-automation/loader/`, {
       state: {
        formValues
       },

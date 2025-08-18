@@ -1,26 +1,28 @@
 import React, { useEffect, useState } from 'react'
-import AddCircleIcon from '@mui/icons-material/AddCircle';
+// import AddCircleIcon from '@mui/icons-material/AddCircle';
 import ApiListTable from './components/ApiListTable';
-import CustomeCodeIcon from '@/assets/customeIcons/CustomeCodeIcon';
-import { useNavigate, useParams } from 'react-router-dom';
+// import CustomeCodeIcon from '@/assets/customeIcons/CustomeCodeIcon';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { API_URL } from '@/config';
-import { Backdrop, CircularProgress, TablePagination } from '@mui/material';
+import { Backdrop, CircularProgress,} from '@mui/material';
 import TestCaseHeader from './components/TestCaseHeader';
+import { useSelector } from 'react-redux';
+import type { RootState } from '@/redux/store';
 
-interface Data {
-    api_header: string,
-    api_method: string,
-    api_name: string,
-    api_url: string,
-    custom_instruction: string,
-    description: string | null,
-    id: number,
-    is_selected: boolean,
-    operation_id: string,
-    project_id: string,
-    request_body: string,
-}
+// interface Data {
+//     api_header: string,
+//     api_method: string,
+//     api_name: string,
+//     api_url: string,
+//     custom_instruction: string,
+//     description: string | null,
+//     id: number,
+//     is_selected: boolean,
+//     operation_id: string,
+//     project_id: string,
+//     request_body: string,
+// }
 
 
 const ListOfApis = () => {
@@ -35,7 +37,9 @@ const ListOfApis = () => {
     const [currentPage, setCurrentPage] = React.useState(1);
     const [totalPages, setTotalPages] = React.useState(0);
     const navigate = useNavigate();
-    const { projectId } = useParams();
+    // const { projectId } = useParams();
+    const projectId = useSelector((state: RootState) => state.appState.project_id);
+
     const [selectedApis, setSelectedApis] = React.useState<any | []>([])
 
 
@@ -91,14 +95,23 @@ const ListOfApis = () => {
         try {
             setLoading(true);
             // const response = await axios.get(`${API_URL}/v1/api/projects/get-apis/0dded977-6d16-4f8b-bff0-12771a92f08d/`);
-            const response = await axios.get(`${API_URL}/v1/api/projects/get-apis/${projectId}/`);
+            // const response = await axios.get(`${API_URL}/v1/api/projects/get-apis/${projectId}/`);
 
-            console.log('Fetched APIs:', response);
-            if (response?.data?.response && response?.data?.response.length > 0) {
-                setAllApis(response.data.response);
-                setTotalPages(Math.ceil(response.data.response.length / noApisPerPage));
-            }
-            // navigate('/api-code-review');
+            axios.get(`${API_URL}/v1/api/projects/get-apis/${projectId}/`).then((response) => {
+                console.log('Fetched APIs:', response);
+
+                if (response?.data?.response && response?.data?.response.length > 0) {
+                    setAllApis(response.data.response);
+                    setTotalPages(Math.ceil(response.data.response.length / noApisPerPage));
+                }
+            }).catch(e => {
+                console.log('Fetched APIs:', e);
+                setError(e.response.data.error)
+            })
+
+            // console.log('Fetched APIs:', response);
+
+
         } catch (err) {
             console.error('Error fetching users:', err);
             setError('Failed to fetch users');
@@ -129,7 +142,9 @@ const ListOfApis = () => {
                 // alert('Code generated successfully!');
                 setSelectedApis([]);
                 setIsGeneratingCode(false)
-                navigate(`/project/api-testing-suite/code-review/${projectId}`)
+                // navigate(`/project/api-testing-suite/code-review/${projectId}`)
+                navigate(`/project/api-testing-suite/code-review/`)
+
                 // navigate(`/api-code-review/${id}/${encodeURIComponent(projectTitle)}`);
 
             }
@@ -172,7 +187,7 @@ const ListOfApis = () => {
                 <TestCaseHeader
                     title="API Endpoints"
                     submitBtnText="Generate Code"
-                    submitBtnClass="bg-[#3B82F6] flex gap-2 items-center hover:bg-[#2563EB] text-white px-6 py-2 rounded-lg transition-colors"
+                    submitBtnClass="bg-[#3B82F6] cursor-pointer flex gap-2 items-center hover:bg-[#2563EB] text-white px-6 py-2 rounded-lg transition-colors"
                     submitBtnIcon={<i className="fa fa-code text-white" aria-hidden="true" />}
                     submitBtnClick={handleGenerateCode}
                     selectedApis={selectedApis}
@@ -186,43 +201,49 @@ const ListOfApis = () => {
                                 <CircularProgress size="3rem" />
                             </div>
                             :
-                            <>
-                                <ApiListTable
-                                    data={allApis}
-                                    currentPage={currentPage}
-                                    totalPages={totalPages}
-                                    noApisPerPage={noApisPerPage}
-                                    handleSelection={handleSelection}
-                                    handleSelectAll={handleSelectAll}
-                                    selectedApis={selectedApis}
-                                />
-                                <hr className="border-t border-[#374151]  my-4" />
-                                <div className='flex justify-between px-6 py-6'>
-                                    <div className='flex items-center'>
-                                        <p className='text-white text-[18px] mr-4'>Rows Per Page</p>
-                                        <select
-                                            onChange={handleSelectePerPage}
-                                            className=' w-12 bg-[#1A1A2E] border border-white text-white'>
-                                            <option value={10}>10</option>
-                                            <option value={25}>25</option>
-                                            <option value={50}>50</option>
-                                        </select>
-                                    </div>
-                                    <div className='flex items-center'>
-                                        <i className="fa fa-chevron-left mr-4 cursor-pointer"
-                                            onClick={handlePrevPage}
-                                            aria-hidden="true"
-                                        ></i>
-                                        <div className='text-white mr-4'>
-                                            {currentPage}
-                                        </div>
-                                        <i className="fa fa-chevron-right cursor-pointer"
-                                            onClick={handleNextPage}
-                                            aria-hidden="true"></i>
-                                    </div>
+                            error ?
+                                <div className='flex justify-center items-center h-40'>
 
+                                    <h3 className='text-red-500'>{error}</h3>
                                 </div>
-                            </>
+                                :
+                                <>
+                                    <ApiListTable
+                                        data={allApis}
+                                        currentPage={currentPage}
+                                        totalPages={totalPages}
+                                        noApisPerPage={noApisPerPage}
+                                        handleSelection={handleSelection}
+                                        handleSelectAll={handleSelectAll}
+                                        selectedApis={selectedApis}
+                                    />
+                                    <hr className="border-t border-[#374151]  my-4" />
+                                    <div className='flex justify-between px-6 py-6'>
+                                        <div className='flex items-center'>
+                                            <p className='text-white text-[18px] mr-4'>Rows Per Page</p>
+                                            <select
+                                                onChange={handleSelectePerPage}
+                                                className=' w-12 bg-[#1A1A2E] border border-white text-white'>
+                                                <option value={10}>10</option>
+                                                <option value={25}>25</option>
+                                                <option value={50}>50</option>
+                                            </select>
+                                        </div>
+                                        <div className='flex items-center'>
+                                            <i className="fa fa-chevron-left mr-4 cursor-pointer"
+                                                onClick={handlePrevPage}
+                                                aria-hidden="true"
+                                            ></i>
+                                            <div className='text-white mr-4'>
+                                                {currentPage}
+                                            </div>
+                                            <i className="fa fa-chevron-right cursor-pointer"
+                                                onClick={handleNextPage}
+                                                aria-hidden="true"></i>
+                                        </div>
+
+                                    </div>
+                                </>
 
                     }
 

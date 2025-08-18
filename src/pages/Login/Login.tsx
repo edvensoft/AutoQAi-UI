@@ -166,7 +166,7 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [email, setEmail] = useState("");
-const [emailEntered, setEmailEntered] = useState(false);
+  const [emailEntered, setEmailEntered] = useState(false);
   const [otp, setOtp] = useState(Array(6).fill(""));
   const [fullName, setFullName] = useState("");
   const [orgName, setOrgName] = useState("");
@@ -203,8 +203,8 @@ const [emailEntered, setEmailEntered] = useState(false);
 
   return (
     <div className="h-screen flex items-center justify-center bg-[#0b0b20]">
-      <div className="bg-[#141426] p-8 rounded-lg shadow-lg w-96 text-center border border-[0.5px] border-white/20">
-        
+      <div className="bg-[#141426] p-8 rounded-lg shadow-lg w-96 text-center border-[0.5px] border-white/20">
+
         {/* Logo */}
         <div className="flex justify-center mb-6">
           <div className="p-1 rounded-lg">
@@ -232,24 +232,27 @@ const [emailEntered, setEmailEntered] = useState(false);
                   : "bg-transparent text-white placeholder-gray-400"
               }`}
             /> */}
-         
-            <input
-  type="email"
-  placeholder="Email address"
-  value={email}
-  onChange={(e) => {
-    setEmail(e.target.value);
-    setEmailEntered(false); // reset until user leaves field
-  }}
-  onBlur={() => {
-    if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setEmailEntered(true);
-    }
-  }}
-  className={`w-full mb-4 px-3 py-2 rounded border border-gray-600 placeholder:text-sm placeholder:font-medium focus:outline-none focus:border-blue-500'
-  }`}
-/>
 
+            <input
+              type="email"
+              placeholder="Email address"
+              value={email}
+              // value={emailEntered}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setEmailEntered(false); // reset until user leaves field
+              }}
+              onBlur={() => {
+                if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                  setEmailEntered(true);
+                }
+              }}
+              className={`w-full mb-4 px-3 py-2 rounded border border-gray-600 placeholder:text-sm placeholder:font-medium focus:outline-none focus:border-blue-500'
+  }`}
+            />
+            {
+              emailEntered && <p className="text-green-500">Valid email</p>
+            }
 
             <button
               onClick={handleSendOTP}
@@ -334,7 +337,7 @@ const [emailEntered, setEmailEntered] = useState(false);
             </button>
           </>
         )} */}
-      {step === 3 && (
+        {step === 3 && (
           <>
             <h1 className="text-xl font-bold text-white mb-1">
               Complete Your Profile

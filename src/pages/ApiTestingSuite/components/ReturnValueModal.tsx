@@ -1,13 +1,45 @@
 
+import extractSchemaNodes from '@/utilities/extractSchemaNodes';
 import CloseIcon from '@mui/icons-material/Close';
 import { Portal } from '@mui/material';
 
 
 interface ModalProps {
-    onClose: (modal: string) => void
+    onClose: (modal: string) => void,
 }
+type JSONSchema = {
+  type?: string;
+  properties?: {
+    [key: string]: JSONSchema;
+  };
+  items?: JSONSchema;
+  // Add more fields if needed
+};
 
 const ReturnValueModal = ({ onClose }: ModalProps) => {
+    const exampleSchema: JSONSchema = {
+        type: 'object',
+        properties: {
+            name: { type: 'string' },
+            age: { type: 'number' },
+            address: {
+                type: 'object',
+                properties: {
+                    street: { type: 'string' },
+                    city: { type: 'string' }
+                }
+            },
+            tags: {
+                type: 'array',
+                items: {
+                    type: 'string'
+                }
+            }
+        }
+    };
+
+    const nodes = extractSchemaNodes(exampleSchema);
+    console.log(nodes);
     return (
         <Portal>
             <div id="return-values-modal"

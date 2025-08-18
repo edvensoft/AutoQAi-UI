@@ -5,7 +5,7 @@ interface TestHeaderProps {
     submitBtnText: string,
     submitBtnClass:string,
     submitBtnIcon:React.ReactElement,
-    submitBtnClick: () => void,
+    submitBtnClick: (id) => void,
     selectedApis: []
 }
 
@@ -22,7 +22,7 @@ const TestCaseHeader = (props: TestHeaderProps) => {
                         <button id="approve-selected-btn"
                             // className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg transition-colors flex items-center space-x-2"
                             className={submitBtnClass}
-                            onClick={submitBtnClick}
+                            onClick={()=>submitBtnClick(null)}
                         >
                             {/* <i className="fa-solid fa-check"></i> */}
                             {submitBtnIcon}
