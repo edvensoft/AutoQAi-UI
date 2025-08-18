@@ -19,6 +19,7 @@ import CodeReview from "./pages/ApiTestingSuite/CodeReview";
 import TestDataReview from "./pages/ApiTestingSuite/TestDataReview";
 import TestExecution from "./pages/ApiTestingSuite/TestExecution";
 import ExecutionLoader from "./pages/ApiTestingSuite/ExecutionLoader";
+import Dashboard from "./pages/Dashboard/Dashboard.jsx";
 
 function App() {
 	return (
@@ -36,6 +37,10 @@ function App() {
 						element={<Projects />}
 					/>
 				</Route>
+					<Route
+						path='/dashboard'
+						element={<Dashboard/>}
+					/>
 
 				{/* Project details with sidebar */}
 				<Route element={<MainLayout />}>

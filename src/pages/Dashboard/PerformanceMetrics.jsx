@@ -1,0 +1,138 @@
+import React from "react";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import { Line, Bar } from "react-chartjs-2";
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
+export default function PerformanceMetrics() {
+  // Line chart data (Response Time)
+  const lineData = {
+    labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+    datasets: [
+      {
+        label: "Response Time (ms)",
+        data: [200, 220, 190, 260, 185, 230, 210],
+        borderColor: "#3b82f6",
+        backgroundColor: "#3b82f6",
+        fill: false,
+        tension: 0.3,
+        pointRadius: 5,
+        pointBackgroundColor: "#3b82f6",
+      },
+    ],
+  };
+
+  const lineOptions = {
+    responsive: true,
+    plugins: {
+      legend: { labels: { color: "#fff" } },
+      title: { display: true, text: "Response Time", color: "#fff" },
+    },
+    scales: {
+      x: { ticks: { color: "#ccc" } },
+      y: { ticks: { color: "#ccc" } },
+    },
+  };
+
+  // Bar chart data (Success Rate)
+  const barData = {
+    labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+    datasets: [
+      {
+        label: "Success Rate (%)",
+        data: [20, 58, 97, 47, 98, 65   , 99],
+        backgroundColor: "#4ade80",
+        borderRadius: 6,
+      },
+    ],
+  };
+
+  const barOptions = {
+    responsive: true,
+    plugins: {
+      legend: { labels: { color: "#fff" } },
+      title: { display: true, text: "Success Rate", color: "#fff" },
+    },
+    scales: {
+      x: { ticks: { color: "#ccc" } },
+      y: { ticks: { color: "#ccc" } },
+    },
+  };
+
+  return (
+    <div className="bg-[#1a1a2e] rounded-2xl p-6 w-full text-white border-gray-500 border hover:border-blue-500 mt-5">
+      {/* Header */}
+      <div className="flex justify-between items-center mb-4">
+        <div className="flex items-center gap-3">
+          <div className="bg-purple-500 p-3 rounded-lg">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6 text-white"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M3 3v18h18M3 12h18M3 6h18M3 18h18"
+              />
+            </svg>
+          </div>
+          <h2 className="text-xl font-bold">Performance Metrics</h2>
+        </div>
+        <span className="text-purple-400 font-medium">Real-time Data</span>
+      </div>
+
+      {/* Charts Row */}
+      <div className="grid grid-cols-2 gap-4">
+        <div className="bg-[#0f0f1a] rounded-lg p-4">
+          <Line data={lineData} options={lineOptions} />
+        </div>
+        <div className="bg-[#0f0f1a] rounded-lg p-4">
+          <Bar data={barData} options={barOptions} />
+        </div>
+      </div>
+
+      {/* Stats Row */}
+      <div className="grid grid-cols-4 gap-6 mt-6 border-t border-gray-700 pt-4 text-center">
+        <div>
+          <p className="text-green-400 text-2xl font-bold">98.5%</p>
+          <p className="text-gray-400 text-sm">Success Rate</p>
+        </div>
+        <div>
+          <p className="text-blue-400 text-2xl font-bold">245ms</p>
+          <p className="text-gray-400 text-sm">Avg Response</p>
+        </div>
+        <div>
+          <p className="text-yellow-400 text-2xl font-bold">1.2k</p>
+          <p className="text-gray-400 text-sm">Total Tests</p>
+        </div>
+        <div>
+          <p className="text-red-400 text-2xl font-bold">18</p>
+          <p className="text-gray-400 text-sm">Failed Tests</p>
+        </div>
+      </div>
+    </div>
+  );
+}
