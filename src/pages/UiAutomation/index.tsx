@@ -4,7 +4,7 @@ import TestCaseOptions from "./TestCaseOptions";
 export default function UiAutomation() {
 	return (
 
-		<div>
+		<div >
 			<h2 className='text-4xl font-bold mb-2'>
 				UI Automation
 			</h2>

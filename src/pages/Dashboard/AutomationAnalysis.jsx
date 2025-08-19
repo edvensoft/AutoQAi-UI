@@ -19,19 +19,18 @@ export default function AutomationAnalysis() {
       "User Management",
       "Data Processing",
       "File Operations",
-      "Notifications",
-      "Reporting",
+      // "Notifications",
     ],
     datasets: [
       {
         label: "Manual Effort",
-        data: [50, 48, 55, 30, 45, 500],
+        data: [50, 48, 55, 30],
         backgroundColor: "#ff4d4f",
         borderRadius: 4,
       },
       {
         label: "Automation Effort",
-        data: [10, 8, 12, 7, 6, 5],
+        data: [10, 8, 12, 7],
         backgroundColor: "#4ade80",
         borderRadius: 4,
       },
@@ -45,12 +44,20 @@ export default function AutomationAnalysis() {
       legend: {
         labels: {
           color: "#fff",
+        usePointStyle: true,   // 👈 makes legend markers circular
+        pointStyle: "circle",
+         padding: 40   // 👈 shape can be "circle", "rect", "star", etc.
         },
+        position:"bottom"
       },
       title: {
         display: true,
-        text: "Effort Comparison by API Category",
+        text: "Minute Vs API Name",
         color: "#fff",
+        font: {
+        size: 16,   // 👈 increase title font size (default ~12-14)
+        weight: "bold" // optional: make it bold
+      },
       },
     },
     scales: {
@@ -100,11 +107,16 @@ export default function AutomationAnalysis() {
 
       {/* Charts Row */}
       <div className="grid grid-cols-3 gap-4">
-        <div className="bg-[#0f0f1a] rounded-lg p-4 h-64">
+        <div className="bg-[#0f0f1a] rounded-lg p-4 h-80 w-100 flex flex-col justify-between items-center">
+          <h2 className="font-bold text-2xl text-center">Api Automation</h2>
           <Bar data={chartData} options={chartOptions}/>
         </div>
-        <div className="bg-[#0f0f1a] rounded-lg h-64"></div>
-        <div className="bg-[#0f0f1a] rounded-lg h-64"></div>
+        <div className="bg-[#0f0f1a] rounded-lg p-4 h-80 w-100 flex flex-col justify-between items-center">
+           <h2 className="font-bold text-2xl text-center">UI Automation</h2>
+          <Bar data={chartData} options={chartOptions}/></div>
+        <div className="bg-[#0f0f1a] rounded-lg p-4 h-80 w-100 flex flex-col justify-between items-center">
+           <h2 className="font-bold text-2xl text-center">Test Case Generator</h2>
+          <Bar data={chartData} options={chartOptions}/></div>
       </div>
 
       {/* Stats Row */}

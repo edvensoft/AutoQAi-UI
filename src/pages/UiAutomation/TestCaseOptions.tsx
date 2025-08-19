@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import UploadCases from './UploadCases';
 import ManualTestCollections from './ManualTestCollections';
 import { useLocation } from 'react-router-dom';
+import TestManagement from './TestManagement/TestManagement';
 
 export default function TestCaseOptions() {
   const [testCase, setTestCase] = useState("");
@@ -58,7 +59,7 @@ export default function TestCaseOptions() {
       )}
 
       {testCase === "Upload Cases" && <div><UploadCases setTestCase={setTestCase}/></div>}
-      {testCase === "Test Management" && <></>}
+      {testCase === "Test Management" && <div className="w-full"><TestManagement/></div>}
       {testCase === "Manual Collections" && <ManualTestCollections />}
     </>
   );

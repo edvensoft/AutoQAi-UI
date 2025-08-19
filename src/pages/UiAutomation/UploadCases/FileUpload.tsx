@@ -11,7 +11,7 @@ import type { ChangeEvent } from "react";
 import TaskIcon from "@mui/icons-material/Task";
 import ClearIcon from "@mui/icons-material/Clear";
 import * as XLSX from "xlsx";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 // import { useParams } from "react-router-dom";
 // import { useSelector } from "react-redux";
 // import type { RootState } from "@/redux/store";
@@ -69,7 +69,9 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
     const [webBooks, setWebBooks] = useState<WorkbookState | null>(null);
     const [showSheetSelector, setShowSheetSelector] = useState(false);
     const navigate = useNavigate();
-    const { projectId } = useParams()
+    const { projectId } = useParams();
+
+    console.log(webBooks,"webBooks")
     // ---------- Memoized values ----------
     const isError = useMemo(
       () => Object.values(formErrors).some((error) => !!error),
@@ -96,7 +98,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
       onSave: () => {
         if (template) {
           // navigate(`/project/ui-automation/loader/${projectId}`, { state: { formValues } });
-          navigate(`/project/ui-automation/loader/`, { state: { formValues } });
+          navigate(`/project/ui-automation/loader/${projectId}`, { state: { formValues } });
 
         }
         console.log("Save clicked", formValues, webBooks);
@@ -330,7 +332,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
                   name="sheet_name"
                   onChange={(e) => handleChange(e)}
                   // className="appearance-none w-full p-2 bg-[#0f0f1a] border border-gray-600 text-white text-sm px-4 py-2 rounded-md pr-8"
-                   className="appearance-none w-full p-2 rounded bg-[#0f0f1a] border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                   className="appearance-none w-full p-2 rounded bg-[#0f0f1a] border border-gray-700 text-white focus:outline-none focus:ring focus:ring-purple-500"
                 >
                   <option key="" value="">
                       Select

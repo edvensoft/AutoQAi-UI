@@ -10,6 +10,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { Scatter } from "react-chartjs-2";
 import { Line, Bar } from "react-chartjs-2";
 
 ChartJS.register(
@@ -49,7 +50,14 @@ export default function PerformanceMetrics() {
     },
     scales: {
       x: { ticks: { color: "#ccc" } },
-      y: { ticks: { color: "#ccc" } },
+      y: {
+        ticks: {
+          color: "#ccc",
+          display: true,
+          text: "Seconds",
+          // color: "gray",
+        },
+      },
     },
   };
 
@@ -59,7 +67,7 @@ export default function PerformanceMetrics() {
     datasets: [
       {
         label: "Success Rate (%)",
-        data: [20, 58, 97, 47, 98, 65   , 99],
+        data: [20, 58, 97, 47, 98, 65, 99],
         backgroundColor: "#4ade80",
         borderRadius: 6,
       },
@@ -69,12 +77,104 @@ export default function PerformanceMetrics() {
   const barOptions = {
     responsive: true,
     plugins: {
-      legend: { labels: { color: "#fff" } },
-      title: { display: true, text: "Success Rate", color: "#fff" },
+      legend: { labels: { color: "#fff" }, position:"bottom",display: false },
+      title: { display: false, text: "Success Rate", color: "#fff" },
+     
     },
     scales: {
       x: { ticks: { color: "#ccc" } },
-      y: { ticks: { color: "#ccc" } },
+      y: {
+        ticks: { color: "#ccc" },
+        title: { text: "Seconds", color: "gray", display: true },
+        grid: { drawTicks: true, drawOnChartArea: true,color: "gray" },
+      },
+    },
+  };
+
+  const scatterData = {
+    labels: ["UserAuth", "Payment", "Data Sync", "Upload", "Notify"], // X-axis API names
+    datasets: [
+      {
+        label: "Exec-001",
+        data: [4.0, 3.8, 4.1, 3.9, 4.2], // Seconds for each API
+        pointStyle: "circle",
+        pointBackgroundColor: "teal",
+        borderColor: "teal",
+        showLine: false,
+      },
+      {
+        label: "Exec-002",
+        data: [3.7, 3.9, 4.0, 3.8, 3.9],
+        pointStyle: "rectRot",
+        pointBackgroundColor: "blue",
+        borderColor: "blue",
+        showLine: false,
+      },
+      {
+        label: "Exec-003",
+        data: [3.9, 4.1, 3.8, 3.7, 4.0],
+        pointStyle: "rect",
+        pointBackgroundColor: "purple",
+        borderColor: "purple",
+        showLine: false,
+      },
+      {
+        label: "Exec-004",
+        data: [4.2, 4.0, 3.9, 4.1, 4.3],
+        pointStyle: "triangle",
+        pointBackgroundColor: "orange",
+        borderColor: "orange",
+        showLine: false,
+      },
+      {
+        label: "Exec-005",
+        data: [3.6, 3.7, 3.8, 3.9, 4.0],
+        pointStyle: "triangle", // inverted triangle is not built-in, need custom plugin
+        rotation: 180, // rotate to make it upside-down
+        pointBackgroundColor: "red",
+        borderColor: "red",
+        showLine: false,
+      },
+    ],
+  };
+
+  const scatterOptions = {
+    responsive: true,
+    plugins: {
+      title: {
+        display: true,
+        text: "Seconds vs API Name",
+        font: { size: 20 },
+        color: "white",
+      },
+      legend: {
+        position: "bottom",
+        labels: {
+          color: "white",
+          padding: 20, // space between legend items
+          usePointStyle: true, // show as circle/triangle instead of box
+        },
+      },
+      
+    },
+    scales: {
+      x: {
+        type: "category",
+        labels: ["UserAuth", "Payment", "Data Sync", "Upload", "Notify"],
+        ticks: { color: "white" },
+        grid: { display: false },
+        offset: true,
+      },
+      y: {
+        // beginAtZero: true,
+        title: {
+          display: true,
+          text: "Seconds",
+          color: "gray",
+        },
+        ticks: { color: "white" },
+        grid: { display: false },
+      },
     },
   };
 
@@ -107,10 +207,11 @@ export default function PerformanceMetrics() {
       {/* Charts Row */}
       <div className="grid grid-cols-2 gap-4">
         <div className="bg-[#0f0f1a] rounded-lg p-4">
-          <Line data={lineData} options={lineOptions} />
+          <Bar data={barData} options={barOptions} />
         </div>
         <div className="bg-[#0f0f1a] rounded-lg p-4">
-          <Bar data={barData} options={barOptions} />
+          {/* <Line data={lineData} options={lineOptions} /> */}
+          <Scatter data={scatterData} options={scatterOptions} />
         </div>
       </div>
 
