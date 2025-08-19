@@ -266,22 +266,37 @@
 // };
 
 // export default ZephyrIntegration;
-import  { useState } from "react";
-// import {Flask} from "../../assets/Flask.svg";
+import { useState } from "react";
+import Flask from "../../assets/Flask.svg";
 import {
   EyeIcon,
   EyeSlashIcon,
   InformationCircleIcon,
 } from "@heroicons/react/24/outline";
+import axios from "axios";
+import { API_URL } from "@/config";
+import { useNavigate } from "react-router-dom";
+import CircularProgress from '@mui/material/CircularProgress';
+
 
 const ZephyrIntegration = () => {
   const [projectKey, setProjectKey] = useState("");
   const [accessToken, setAccessToken] = useState("");
   const [showProjectKey, setShowProjectKey] = useState(false);
   const [showAccessToken, setShowAccessToken] = useState(false);
+  const navigate=useNavigate();
+  const [loading,setLoading]=useState(false)
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setLoading(true);
+    axios.post(`${API_URL}/v1/api/ui-automation/fetch-zephyr-testcase/`, { project_key: projectKey, api_token: accessToken }).then((res) => {
+        //  console.log(res,"response");
+         if(res.data?.response?.length){
+             navigate("/zephyr/testcases",{state:{data:res.data?.response}})
+         }
+        setLoading(false)
+        })
     console.log("Zephyr Project Key:", projectKey);
     console.log("Zephyr Access Token:", accessToken);
   };
@@ -289,9 +304,9 @@ const ZephyrIntegration = () => {
   return (
     <div className="min-h-screen flex items-center justify-center -mt-3">
       <div className="bg-[#15182b] text-white rounded-xl shadow-lg p-10 w-full max-w-2xl border border-white/20">
-      <div className="w-16 h-16 rounded-full bg-blue-900 flex items-center justify-center mx-auto mb-4">
-      <img src="/Flask.svg" alt="Flask" className="w-8 h-8 text-blue-400" />
-      </div>
+        <div className="w-16 h-16 rounded-full bg-blue-900 flex items-center justify-center mx-auto mb-4">
+          <img src={Flask} alt="Flask" className="w-8 h-8 text-blue-400" />
+        </div>
 
         {/* Title */}
         <h2 className="text-3xl font-semibold text-center text-white">
@@ -388,7 +403,8 @@ const ZephyrIntegration = () => {
             disabled={!projectKey || !accessToken}
             className="w-full bg-[#2b4c8c] hover:bg-[#1d4ed8] transition-colors text-white font-medium py-3 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Connect to Zephyr
+            {loading?<CircularProgress size="30px" color="secondary" />:"Connect to Zephyr"} 
+           
           </button>
         </form>
       </div>

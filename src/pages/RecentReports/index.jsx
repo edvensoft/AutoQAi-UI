@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { toast, ToastContainer } from "react-toastify";
 
 // import type { RootState } from '@/redux/store';
 // import RootState from '../../redux/store'
@@ -109,7 +110,7 @@ export default function RecentReports() {
     axios
       .get(
         // `${API_URL}/v1/api/projects/${"fce9e73a-9b1f-4cb0-81e2-34506b33edf0"}/reports/`
-        `${API_URL}/v1/api/projects/0c32be2e-c485-4aa2-b3fa-3783ab831e4a/reports/`
+        `${API_URL}/v1/api/projects/${projectId}/`
 
       )
       .then((response) => {
@@ -117,13 +118,14 @@ export default function RecentReports() {
         if (response?.data?.response?.results?.length) {
           setRecentReports(response.data.response.results);
         } else {
-          setRecentReports(reportResponse?.response?.results);
+          setRecentReports([]);
         }
       });
   }, []);
 
   return (
     <div className="min-h-screen bg-[#0d0d1a] p-4">
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
       <div className="w-full rounded-lg">
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
@@ -169,6 +171,8 @@ export default function RecentReports() {
                     <td className="py-3 px-4 text-blue-500 font-medium cursor-pointer hover:underline" onClick={()=>{
                       if(report?.presigned_url){
                         window.open(report?.presigned_url)
+                      }else{
+                         toast.error("File Doesn't Exist!");
                       }
                     }}>
                       {report?.id}

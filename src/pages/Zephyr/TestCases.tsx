@@ -342,17 +342,23 @@
 
 // export default TestCases;
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useLocation } from "react-router-dom";
 import {
   ListChecks,
   CheckSquare,
   XSquare,
   // ClipboardList,
 } from "lucide-react";
+import axios from "axios";
+import { API_URL } from "@/config";
+import ExecutionLoader from "../ApiTestingSuite/ExecutionLoader";
 
 const TestCases: React.FC = () => {
   const [selected, setSelected] = useState<string[]>([]);
    const headerCheckboxRef = useRef<HTMLInputElement>(null);
+   const location=useLocation();
+   const [cases,setCases]=useState([]);
+   const [loading,setLoading]=useState(false);
 useEffect(() => {
     if (headerCheckboxRef.current) {
       if (selected.length > 0 && selected.length < testCases.length) {
@@ -362,6 +368,13 @@ useEffect(() => {
       }
     }
   }, [selected]);
+
+
+  useEffect(() => {
+console.log(location.state,"checking-state")
+setCases(location.state.data)
+  }, [])
+  
   const testCases = [
     {
       id: "TC-001",
@@ -401,7 +414,7 @@ useEffect(() => {
     },
   ];
 
-  const allSelected = selected.length === testCases.length;
+  const allSelected = selected.length === cases.length;
 
   const toggleSelect = (id: string) => {
     setSelected((prev) =>
@@ -413,12 +426,20 @@ useEffect(() => {
     if (allSelected) {
       setSelected([]);
     } else {
-      setSelected(testCases.map((tc) => tc.id));
+      setSelected(cases.map((tc) => tc.id));
     }
   };
  const navigate = useNavigate();
+ const onExecute=()=>{
+  setLoading(true);
+  axios.post(`${API_URL}/v1/api/ui-automation/execute-zephyr-testcase/`,{ids:[...selected]}).then((res)=>{
+    console.log(res,"response")
+    setLoading(false)
+    navigate("/project/ui-automation/report/",{state:{testResult:res.data}});
+  })
+ }
   return (
-    <div className="min-h-screen text-white p-8">
+    loading?<><ExecutionLoader/></>:<div className="min-h-screen text-white p-8">
       <div className="bg-[#1A1B2E] border border-white/20 rounded-xl shadow-lg p-6 max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex justify-between items-center mb-4">
@@ -442,7 +463,7 @@ useEffect(() => {
                  <ListChecks className="w-4 h-4 text-blue-400" />
               {/* <ClipboardList className="w-4 h-4 text-gray-300" /> */}
               <span className="font-semibold">Total Test Cases:</span>
-              <span className="text-blue-400">{testCases.length}</span>
+              <span className="text-blue-400">{cases?.length}</span>
             </div>
 
             {/* Selected */}
@@ -490,7 +511,7 @@ useEffect(() => {
                   <input
                     type="checkbox"
                     ref={headerCheckboxRef}
-                    checked={selected.length === testCases.length}
+                    checked={selected.length === cases?.length}
                     // checked={allSelected}
                     onChange={toggleSelectAll}
                     className="h-4 w-4 accent-purple-500"
@@ -506,7 +527,7 @@ useEffect(() => {
 
             {/* Table Body */}
             <tbody>
-              {testCases.map((tc, idx) => (
+              {cases.map((tc, idx) => (
                 <tr
                   key={tc.id}
                   className={`border-t border-white/10 ${
@@ -524,19 +545,25 @@ useEffect(() => {
                   </td>
                   {/* ID */}
                   <td className="p-3 text-indigo-400 font-semibold cursor-pointer underline">
-                    {tc.id}
+                    {tc.test_id}
                   </td>
                   {/* Name */}
                   <td className="p-3 font-semibold">{tc.name}</td>
                   {/* Steps */}
                   <td className="p-3 text-gray-300 whitespace-pre-line">
-                    {tc.steps.map((step, i) => `${i + 1}. ${step}`).join("\n")}
+                    {/* {tc?.test_scripts.map((step, i) => `${i + 1}. ${step}`).join("\n")} */}
+                     {tc?.test_scripts.map((step) => step?.testDescription?<li dangerouslySetInnerHTML={{ __html: step?.testDescription }}></li>:<></>)}
+                    {/* {tc?.test_scripts?.testDescription} */}
                   </td>
                   {/* Expected */}
-                  <td className="p-3">{tc.expected}</td>
+                  <td className="p-3">
+                    {/* {tc?.test_scripts[0]?.expectedResult} */}
+                    {tc?.test_scripts.map((step) => step?.expectedResult?<li dangerouslySetInnerHTML={{ __html: step?.expectedResult }}></li>:<></>)}
+                    </td>
                   {/* Data */}
                   <td className="p-3 whitespace-pre-wrap text-gray-300">
-                    {tc.data}
+                    {/* {tc?.test_scripts[0]?.testData} */}
+                     {tc?.test_scripts.map((step) => step?.testData?<li dangerouslySetInnerHTML={{ __html: step?.testData }}></li>:<></>)}
                   </td>
                 </tr>
               ))}
@@ -545,7 +572,9 @@ useEffect(() => {
         </div>
 
         {/* Execute Button */}
-        <div className="flex justify-end mt-6">
+        <div className="flex justify-end mt-6" onClick={()=>{
+onExecute()
+        }}>
           <button
             disabled={selected.length === 0}
             className={`px-6 py-2 rounded-lg shadow-md flex items-center gap-2 ${
