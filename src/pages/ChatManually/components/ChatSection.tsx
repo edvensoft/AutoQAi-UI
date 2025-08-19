@@ -11,7 +11,7 @@ import { setChats, setTestCases } from '@/redux/collectionsSlice';
 
 const ChatSection = () => {
     const [isTestCasesOpen, setIsTestCasesOpen] = useState(false)
-    const [apiError, setApiError] = useState('')
+    // const [apiError, setApiError] = useState('')
 
     const collections = useSelector((state: RootState) => state.collections.list);
     const chats = useSelector((state: RootState) => state.collections.chats);
@@ -45,7 +45,7 @@ const ChatSection = () => {
                     chats.push(chatObj)
                     dispatch(setChats(chats))
                     dispatch(setTestCases(response.data.response.test_cases))
-                    setApiError('')
+                    // setApiError('')
 
                 }
             }
@@ -53,7 +53,7 @@ const ChatSection = () => {
             // console.log('error', err)
             if (err.response.data.error === "No test cases found for this collection") {
                 console.log('incoming')
-                setApiError(err.response.data.error)
+                // setApiError(err.response.data.error)
                 dispatch(setChats([]))
                 dispatch(setTestCases([]))
 
@@ -97,15 +97,13 @@ const ChatSection = () => {
                 <div id='api-error '
                     className='flex justify-center items-center '
                 >
-                    {apiError.length > 0 &&
+                    {/* {apiError.length > 0 &&
                         <div className='bg-[#1A1A2E] text-red-500 rounded-lg p-6 flex flex-col justify-center items-center w-[28rem] h-[150px]'>
 
                             <i className="fa fa-times-circle text-3xl " aria-hidden="true"></i>
-
-
                             <h2 className='mt-2'>{apiError}</h2>
                         </div>
-                    }
+                    } */}
                 </div>
                 {
                     chats?.length > 0 &&

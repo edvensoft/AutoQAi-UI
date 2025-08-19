@@ -34,11 +34,11 @@ const ChatPrompt = () => {
         chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [chats]);
 
-    useEffect(()=>{
-collections.length ===0 && setIsSubmit(true)
-    },[])
+    useEffect(() => {
+        collections.length === 0 ? setIsSubmit(true) :setIsSubmit(false)
+    }, [collections])
     const handleSend = () => {
-        console.log('submit',file)
+        console.log('submit', file)
 
         if (file) {
             setIsSubmit(true)
@@ -68,7 +68,7 @@ collections.length ===0 && setIsSubmit(true)
                     dispatch(updateChat({
                         ...newChat,
                         // id:response.data.response.id,
-                        user_message:response.data.response.user_message,
+                        user_message: response.data.response.user_message,
                         collection_id: response.data.response.collection_id,
                         // test_case_chat_id:response.data.response.test_case_chat_id,
                         // test_cases:response.data.response.test_cases,
