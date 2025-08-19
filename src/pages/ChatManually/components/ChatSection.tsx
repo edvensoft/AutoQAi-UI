@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import type { RootState } from '@/redux/store';
 import axios from 'axios';
 import { API_URL } from '@/config';
-import ExistingCollections from './ExistingCollections';
+// import ExistingCollections from './ExistingCollections';
 import { setChats, setTestCases } from '@/redux/collectionsSlice';
 // import { setTestCases } from '@/redux/collectionsSlice';
 

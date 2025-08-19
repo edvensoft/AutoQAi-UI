@@ -2,7 +2,7 @@ import { API_URL } from '@/config';
 import { setTestCases } from '@/redux/collectionsSlice';
 import type { RootState } from '@/redux/store';
 import axios from 'axios';
-import React, { useState } from 'react'
+import  { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 
 const TestCaseRow = ({ test }) => {
@@ -34,8 +34,8 @@ const TestCaseRow = ({ test }) => {
 
     const handleSave = () => {
         console.log('save', testCases)
-        const checkNewTestCase = testCases.find(item => item.id === "new")
-        let copyTestcases = JSON.parse(JSON.stringify(testCases))
+        // const checkNewTestCase = testCases.find(item => item.id === "new")
+        // let copyTestcases = JSON.parse(JSON.stringify(testCases))
         if (test.id === 'new') {
             const payLoad = {
                 "collection_id": activeCollectionId,

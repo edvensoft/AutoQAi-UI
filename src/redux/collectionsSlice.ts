@@ -3,12 +3,12 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import { createSlice } from "@reduxjs/toolkit";
 
 interface Collection {
-  created_at: string,
+  created_at?: string,
   id: string,
   name: string,
-  project_id: string,
-  updated_at: string,
-  user_id: number
+  project_id?: string,
+  updated_at?: string,
+  user_id?: number
 }
 
 type TestCases = {

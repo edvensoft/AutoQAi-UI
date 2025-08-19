@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import  { useState } from 'react'
 import CreateCollection from './CreateCollection'
 
 interface Props {

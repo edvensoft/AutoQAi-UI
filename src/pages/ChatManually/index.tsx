@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import  { useEffect, useState } from 'react'
 import CollectionsSidebar from './components/CollectionsSidebar'
-import ChatLayout from './components/ChatSection'
+// import ChatLayout from './components/ChatSection'
 import ChatPrompt from './components/ChatPrompt'
 import ChatHeader from './components/ChatHeader'
 import ChatSection from './components/ChatSection'
-import CreateCollection from './components/CreateCollection'
+// import CreateCollection from './components/CreateCollection'
 import axios from 'axios'
 import { API_URL } from '@/config'
 import { useDispatch, useSelector } from 'react-redux'
@@ -15,7 +15,7 @@ import ExistingCollections from './components/ExistingCollections'
 
 const ChatManually = () => {
     const projectId = useSelector((state: RootState) => state.appState.project_id);
-    const collections = useSelector((state: RootState) => state.collections.list);
+    // const collections = useSelector((state: RootState) => state.collections.list);
     const [isExistColModalOpen, setIsExistColModalOpen] = useState(false)
 
     const dispatch = useDispatch();

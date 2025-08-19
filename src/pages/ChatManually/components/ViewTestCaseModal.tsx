@@ -1,9 +1,9 @@
-import { API_URL } from '@/config';
+// import { API_URL } from '@/config';
 import { addTestCases } from '@/redux/collectionsSlice';
 import type { RootState } from '@/redux/store';
 import { Portal } from '@mui/material'
-import axios from 'axios';
-import React, { useEffect, useState } from 'react'
+// import axios from 'axios';
+import  { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import TestCaseRow from './TestCaseRow';
 
@@ -30,14 +30,14 @@ const ViewTestCaseModal = (props: Props) => {
     console.log(testCases, 'testCase')
 
 
-    const getTestCases = () => {
-        axios.get(`${API_URL}/v1/api/test-cases/get-test-cases/${activeCollectionId}/`).then(res => {
-            console.log('res', res)
-            // setTestCases(res.data.test_cases)
-            // setOpenModal(true)
+    // const getTestCases = () => {
+    //     axios.get(`${API_URL}/v1/api/test-cases/get-test-cases/${activeCollectionId}/`).then(res => {
+    //         console.log('res', res)
+    //         // setTestCases(res.data.test_cases)
+    //         // setOpenModal(true)
 
-        })
-    }
+    //     })
+    // }
 
     const handleAddTestCase = () => {
         const emptyTestCase = {
@@ -54,68 +54,68 @@ const ViewTestCaseModal = (props: Props) => {
     }
 
 
-    const handleSave = () => {
-        console.log('save', testCases)
-        // const checkNewTestCase = storeTestCase.find(item => item.id === "new")
-        // let copyTestcases = JSON.parse(JSON.stringify(storeTestCase))
-        // if (testCases.id === 'new') {
-        //     const payLoad = {
-        //         "collection_id": activeCollectionId,
-        //         "test_case_chat_id": storeTestCase.length > 0 ? storeTestCase[0].test_case_chat_id : '',
-        //         "name": 'new',
-        //         "steps": testSteps,
-        //         "expected_output": expectedResult
-        //     }
-        //     // setIsEditing(false)
-        //     // dispatch(deleteTestCaseById(checkNewTestCase.id))
+    // const handleSave = () => {
+    //     console.log('save', testCases)
+    //     // const checkNewTestCase = storeTestCase.find(item => item.id === "new")
+    //     // let copyTestcases = JSON.parse(JSON.stringify(storeTestCase))
+    //     // if (testCases.id === 'new') {
+    //     //     const payLoad = {
+    //     //         "collection_id": activeCollectionId,
+    //     //         "test_case_chat_id": storeTestCase.length > 0 ? storeTestCase[0].test_case_chat_id : '',
+    //     //         "name": 'new',
+    //     //         "steps": testSteps,
+    //     //         "expected_output": expectedResult
+    //     //     }
+    //     //     // setIsEditing(false)
+    //     //     // dispatch(deleteTestCaseById(checkNewTestCase.id))
 
-        //     console.log(payLoad, testCases.length, 'payloa')
-        //     axios.post(`${API_URL}/v1/api/test-cases/add-testcase/`, payLoad).then(
-        //         resp => {
-        //             console.log('res', resp)
-        //             if (resp.data.message === "Test case added sucessfully") {
-        //                 let copyTestcases = JSON.parse(JSON.stringify(storeTestCase))
-        //                 let filteredCases = copyTestcases.filter(item => item.id !== 'new')
-        //                 filteredCases.push(resp.data.response)
-        //                 dispatch(setTestCases(filteredCases))
-        //                 setIsEditing(false)
-        //             }
-        //         }
-        //     )
-        // } else {
-        //     const payload = {
-        //         "id": testCases.id, //this is generate testcase id
-        //         "test_case_chat_id": testCases.test_case_chat_id,
-        //         "name": testCases.name,
-        //         "steps": testSteps,
-        //         "expected_output": expectedResult
-        //     }
-        //     console.log(payload, storeTestCase.length, 'payload old')
-        //     // axios.put(`${API_URL}/v1/api/test-cases/update-testcase/`, payload).then(
-        //     //     resp => {
-        //     //         console.log('res', resp)
-        //     //         if (resp.data.message === "updated sucessfully") {
-        //     //             let copyTestcases = JSON.parse(JSON.stringify(storeTestCase))
-        //     //             let filteredCases = copyTestcases.map(item => {
-        //     //                 if (item.id === testCases.id) {
-        //     //                     item = {
-        //     //                         ...item,
-        //     //                         steps: testSteps,
-        //     //                         expected_output: expectedResult
-        //     //                     }
-        //     //                 }
-        //     //                 return item
-        //     //             })
-        //     //             // filteredCases.push(resp.data.response)
-        //     //             console.log('filter', filteredCases)
-        //     //             // dispatch(setTestCases(filteredCases))
-        //     //             setIsEdit(false)
-        //     //         }
-        //     //     }
-        //     // )
-        // }
+    //     //     console.log(payLoad, testCases.length, 'payloa')
+    //     //     axios.post(`${API_URL}/v1/api/test-cases/add-testcase/`, payLoad).then(
+    //     //         resp => {
+    //     //             console.log('res', resp)
+    //     //             if (resp.data.message === "Test case added sucessfully") {
+    //     //                 let copyTestcases = JSON.parse(JSON.stringify(storeTestCase))
+    //     //                 let filteredCases = copyTestcases.filter(item => item.id !== 'new')
+    //     //                 filteredCases.push(resp.data.response)
+    //     //                 dispatch(setTestCases(filteredCases))
+    //     //                 setIsEditing(false)
+    //     //             }
+    //     //         }
+    //     //     )
+    //     // } else {
+    //     //     const payload = {
+    //     //         "id": testCases.id, //this is generate testcase id
+    //     //         "test_case_chat_id": testCases.test_case_chat_id,
+    //     //         "name": testCases.name,
+    //     //         "steps": testSteps,
+    //     //         "expected_output": expectedResult
+    //     //     }
+    //     //     console.log(payload, storeTestCase.length, 'payload old')
+    //     //     // axios.put(`${API_URL}/v1/api/test-cases/update-testcase/`, payload).then(
+    //     //     //     resp => {
+    //     //     //         console.log('res', resp)
+    //     //     //         if (resp.data.message === "updated sucessfully") {
+    //     //     //             let copyTestcases = JSON.parse(JSON.stringify(storeTestCase))
+    //     //     //             let filteredCases = copyTestcases.map(item => {
+    //     //     //                 if (item.id === testCases.id) {
+    //     //     //                     item = {
+    //     //     //                         ...item,
+    //     //     //                         steps: testSteps,
+    //     //     //                         expected_output: expectedResult
+    //     //     //                     }
+    //     //     //                 }
+    //     //     //                 return item
+    //     //     //             })
+    //     //     //             // filteredCases.push(resp.data.response)
+    //     //     //             console.log('filter', filteredCases)
+    //     //     //             // dispatch(setTestCases(filteredCases))
+    //     //     //             setIsEdit(false)
+    //     //     //         }
+    //     //     //     }
+    //     //     // )
+    //     // }
 
-    }
+    // }
 
     useEffect(() => {
         // getTestCases()

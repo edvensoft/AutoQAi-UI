@@ -3,7 +3,7 @@ import { addCollection } from '@/redux/collectionsSlice';
 import type { RootState } from '@/redux/store';
 import { Portal } from '@mui/material'
 import axios from 'axios';
-import React, { useState } from 'react'
+import  { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 
 interface Props {
