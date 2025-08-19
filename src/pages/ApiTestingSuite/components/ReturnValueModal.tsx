@@ -1,5 +1,5 @@
 
-import extractSchemaNodes from '@/utilities/extractSchemaNodes';
+// import extractSchemaNodes from '@/utilities/extractSchemaNodes';
 import CloseIcon from '@mui/icons-material/Close';
 import { Portal } from '@mui/material';
 
@@ -7,57 +7,57 @@ import { Portal } from '@mui/material';
 interface ModalProps {
     onClose: (modal: string) => void,
 }
-type JSONSchema = {
-  type?: string;
-  properties?: {
-    [key: string]: JSONSchema;
-  };
-  items?: JSONSchema;
-  // Add more fields if needed
-};
+// type JSONSchema = {
+//   type?: string;
+//   properties?: {
+//     [key: string]: JSONSchema;
+//   };
+//   items?: JSONSchema;
+//   // Add more fields if needed
+// };
 
-const dummyJson={
-    "user": {
-    "id": "string",
-    "name": "string",
-    "email": "string",
-    "profile": {
-      "avatar": "string",
-      "preferences": {}
-    }
-  },
-  "token": "string",
-  "expires": "datetime",
-  "status": "string"
+// const dummyJson={
+//     "user": {
+//     "id": "string",
+//     "name": "string",
+//     "email": "string",
+//     "profile": {
+//       "avatar": "string",
+//       "preferences": {}
+//     }
+//   },
+//   "token": "string",
+//   "expires": "datetime",
+//   "status": "string"
 
-}
+// }
 
 const ReturnValueModal = ({ onClose }: ModalProps) => {
-    const exampleSchema: JSONSchema = {
-        type: 'object',
-        properties: {
-            name: { type: 'string' },
-            age: { type: 'number' },
-            address: {
-                type: 'object',
-                properties: {
-                    street: { type: 'string' },
-                    city: { type: 'string' }
-                }
-            },
-            tags: {
-                type: 'array',
-                items: {
-                    type: 'string'
-                }
-            }
-        }
-    };
+    // const exampleSchema: JSONSchema = {
+    //     type: 'object',
+    //     properties: {
+    //         name: { type: 'string' },
+    //         age: { type: 'number' },
+    //         address: {
+    //             type: 'object',
+    //             properties: {
+    //                 street: { type: 'string' },
+    //                 city: { type: 'string' }
+    //             }
+    //         },
+    //         tags: {
+    //             type: 'array',
+    //             items: {
+    //                 type: 'string'
+    //             }
+    //         }
+    //     }
+    // };
 
 
 
-    const nodes = extractSchemaNodes(exampleSchema);
-    console.log(nodes,'noses');
+    // const nodes = extractSchemaNodes(dummyJson);
+    // console.log(nodes,'noses');
     return (
         <Portal>
             <div id="return-values-modal"
