@@ -1,5 +1,5 @@
 import { API_URL } from "@/config";
-import { addTestCases, deleteTestCaseById, setCollections, setTestCases } from "@/redux/collectionsSlice";
+import { setTestCases } from "@/redux/collectionsSlice";
 import type { RootState } from "@/redux/store";
 import axios from "axios";
 import { DeleteIcon, SaveIcon } from "lucide-react";
@@ -25,38 +25,19 @@ function TableRowWithEdit({ testCases }) {
 	const dispatch = useDispatch();
 
 
-	const handleTestCaseId = (e, id) => {
+	const handleTestCaseId = (e) => {
 		const val = e.target.value
 		setTestCaseId(val)
-		// const copyTestcases = JSON.parse(JSON.stringify(storeTestCase))
-		// copyTestcases.map(item => {
-		// 	if (item.id === id) {
-		// 		item.test_case_id = val
-		// 	}
-		// })
-		// dispatch(setCollections(copyTestcases))
+		
 	}
-	const handleTestCaseResult = (e, id) => {
+	const handleTestCaseResult = (e) => {
 		const val = e.target.value
 		setExpectedResult(val)
-		// const copyTestcases = JSON.parse(JSON.stringify(storeTestCase))
-		// copyTestcases.map(item => {
-		// 	if (item.id === id) {
-		// 		item.expected_output = val
-		// 	}
-		// })
-		// dispatch(setCollections(copyTestcases))
+		
 	}
-	const handleTestCaseStep = (e, id) => {
+	const handleTestCaseStep = (e) => {
 		const val = e.target.value
 		setTestSteps(val)
-		// const copyTestcases = JSON.parse(JSON.stringify(storeTestCase))
-		// copyTestcases.map(item => {
-		// 	if (item.id === id) {
-		// 		item.steps = val
-		// 	}
-		// })
-		// dispatch(setCollections(copyTestcases))
 	}
 
 
@@ -145,7 +126,7 @@ function TableRowWithEdit({ testCases }) {
 						value={testCaseId}
 						placeholder="enter"
 						// onChange={(e) => setTestCaseId(e.target.value)}
-						onChange={(e) => handleTestCaseId(e, testCases.id)}
+						onChange={(e) => handleTestCaseId(e)}
 					/>
 				) : (
 					testCases.test_case_id
@@ -157,7 +138,7 @@ function TableRowWithEdit({ testCases }) {
 						className='bg-gray-900 text-white border border-gray-600 rounded px-2 py-1 w-full min-h-[60px]'
 						value={testSteps}
 						// onChange={(e) => setTestSteps(e.target.value)}
-						onChange={(e) => handleTestCaseStep(e, testCases.id)}
+						onChange={(e) => handleTestCaseStep(e)}
 
 					/>
 				) : (
@@ -170,7 +151,7 @@ function TableRowWithEdit({ testCases }) {
 						className='bg-gray-900 text-white border border-gray-600 rounded px-2 py-1 w-full'
 						value={expectedResult}
 						// onChange={(e) => setExpectedResult(e.target.value)}
-						onChange={(e) => handleTestCaseResult(e, testCases.id)}
+						onChange={(e) => handleTestCaseResult(e)}
 
 					/>
 				) : (

@@ -6,7 +6,7 @@ import Projects from "./pages/Projects/Projects";
 // Project detail child pages
 import ApiTestingSuite from "./pages/ApiTestingSuite";
 import UiAutomation from "./pages/UiAutomation";
-import ManualTestCases from "./pages/ManualTestCases";
+// import ManualTestCases from "./pages/ManualTestCases";
 import DatabaseTesting from "./pages/DatabaseTesting";
 import Index from "./pages/UiAutomation/index.jsx";
 import Loader from "./pages/UiAutomation/Loader/Loader.jsx";
@@ -18,14 +18,20 @@ import ListOfApis from "./pages/ApiTestingSuite/ListOfApis";
 import CodeReview from "./pages/ApiTestingSuite/CodeReview";
 import TestDataReview from "./pages/ApiTestingSuite/TestDataReview";
 import TestExecution from "./pages/ApiTestingSuite/TestExecution";
-import ExecutionLoader from "./pages/ApiTestingSuite/ExecutionLoader";
+import ChatManually from "./pages/ChatManually/index.js";
+import { UserDetailsProvider } from "./context/UserDetailsContext.jsx";
+import ZephyrIntegration from "./pages/Zephyr/ZephyrIntegration.tsx";
+import TestCases from "./pages/Zephyr/TestCases.tsx";
+// import TestCases from "./pages/Zephyr/Testcases.tsx";
+
 
 function App() {
 	return (
+		<UserDetailsProvider>
 		<Router>
 			<Routes>
 				<Route
-					path='*'
+					path='/'
 					element={<Login />}
 				/>
 
@@ -42,6 +48,14 @@ function App() {
 					<Route
 						path='/project/api-testing-suite/'
 						element={<ApiTestingSuite />}
+					/>
+					<Route 
+					    path="/zephyr" 
+						element={<ZephyrIntegration />} 
+					/>
+					<Route 
+					    path="/testcases" 
+						element={<TestCases />} 
 					/>
 					<Route
 						path='/project/api-testing-suite/recent-reports/'
@@ -71,7 +85,7 @@ function App() {
 						path='/project/ui-automation/'
 						element={<UiAutomation />}
 					/>
-						<Route
+					<Route
 						path='/project/ui-automation/loader/'
 						element={<Loader />}
 					/>
@@ -83,13 +97,17 @@ function App() {
 						path='/project/ui-automation/report/'
 						element={<ReportPage />}
 					/>
-						<Route
+					<Route
 						path='/project/ui-automation/column-mapping/'
 						element={<ColumnMapping />}
 					/>
-					<Route
+					{/* <Route
 						path='/project/manual-test-cases'
 						element={<ManualTestCases />}
+					/> */}
+					<Route
+						path='/project/manual-test-cases'
+						element={<ChatManually />}
 					/>
 					<Route
 						path='/project/database-testing'
@@ -102,6 +120,7 @@ function App() {
 				</Route>
 			</Routes>
 		</Router>
+		</UserDetailsProvider>
 	);
 }
 

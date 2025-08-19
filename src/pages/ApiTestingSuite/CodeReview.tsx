@@ -1,12 +1,12 @@
-import { nextStep, prevStep } from "@/redux/apiTestingSlice";
+// import { nextStep, prevStep } from "@/redux/apiTestingSlice";
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 import TestCaseHeader from "./components/TestCaseHeader";
 import TestCaseTable from "./components/TestCaseTable";
 import axios from 'axios'
 import { API_URL } from "@/config";
-import { useNavigate, useParams } from "react-router-dom";
-import { Box, CircularProgress } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { CircularProgress } from "@mui/material";
 import type { RootState } from "@/redux/store";
 
 interface Data {
@@ -98,7 +98,7 @@ interface Data {
 
 
 const CodeReview = () => {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const [selectedApis, setSelectedApis] = useState<any | []>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -135,7 +135,8 @@ const CodeReview = () => {
           if (response.status === 200) {
             alert('Selected APIs approved successfully!');
             setSelectedApis([]);
-            navigate(`/project/api-testing-suite/test-data-review/`)
+            getEndpointsData()
+            // navigate(`/project/api-testing-suite/test-data-review/`)
 
             // getEndpointsData();
           }
@@ -155,7 +156,9 @@ const CodeReview = () => {
           if (response.status === 200) {
             alert('Selected APIs approved successfully!');
             setSelectedApis([]);
-            navigate(`/project/api-testing-suite/test-data-review/`)
+            getEndpointsData()
+
+            // navigate(`/project/api-testing-suite/test-data-review/`)
 
             // getEndpointsData();
           }
@@ -210,7 +213,7 @@ const CodeReview = () => {
 
 
   return (
-    <div id="code-review-content" className="max-w-7xl mx-auto">
+    <div id="code-review-content" className="max-w-7xl mx-auto p-4">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-[#FFFFFF] mb-2">Code Review</h1>
         <p className="text-gray-400">Review and approve generated API codes for seamless integration</p>
@@ -244,15 +247,20 @@ const CodeReview = () => {
                 <CircularProgress size="3rem" />
               </div>
               :
-              <TestCaseTable
-                apiData={apiData}
-                tableName="code_review"
-                selectedApis={selectedApis}
-                handleSelectAll={handleSelectAll}
-                totalNoApi={apiData.length}
-                handleSelection={handleSelection}
-                approve={handleApproveCode}
-              />
+              error && error.length > 0 ?
+                <div className="h-60 flex  justify-center items-center">
+                  <p className="text-red-500">{error}</p>
+                </div>
+                :
+                <TestCaseTable
+                  apiData={apiData}
+                  tableName="code_review"
+                  selectedApis={selectedApis}
+                  handleSelectAll={handleSelectAll}
+                  totalNoApi={apiData.length}
+                  handleSelection={handleSelection}
+                  approve={handleApproveCode}
+                />
           }
         </div>
       </div>

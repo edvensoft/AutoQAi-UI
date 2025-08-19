@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import  { useEffect, useRef } from 'react'
 
 interface Data {
     id: string,
@@ -20,15 +20,15 @@ interface TableRowProps {
 }
 interface TableProps {
     apiData: Data[],
-    tableName: string,
+    tableName?: string,
     selectedApis: any[],
     handleSelectAll: (e: any) => void,
-    totalNoApi: number,
+    totalNoApi?: number,
     handleSelection: (e: any, apiId: string) => void
 }
 
 const ExecutionTable = (props: TableProps) => {
-    const { apiData, tableName, selectedApis, handleSelectAll, totalNoApi, handleSelection } = props
+    const { apiData,  selectedApis, handleSelectAll,  handleSelection } = props
 
     const selectAllRef = useRef<HTMLInputElement>(null)
 

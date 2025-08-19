@@ -1,16 +1,20 @@
-import React, { useEffect, useRef, useState } from 'react'
-import AddCircleIcon from '@mui/icons-material/AddCircle';
+import React, {  useEffect, useRef, useState } from 'react'
+// import AddCircleIcon from '@mui/icons-material/AddCircle';
 import ReturnValueModal from './ReturnValueModal';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+// import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CompareValuesModal from './CompareValuesModal';
 import AddSchemaModal from './AddSchemaModal';
 import ApiMapingModal from './ApiMapingModal';
+// import { Autocomplete, Chip, TextField } from '@mui/material';
+// import MultiSelect from './MultiSelect';
+// import { Combobox, ComboboxInput, ComboboxOption, ComboboxOptions } from '@headlessui/react';
+import ApiListTableRow from './ApiListTableRow';
 
 
-interface AdditionalActions {
-    return_value: boolean,
-    compared_value: boolean,
-}
+// interface AdditionalActions {
+//     return_value: boolean,
+//     compared_value: boolean,
+// }
 
 // interface Data {
 //     id: number,
@@ -36,10 +40,10 @@ interface Data {
 }
 
 
-interface TableRowProps {
-    item: Data,
-    index: number
-}
+// interface TableRowProps {
+//     item: Data,
+//     index: number
+// }
 
 interface TableProps {
     data: Data[],
@@ -78,11 +82,14 @@ interface TableProps {
 
 
 const ApiListTable = (props: TableProps) => {
-    const { currentPage, data, totalPages, noApisPerPage, handleSelection, handleSelectAll, selectedApis } = props
+    const { currentPage, data, noApisPerPage, handleSelection, handleSelectAll, selectedApis } = props
     const [isReturnValue, setIsReturnValue] = useState<boolean>(false)
+
+
     const [isCompareValue, setIsCompareValue] = useState<boolean>(false)
     const [isSchemaModal, setIsSchemaModal] = useState<boolean>(false)
     const [isApiMapingModal, setIsApiMapingModal] = useState<boolean>(false)
+    const [apiMappingStatus, setApiMappingStatus] = useState({status:false})
 
 
 
@@ -113,9 +120,9 @@ const ApiListTable = (props: TableProps) => {
 
     }
 
-    const handleSchema = (id: number) => {
-        setIsSchemaModal(true)
-    }
+    // const handleSchema = (id: number) => {
+    //     setIsSchemaModal(true)
+    // }
 
     const startIndex = (currentPage - 1) * noApisPerPage;
     const endIndex = startIndex + noApisPerPage;
@@ -123,96 +130,168 @@ const ApiListTable = (props: TableProps) => {
     const currentItems = data.slice(startIndex, endIndex);
 
 
-    const TableRow = ({ item, index }: TableRowProps) => {
-        return (
-            <tr className="hover:bg-[#0F0F23]/50" key={item?.id}>
-                <td className="px-6 py-4">
-                    <input type="checkbox"
-                        checked={selectedApis.includes(item.id)}
-                        onChange={(e) => handleSelection(e, item.id)}
-                        className="api-checkbox w-4 h-4 cursor-pointer text-[#3B82F6] bg-transparent border-[#374151] rounded focus:ring-[#3B82F6]" />
-                </td>
-                <td className="px-6 py-4 text-sm text-[#FFFFFF]">{item?.id}</td>
-                <td className="px-6 py-4 text-sm w-36 text-[#FFFFFF]">{item?.api_name}</td>
-                <td className="px-6 py-4">
-                    {
-                        item.api_method === 'Get' ?
-                            <span className="px-2 py-1 text-xs font-medium bg-blue-600 text-white rounded">{item.api_method}</span>
-                            :
-                            <span className="px-2 py-1 text-xs font-medium bg-green-600 text-white rounded">{item.api_method}</span>
+    // const TableRow = ({ item }: TableRowProps) => {
 
-                    }
-                </td>
-                <td className="px-6 py-4">
-                    <div className="relative">
-                        <input type="text" className="dependent-api-input cursor-pointer bg-[#0F0F23] border border-[#374151] rounded-lg px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:ring-2 focus:ring-[#3B82F6] w-full" placeholder="Type to search APIs..."
-                        // autocomplete="off" 
-                        />
-                        <div className="dependent-api-suggestions hidden absolute top-full left-0 right-0 bg-[#1A1A2E] border border-[#374151] rounded-lg mt-1 max-h-40 overflow-y-auto z-10">
-                            <div className="suggestion-item px-3 py-2 text-sm text-gray-300 hover:bg-[#3B82F6] hover:text-white cursor-pointer" data-value="api_002">User Profile API</div>
-                            <div className="suggestion-item px-3 py-2 text-sm text-gray-300 hover:bg-[#3B82F6] hover:text-white cursor-pointer" data-value="api_003">Session Management API</div>
-                            <div className="suggestion-item px-3 py-2 text-sm text-gray-300 hover:bg-[#3B82F6] hover:text-white cursor-pointer" data-value="api_004">Payment Gateway API</div>
-                            <div className="suggestion-item px-3 py-2 text-sm text-gray-300 hover:bg-[#3B82F6] hover:text-white cursor-pointer" data-value="api_005">Notification Service API</div>
-                        </div>
-                        <div className="selected-apis mt-2 flex flex-wrap gap-1">
+    //     const [inputValue, setInputValue] = React.useState('');
+    //     const [selectedDependeAPi, setSelectedDependeAPi] = useState([{ label: 'ss', id: 2 }])
+    //     const handleDependentApi = (val, id) => {
+    //         console.log('value', val, id)
+    //         let selected = { label: val.label, id: id }
+    //         setSelectedDependeAPi((prev) => [...prev, selected])
 
-                        </div>
-                    </div>
-                </td>
-                <td className="px-6 py-4">
-                    <div className="flex space-x-2">
-                        <label className="flex items-center">
-                            <input type="checkbox"
-                                // checked={item.additional_actions.return_value}
-                                onChange={(e) => handleAditionalActions(e, 'return', item.id)}
-                                className="w-4 h-4 text-[#3B82F6] cursor-pointer bg-transparent border-[#374151] rounded"
-                            />
-                            <span className="ml-2 text-sm text-gray-300">Return Values</span>
-                        </label>
-                        <label className="flex items-center">
-                            <input type="checkbox"
-                                // checked={item.additional_actions.compared_value}
-                                onChange={(e) => handleAditionalActions(e, 'compare', item.id)}
-                                className="compare-values-cb w-4 h-4 cursor-pointer text-[#3B82F6] bg-transparent border-[#374151] rounded" />
-                            <span className="ml-2 text-sm text-gray-300">Compare Values</span>
-                        </label>
-                    </div>
-                </td>
-                <td className="px-6 py-4">
-                    <div className="flex items-center space-x-2">
-                        {/* {
-                            item.missing_schema === 'completed' ?
-                                <div className='flex items-center gap-1'>
-                                    <CheckCircleIcon className='text-sm text-green-400 ' />
-                                    <div className="text-sm text-green-400 capitalize">
-                                        
-                        {item.missing_schema}
-                    </div>
-                </div>
-                :
-                <div className='flex items-center gap-1'>
-                    <div className="text-sm text-red-400">{item.missing_schema}</div>
-                    <button className="add-schema-btn text-[#3B82F6] hover:text-[#2563EB]" title="Add JSON Schema"
-                        onClick={() => handleSchema(item.id)}
-                    >
-                       
-                        <AddCircleIcon className='text-sm' />
-                    </button>
-                </div>
-                        } */}
+    //         setInputValue('')
+    //         setIsApiMapingModal(true)
+    //     }
 
-                        <div className="flex items-center space-x-2">
-                            <span className="text-sm text-red-400">400, 500</span>
-                            <button className="add-schema-btn cursor-pointer text-brand-accent hover:text-brand-accent-dark" title="Add JSON Schema">
-                                <i className="fa-solid fa-plus-circle"></i>
-                            </button>
-                        </div>
 
-                    </div>
-                </td >
-            </tr >
-        )
-    }
+
+    //     return (
+    //         <tr className="hover:bg-[#0F0F23]/50" key={item?.id}>
+    //             <td className="px-6 py-4">
+    //                 <input type="checkbox"
+    //                     checked={selectedApis.includes(item.id)}
+    //                     onChange={(e) => handleSelection(e, item.id)}
+    //                     className="api-checkbox w-4 h-4 cursor-pointer text-[#3B82F6] bg-transparent border-[#374151] rounded focus:ring-[#3B82F6]" />
+    //             </td>
+    //             <td className="px-6 py-4 text-sm text-[#FFFFFF]">{item?.id}</td>
+    //             <td className="px-6 py-4 text-sm w-36 text-[#FFFFFF]">{item?.api_name}</td>
+    //             <td className="px-6 py-4">
+    //                 {
+    //                     item.api_method === 'Get' ?
+    //                         <span className="px-2 py-1 text-xs font-medium bg-blue-600 text-white rounded">{item.api_method}</span>
+    //                         :
+    //                         <span className="px-2 py-1 text-xs font-medium bg-green-600 text-white rounded">{item.api_method}</span>
+
+    //                 }
+    //             </td>
+    //             <td className="px-6 py-4">
+    //                 <div className="relative">
+    //                     {/* <input type="text" 
+    //                     className="dependent-api-input bg-[#0F0F23] border border-[#374151] rounded-lg px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:ring-2 focus:ring-[#3B82F6] w-full"
+    //                      placeholder="Type to search APIs..."
+    //                     // autocomplete="off" 
+    //                     />
+    //                     <div className="dependent-api-suggestions hidden absolute top-full left-0 right-0 bg-[#1A1A2E] border border-[#374151] rounded-lg mt-1 max-h-40 overflow-y-auto z-10">
+    //                         <div className="suggestion-item px-3 py-2 text-sm text-gray-300 hover:bg-[#3B82F6] hover:text-white cursor-pointer" data-value="api_002">User Profile API</div>
+    //                         <div className="suggestion-item px-3 py-2 text-sm text-gray-300 hover:bg-[#3B82F6] hover:text-white cursor-pointer" data-value="api_003">Session Management API</div>
+    //                         <div className="suggestion-item px-3 py-2 text-sm text-gray-300 hover:bg-[#3B82F6] hover:text-white cursor-pointer" data-value="api_004">Payment Gateway API</div>
+    //                         <div className="suggestion-item px-3 py-2 text-sm text-gray-300 hover:bg-[#3B82F6] hover:text-white cursor-pointer" data-value="api_005">Notification Service API</div>
+    //                     </div>
+    //                     <div className="selected-apis mt-2 flex flex-wrap gap-1">
+
+    //                     </div> */}
+
+    //                     <Autocomplete
+    //                         // id="free-solo-demo"
+    //                         // id='Type to search APIs...'
+    //                         freeSolo
+    //                         inputValue={inputValue}
+    //                         value={inputValue}
+    //                         onChange={(_event, value: string | null) => handleDependentApi(value, item.id)}
+    //                         options={currentItems.filter(i => i.id !== item.id).map(s => ({ label: s.api_name, id: s.id }))}
+    //                         renderInput={(params) => <TextField
+    //                             // className='w-full'
+    //                             placeholder="Type to search APIs..."
+    //                             sx={{
+    //                                 '& .MuiOutlinedInput-root': {
+    //                                     height: '28px', // Set height
+    //                                     borderRadius: '0.375rem', // Tailwind rounded-md equivalent
+    //                                     // paddingX: 1.5,
+    //                                     paddingY: '0.6rem',
+    //                                     fontSize: '0.875rem',
+    //                                     color: '#ffffff',
+    //                                     '& fieldset': {
+    //                                         borderColor: '#374151', // Tailwind blue-500
+    //                                     },
+    //                                     '&:hover fieldset': {
+    //                                         borderColor: '#374151', // Tailwind blue-600 on hover
+    //                                     },
+    //                                     '&.Mui-focused fieldset': {
+    //                                         borderColor: '#374151', // Tailwind blue-700 on focus
+    //                                     },
+    //                                 },
+    //                             }}
+    //                             {...params}
+
+    //                         />}
+    //                     />
+    //                     {
+    //                         selectedDependeAPi.length > 0 &&
+    //                         selectedDependeAPi.map(selected => {
+    //                             if (selected.id === item.id) {
+    //                                 return (
+    //                                     <div className="selected-apis mt-2 flex flex-wrap gap-1">
+    //                                         <span className="bg-[#3B82F6] text-white px-2 py-1 rounded text-xs flex items-center">
+    //                                             {selected.label}
+    //                                             <button className="ml-1 text-white hover:text-gray-300"
+    //                                                 // onclick="removeSelectedApi(this)" 
+    //                                                 data-value="api_002">
+    //                                                 <i className="fa fa-times" aria-hidden="true"></i>
+    //                                             </button>
+    //                                         </span>
+    //                                     </div>
+    //                                 )
+    //                             }
+    //                         })
+
+    //                     }
+
+    //                 </div>
+    //             </td>
+    //             <td className="px-6 py-4">
+    //                 <div className="flex space-x-2">
+    //                     <label className="flex items-center">
+    //                         <input type="checkbox"
+    //                             // checked={item.additional_actions.return_value}
+    //                             onChange={(e) => handleAditionalActions(e, 'return', item.id)}
+    //                             className="w-4 h-4 text-[#3B82F6] cursor-pointer bg-transparent border-[#374151] rounded"
+    //                         />
+    //                         <span className="ml-2 text-sm text-gray-300">Return Values</span>
+    //                     </label>
+    //                     <label className="flex items-center">
+    //                         <input type="checkbox"
+    //                             // checked={item.additional_actions.compared_value}
+    //                             onChange={(e) => handleAditionalActions(e, 'compare', item.id)}
+    //                             className="compare-values-cb w-4 h-4 cursor-pointer text-[#3B82F6] bg-transparent border-[#374151] rounded" />
+    //                         <span className="ml-2 text-sm text-gray-300">Compare Values</span>
+    //                     </label>
+    //                 </div>
+    //             </td>
+    //             <td className="px-6 py-4">
+    //                 <div className="flex items-center space-x-2">
+    //                     {/* {
+    //                         item.missing_schema === 'completed' ?
+    //                             <div className='flex items-center gap-1'>
+    //                                 <CheckCircleIcon className='text-sm text-green-400 ' />
+    //                                 <div className="text-sm text-green-400 capitalize">
+
+    //                     {item.missing_schema}
+    //                 </div>
+    //             </div>
+    //             :
+    //             <div className='flex items-center gap-1'>
+    //                 <div className="text-sm text-red-400">{item.missing_schema}</div>
+    //                 <button className="add-schema-btn text-[#3B82F6] hover:text-[#2563EB]" title="Add JSON Schema"
+    //                     onClick={() => handleSchema(item.id)}
+    //                 >
+
+    //                     <AddCircleIcon className='text-sm' />
+    //                 </button>
+    //             </div>
+    //                     } */}
+
+    //                     <div className="flex items-center space-x-2">
+    //                         <span className="text-sm text-red-400">400, 500</span>
+    //                         <button className="add-schema-btn cursor-pointer text-[#3B82F6] hover:text-[#2563EB]" title="Add JSON Schema">
+    //                             <i className="fa-solid fa-plus-circle"></i>
+    //                         </button>
+    //                     </div>
+
+    //                 </div>
+    //             </td >
+    //         </tr >
+    //     )
+    // }
 
     const selectAllRef = useRef<HTMLInputElement>(null)
 
@@ -256,8 +335,18 @@ const ApiListTable = (props: TableProps) => {
                 </thead>
                 <tbody id="api-table-body" className="divide-y divide-[#374151]">
                     {
-                        currentItems.map((item: Data, index: number) => (
-                            <TableRow item={item} index={index} />
+                        currentItems.map((item: Data) => (
+                            // <TableRow item={item} index={index} />
+                            <ApiListTableRow
+                                item={item}
+                                selectedApis={selectedApis}
+                                handleSelection={handleSelection}
+                                currentItems={currentItems}
+                                handleAditionalActions={handleAditionalActions}
+                                setIsApiMapingModal={setIsApiMapingModal}
+                                apiMappingStatus={apiMappingStatus}
+                                setApiMappingStatus={setApiMappingStatus}
+                            />
                         ))
                     }
                     {/* <tr className="hover:bg-[#0F0F23]/50">
@@ -329,7 +418,9 @@ const ApiListTable = (props: TableProps) => {
 
             {
                 isApiMapingModal &&
-                <ApiMapingModal onClose={closeModal} />
+                <ApiMapingModal onClose={closeModal}
+                    setApiMappingStatus={setApiMappingStatus}
+                />
             }
 
         </>

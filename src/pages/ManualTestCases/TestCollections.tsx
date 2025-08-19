@@ -21,12 +21,12 @@ export default function TestCollections() {
 	const [selectAll, setSelectAll] = useState(false);
 	const collections = useSelector((state: RootState) => state.collections.list);
 	const testCases = useSelector((state: RootState) => state.collections.testCases);
-	
+
 
 	const activeCollectionId = useSelector(
 		(state: RootState) => state.collections.activeCollectionId,
 	);
-    const projectId = useSelector((state: RootState) => state.appState.project_id);
+	const projectId = useSelector((state: RootState) => state.appState.project_id);
 
 
 	// const [testCases, setTestCases] = useState<TestCases[]>([])
@@ -57,7 +57,10 @@ export default function TestCollections() {
 	const handleView = (id: string) => {
 		// 
 		// 
-		setOpenModal(true)
+		if (id) {
+			setOpenModal(true)
+
+		}
 		// axios.get(`${API_URL}/v1/api/test-cases/get-test-cases/${id}/`).then(res => {
 		// 	console.log('res', res)
 		// 	// setTestCases(res.data.test_cases)
@@ -89,7 +92,7 @@ export default function TestCollections() {
 		getCollections()
 	}, [])
 
-	
+
 	return (
 		<>
 			<aside
@@ -178,7 +181,7 @@ export default function TestCollections() {
 					// testCases={testCases}
 					// setTestCases={setTestCases}
 					onClose={() => setOpenModal(false)}
-					// collectionId={activeCollectionId}
+				// collectionId={activeCollectionId}
 				/>
 			}
 

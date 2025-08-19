@@ -58,7 +58,7 @@ function Loader() {
   }, [location.state, navigate]);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center">
+    <div className="min-h-screen flex flex-col items-center justify-center p-4">
       <div className="w-14 h-14 border-4 border-blue-500 border-t-transparent rounded-full color-white animate-spin mb-4" />
       <p className="text-white-600 text-lg font-medium">Executing... Please wait</p>
     </div>

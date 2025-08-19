@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import  { useEffect, useRef, useState } from 'react'
 import CodeEditorModal from './CodeEditorModal'
 import { API_URL } from '@/config'
 import axios from 'axios'
@@ -146,7 +146,9 @@ const TestCaseTable = (props: TableProps) => {
                 <td className="px-6 py-4">
                     <div className="flex space-x-2">
                         <button
-                            className="open-code-editor cursor-pointer bg-[#3B82F6] hover:bg-[#2563EB] text-white p-2 rounded transition-colors group relative" data-api-id="API_001" data-api-name="User Authentication" title="View Code"
+                            className="open-code-editor cursor-pointer bg-[#3B82F6] hover:bg-[#2563EB] text-white p-2 rounded transition-colors group relative" 
+                            data-api-id="API_001" 
+                            data-api-name="User Authentication" title="View Code"
                             onClick={() => handleCodeView(item.id)}
                         >
                             <i className="fa-solid fa-eye"></i>

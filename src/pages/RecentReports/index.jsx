@@ -121,7 +121,7 @@ export default function RecentReports() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#0d0d1a]">
+    <div className="min-h-screen bg-[#0d0d1a] p-4">
       <div className="w-full rounded-lg">
         {/* Header */}
         <div className="flex items-center justify-between mb-4">

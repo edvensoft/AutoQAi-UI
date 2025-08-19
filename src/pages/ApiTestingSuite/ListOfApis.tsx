@@ -1,28 +1,28 @@
 import React, { useEffect, useState } from 'react'
-import AddCircleIcon from '@mui/icons-material/AddCircle';
+// import AddCircleIcon from '@mui/icons-material/AddCircle';
 import ApiListTable from './components/ApiListTable';
-import CustomeCodeIcon from '@/assets/customeIcons/CustomeCodeIcon';
-import { useNavigate, useParams } from 'react-router-dom';
+// import CustomeCodeIcon from '@/assets/customeIcons/CustomeCodeIcon';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { API_URL } from '@/config';
-import { Backdrop, CircularProgress, TablePagination } from '@mui/material';
+import { Backdrop, CircularProgress,} from '@mui/material';
 import TestCaseHeader from './components/TestCaseHeader';
 import { useSelector } from 'react-redux';
 import type { RootState } from '@/redux/store';
 
-interface Data {
-    api_header: string,
-    api_method: string,
-    api_name: string,
-    api_url: string,
-    custom_instruction: string,
-    description: string | null,
-    id: number,
-    is_selected: boolean,
-    operation_id: string,
-    project_id: string,
-    request_body: string,
-}
+// interface Data {
+//     api_header: string,
+//     api_method: string,
+//     api_name: string,
+//     api_url: string,
+//     custom_instruction: string,
+//     description: string | null,
+//     id: number,
+//     is_selected: boolean,
+//     operation_id: string,
+//     project_id: string,
+//     request_body: string,
+// }
 
 
 const ListOfApis = () => {
@@ -162,7 +162,7 @@ const ListOfApis = () => {
     }, []);
 
     return (
-        <div id="api-list-content" className="max-w-7xl mx-auto">
+        <div id="api-list-content" className="max-w-7xl mx-auto p-4">
             <div className="mb-8">
                 <h1 className="text-3xl font-bold text-[#FFFFFF] mb-2">API List</h1>
                 <p className="text-gray-400">Manage and configure your API endpoints for testing</p>
