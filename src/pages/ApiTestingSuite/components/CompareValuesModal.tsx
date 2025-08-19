@@ -11,20 +11,22 @@ const CompareValuesModal = ({ onClose }: ModalProps) => {
         <Portal >
             <div id="compare-values-modal"
                 className=" fixed inset-0 bg-black/50 flex items-center justify-center overflow-auto z-50"
-                // className='fixed inset-0 bg-black/50 z-50 overflow-y-auto'
+            // className='fixed inset-0 bg-black/50 z-50 overflow-y-auto'
 
             >
                 <div className="bg-[#1A1A2E]  rounded-lg p-3 w-full max-w-5xl mx-auto my-auto border border-[#374151]  ">
-                    <div className="flex justify-between items-center mb-2">
-                        <h3 className="text-xl font-semibold text-[#FFFFFF]">Configure Parameter Comparison</h3>
-                        <button className=" text-gray-400 hover:text-white cursor-pointer"
-                            onClick={() => onClose('compare')}
+                    <div className=' sticky top-0 z-50 bg-[#1A1A2E] '>
+                        <div className="flex justify-between py-4 items-center mb-2">
+                            <h3 className="text-xl font-semibold text-[#FFFFFF]">Configure Parameter Comparison</h3>
+                            <button className=" text-gray-400 hover:text-white cursor-pointer"
+                                onClick={() => onClose('compare')}
 
-                        >
-                            {/* <i className="fa-solid fa-times"></i> */}
-                            <CloseIcon />
+                            >
+                                {/* <i className="fa-solid fa-times"></i> */}
+                                <CloseIcon />
 
-                        </button>
+                            </button>
+                        </div>
                     </div>
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 mb-2">

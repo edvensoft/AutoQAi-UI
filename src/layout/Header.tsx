@@ -18,7 +18,7 @@
 // 					EV
 // 				</div>
 // 				<span className="text-sm text-gray-200">Elena Voyage</span>
-				
+
 // 			</div>
 // 		</header>
 // 	);
@@ -31,7 +31,7 @@ import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const { fullName } = useUserDetails();
-  	const navigate = useNavigate();
+  const navigate = useNavigate();
   const initials = fullName
     ? fullName.split(" ").map(word => word[0]).join("").slice(0, 2).toUpperCase()
     : "U";
@@ -42,7 +42,19 @@ const Header = () => {
       bg-gray-800 shadow z-50"
       style={{ height: "3rem" }}
     >
-      <div className="flex items-center space-x-2" onClick={() => navigate('/projects')}>
+      <div className="flex items-center cursor-pointer space-x-2" onClick={() => navigate('/projects')}>
+        <div className="w-8 h-8">
+          <img
+            // className="h-24 w-auto mx-auto scale-125 transform"
+            className="h-full w-full  "
+
+            style={{
+              animation: 'scaleFade 3s ease-in-out infinite',
+              transformOrigin: 'center',
+            }}
+            src="https://storage.googleapis.com/uxpilot-auth.appspot.com/9b7d96063c-ea5136f19585b669bf04.png" alt="AutoQAi logo"
+          />
+        </div>
         <span className="font-bold text-xl text-white">AutoQAi</span>
       </div>
       <div className="flex items-center space-x-3">

@@ -6,7 +6,7 @@ import { setActiveCollection } from '@/redux/collectionsSlice';
 import { API_URL } from '@/config';
 import axios from 'axios';
 
-const CollectionsSidebar = () => {
+const CollectionsSidebar = ({getCollections}) => {
     const [isTestCasesOpen, setIsTestCasesOpen] = useState(false)
     const [selectedCollections, setSelectedCollections] = useState([])
     const collections = useSelector((state: RootState) => state.collections.list);
@@ -82,8 +82,7 @@ const CollectionsSidebar = () => {
             res => {
                 console.log('res', res)
                 if (res.data.message === "Sucessfully Deleted collections") {
-                    // getCollections()
-
+                    getCollections()
                 }
             }
         )

@@ -39,6 +39,10 @@ const ChatManually = () => {
                     }
                 }
             }
+        ).catch(
+            ()=>{
+                dispatch(setChats([]))
+            }
         )
     }
 
@@ -62,7 +66,7 @@ const ChatManually = () => {
                 <ChatPrompt />
             </div>
             <div className='w-[30%]'>
-                <CollectionsSidebar />
+                <CollectionsSidebar getCollections={getCollections}/>
             </div>
             {
                 isExistColModalOpen &&

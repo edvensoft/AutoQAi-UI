@@ -16,6 +16,8 @@ const ChatPrompt = () => {
 
     const [isSubmit, setIsSubmit] = useState(false)
     const [file, setFile] = useState<File | null>(null)
+    const collections = useSelector((state: RootState) => state.collections.list);
+
 
     const uploadRef = useRef<HTMLInputElement>(null);
 
@@ -32,8 +34,11 @@ const ChatPrompt = () => {
         chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [chats]);
 
+    useEffect(() => {
+        collections.length === 0 ? setIsSubmit(true) :setIsSubmit(false)
+    }, [collections])
     const handleSend = () => {
-        console.log('submit',file)
+        console.log('submit', file)
 
         if (file) {
             setIsSubmit(true)
@@ -63,7 +68,7 @@ const ChatPrompt = () => {
                     dispatch(updateChat({
                         ...newChat,
                         // id:response.data.response.id,
-                        user_message:response.data.response.user_message,
+                        user_message: response.data.response.user_message,
                         collection_id: response.data.response.collection_id,
                         // test_case_chat_id:response.data.response.test_case_chat_id,
                         // test_cases:response.data.response.test_cases,
@@ -150,7 +155,9 @@ const ChatPrompt = () => {
         const files = e?.target?.files;
         const selectedFile = files && files.length > 0 ? files[0] : null;
         console.log('sele', selectedFile)
-        validateFile(selectedFile);
+            setFile(selectedFile);
+
+        // validateFile(selectedFile);
     };
 
     const onBrowse = () => {
@@ -159,16 +166,16 @@ const ChatPrompt = () => {
         }
     }
 
-    const validateFile = (file: File | null) => {
-        console.log('type', file?.type)
-        if (file && file.type === "application/json") {
-            setFile(file);
-            // setError('');
-        } else {
-            // setError("Please upload a valid JSON file.");
-            setFile(null);
-        }
-    };
+    // const validateFile = (file: File | null) => {
+    //     console.log('type', file?.type)
+    //     if (file && file.type === "application/json") {
+    //         setFile(file);
+    //         // setError('');
+    //     } else {
+    //         // setError("Please upload a valid JSON file.");
+    //         setFile(null);
+    //     }
+    // };
 
     // useEffect(()=>{
 
@@ -188,7 +195,7 @@ const ChatPrompt = () => {
                         </button>
                         <input type="file" id="file-input" className="hidden"
                             // accept=".pdf,.doc,.docx,.txt"
-                            accept=".json"
+                            // accept=".json"
                             ref={uploadRef}
                             onChange={handleFileChange}
                         />
