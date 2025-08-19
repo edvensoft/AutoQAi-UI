@@ -52,7 +52,7 @@ const Login = () => {
 
   return (
     <div className="h-screen flex items-center justify-center bg-[#0b0b20]">
-      <div className="bg-[#141426] p-8 rounded-lg shadow-lg w-96 text-center border border-[0.5px] border-white/20">
+      <div className="bg-[#141426] p-8 rounded-lg shadow-lg w-96 text-center  border-[0.5px] border-white/20">
         {/* Logo */}
         <div className="flex justify-center mb-6">
           <div className="p-1 rounded-lg">

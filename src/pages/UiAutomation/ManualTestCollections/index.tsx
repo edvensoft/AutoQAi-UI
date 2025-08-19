@@ -9,7 +9,7 @@ const ManualTestCollections = () => {
 
 const navigate = useNavigate();
   return (
-    <div className="flex justify-center items-start bg-[#0E0E17] w-full max-w-5xl">
+    <div className="flex justify-center items-start bg-[#0E0E17] w-full max-w-5xl p-4">
       <div className="bg-[#151526] p-6 rounded-lg border border-gray-700 w-full">
         <h2 className="text-white text-lg font-semibold mb-6">
           Manual Test Collections 

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import CloudIcon from "../../../assets/cloudIcon.svg"
-impo
+// impo
 
 const tools = [
   { name: "Zephyr", desc: "Enterprise test management for Jira", icon: "☁️" },
