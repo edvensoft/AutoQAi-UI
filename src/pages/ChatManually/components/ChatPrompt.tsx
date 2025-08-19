@@ -16,6 +16,8 @@ const ChatPrompt = () => {
 
     const [isSubmit, setIsSubmit] = useState(false)
     const [file, setFile] = useState<File | null>(null)
+    const collections = useSelector((state: RootState) => state.collections.list);
+
 
     const uploadRef = useRef<HTMLInputElement>(null);
 
@@ -32,6 +34,9 @@ const ChatPrompt = () => {
         chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [chats]);
 
+    useEffect(()=>{
+collections.length ===0 && setIsSubmit(true)
+    },[])
     const handleSend = () => {
         console.log('submit',file)
 

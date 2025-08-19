@@ -93,7 +93,7 @@ const Projects = () => {
       );
       dispatch(setProjectId(createProj.data.project_id))
       dispatch(setActiveCollection(null))
-      // navigate(`/project/manual-test-cases/`)
+      navigate(`/project/manual-test-cases/`)
 
       toast.success("Project created successfully!");
       setIsModalOpen(false);
