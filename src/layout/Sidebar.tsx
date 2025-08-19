@@ -22,9 +22,9 @@ function Sidebar({ children }) {
   const location = useLocation();
 const projectName = location.state?.projectName || "My Project";
   // find active project based on current route
-  const activeProject = projects.find((proj) =>
-    location.pathname.startsWith(proj.path)
-  );
+  // const activeProject = projects.find((proj) =>
+  //   location.pathname.startsWith(proj.path)
+  // );
  
   return (
     <div className="flex">
