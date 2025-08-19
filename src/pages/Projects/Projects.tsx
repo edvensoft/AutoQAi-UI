@@ -1,11 +1,11 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import {
   CheckCircleIcon,
   ExclamationCircleIcon,
   TrashIcon,
 } from "@heroicons/react/24/solid";
-import { useDispatch} from "react-redux";
+import { useDispatch } from "react-redux";
 import { setProjectId } from "@/redux/appSlice";
 import { setActiveCollection } from "@/redux/collectionsSlice";
 import { useNavigate } from "react-router-dom";
@@ -74,12 +74,13 @@ const Projects = () => {
       formData.append("description", newProject.description);
       if (newProject.image) formData.append("image", newProject.image);
 
-      await axios.post(`${API_BASE_URL}/create-project/`, formData, {
+      const createProj= await axios.post(`${API_BASE_URL}/create-project/`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
       // Refresh project list after adding new one
       const res = await axios.get(`${API_BASE_URL}/get-projects/${userId}/`);
+      console.log(res,'res')
       setProjects(
         res.data.response.map((p) => ({
           id: p.project_id,
@@ -90,9 +91,9 @@ const Projects = () => {
           image: p.image || "",
         }))
       );
-         dispatch(setProjectId(res.data.project_id))
+      dispatch(setProjectId(createProj.data.project_id))
       dispatch(setActiveCollection(null))
-      navigate(`/project/manual-test-cases/`)
+      // navigate(`/project/manual-test-cases/`)
 
       toast.success("Project created successfully!");
       setIsModalOpen(false);
@@ -152,7 +153,7 @@ const Projects = () => {
         {projects.map((project) => (
           <div
             key={project.id}
-            onClick={() =>{
+            onClick={() => {
               dispatch(setProjectId(project.id))
               dispatch(setActiveCollection(null))
 
@@ -161,7 +162,7 @@ const Projects = () => {
               // navigate(`/project/ui-automation`, {
               //   state: { projectName: project.name },
               // })
-            
+
             }
             className="bg-[#1e1e2e] rounded-lg p-5 shadow border border-gray-700 flex flex-col justify-between 
             hover:border-blue-500 hover:-translate-y-1 transition-all duration-200 cursor-pointer"

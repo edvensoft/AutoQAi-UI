@@ -16,6 +16,22 @@ type JSONSchema = {
   // Add more fields if needed
 };
 
+const dummyJson={
+    "user": {
+    "id": "string",
+    "name": "string",
+    "email": "string",
+    "profile": {
+      "avatar": "string",
+      "preferences": {}
+    }
+  },
+  "token": "string",
+  "expires": "datetime",
+  "status": "string"
+
+}
+
 const ReturnValueModal = ({ onClose }: ModalProps) => {
     const exampleSchema: JSONSchema = {
         type: 'object',
@@ -38,8 +54,10 @@ const ReturnValueModal = ({ onClose }: ModalProps) => {
         }
     };
 
+
+
     const nodes = extractSchemaNodes(exampleSchema);
-    console.log(nodes);
+    console.log(nodes,'noses');
     return (
         <Portal>
             <div id="return-values-modal"

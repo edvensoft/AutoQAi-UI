@@ -39,6 +39,10 @@ const ChatManually = () => {
                     }
                 }
             }
+        ).catch(
+            e=>{
+                dispatch(setChats([]))
+            }
         )
     }
 
