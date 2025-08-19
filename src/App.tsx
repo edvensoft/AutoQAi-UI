@@ -6,7 +6,7 @@ import Projects from "./pages/Projects/Projects";
 // Project detail child pages
 import ApiTestingSuite from "./pages/ApiTestingSuite";
 import UiAutomation from "./pages/UiAutomation";
-import ManualTestCases from "./pages/ManualTestCases";
+// import ManualTestCases from "./pages/ManualTestCases";
 import DatabaseTesting from "./pages/DatabaseTesting";
 import Index from "./pages/UiAutomation/index.jsx";
 import Loader from "./pages/UiAutomation/Loader/Loader.jsx";
@@ -19,14 +19,19 @@ import CodeReview from "./pages/ApiTestingSuite/CodeReview";
 import TestDataReview from "./pages/ApiTestingSuite/TestDataReview";
 import TestExecution from "./pages/ApiTestingSuite/TestExecution";
 import ChatManually from "./pages/ChatManually/index.js";
+import { UserDetailsProvider } from "./context/UserDetailsContext.jsx";
+import ZephyrIntegration from "./pages/Zephyr/ZephyrIntegration.tsx";
+import TestCases from "./pages/Zephyr/TestCases.tsx";
+// import TestCases from "./pages/Zephyr/Testcases.tsx";
 
 
 function App() {
 	return (
+		<UserDetailsProvider>
 		<Router>
 			<Routes>
 				<Route
-					path='*'
+					path='/'
 					element={<Login />}
 				/>
 
@@ -43,6 +48,14 @@ function App() {
 					<Route
 						path='/project/api-testing-suite/'
 						element={<ApiTestingSuite />}
+					/>
+					<Route 
+					    path="/zephyr" 
+						element={<ZephyrIntegration />} 
+					/>
+					<Route 
+					    path="/testcases" 
+						element={<TestCases />} 
 					/>
 					<Route
 						path='/project/api-testing-suite/recent-reports/'
@@ -107,6 +120,7 @@ function App() {
 				</Route>
 			</Routes>
 		</Router>
+		</UserDetailsProvider>
 	);
 }
 

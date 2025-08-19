@@ -53,7 +53,7 @@ const ChatManually = () => {
     }, [])
 
     return (
-        <div className='flex flex-row w-full h-full'>
+        <div className='flex flex-row w-full h-full '>
             <div className='flex flex-col w-[70%]'>
                 <ChatHeader
                 />

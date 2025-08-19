@@ -213,7 +213,7 @@ const CodeReview = () => {
 
 
   return (
-    <div id="code-review-content" className="max-w-7xl mx-auto">
+    <div id="code-review-content" className="max-w-7xl mx-auto p-4">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-[#FFFFFF] mb-2">Code Review</h1>
         <p className="text-gray-400">Review and approve generated API codes for seamless integration</p>

@@ -1,11 +1,13 @@
-
-import { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import axios from "axios";
-import { CheckCircleIcon, ExclamationCircleIcon, TrashIcon } from "@heroicons/react/24/solid";
+import {
+  CheckCircleIcon,
+  ExclamationCircleIcon,
+  TrashIcon,
+} from "@heroicons/react/24/solid";
 import { useNavigate } from "react-router-dom";
-import { useDispatch} from "react-redux";
-import { setProjectId } from "@/redux/appSlice";
-import { setActiveCollection } from "@/redux/collectionsSlice";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const API_BASE_URL = "http://13.203.56.29/v1/api/projects";
 const userId = 1; // Replace with actual user ID from auth
@@ -14,20 +16,21 @@ const Projects = () => {
   const [projects, setProjects] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [newProject, setNewProject] = useState({ name: "", description: "", image: null });
+  const [newProject, setNewProject] = useState({
+    name: "",
+    description: "",
+    image: null,
+  });
   const [projectToDelete, setProjectToDelete] = useState(null);
   const navigate = useNavigate();
-
-
-  const dispatch = useDispatch();
-
-
 
   // ✅ Fetch projects once on mount
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const res = await axios.get(`${API_BASE_URL}/get-projects/${userId}/`);
+        const res = await axios.get(
+          `${API_BASE_URL}/get-projects/${userId}/`
+        );
         const fetchedProjects = res.data.response || [];
 
         const transformed = fetchedProjects.map((p) => ({
@@ -42,15 +45,24 @@ const Projects = () => {
         setProjects(transformed);
       } catch (err) {
         console.error("Error fetching projects:", err);
+        toast.error("Failed to fetch projects");
       }
     };
 
     fetchProjects();
   }, []);
 
-  // ✅ Create project
+  // ✅ Create project with validation
   const handleSave = async () => {
-    if (!newProject.name) return;
+    if (!newProject.name.trim()) {
+      toast.error("Project name is required!");
+      return;
+    }
+    if (!newProject.description.trim()) {
+      toast.error("Project description is required!");
+      return;
+    }
+
     try {
       const formData = new FormData();
       formData.append("user_id", String(userId));
@@ -58,34 +70,29 @@ const Projects = () => {
       formData.append("description", newProject.description);
       if (newProject.image) formData.append("image", newProject.image);
 
-      const response = await axios.post(`${API_BASE_URL}/create-project/`, formData, {
+      await axios.post(`${API_BASE_URL}/create-project/`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      console.log('creat', response);
-      // navigate(`/project/api-testing-suite/${response.data.project_id}`)
-      dispatch(setProjectId(response.data.project_id))
-      dispatch(setActiveCollection(null))
-      navigate(`/project/manual-test-cases/`)
-
-
 
       // Refresh project list after adding new one
-      // const res = await axios.get(`${API_BASE_URL}/get-projects/${userId}/`);
-      // setProjects(
-      //   res.data.response.map((p) => ({
-      //     id: p.project_id,
-      //     name: p.name,
-      //     description: p.description,
-      //     status: p.status || "pending",
-      //     updated: p.updated_at ? p.updated_at.split("T")[0] : "-",
-      //     image: p.image || "",
-      //   }))
-      // );
+      const res = await axios.get(`${API_BASE_URL}/get-projects/${userId}/`);
+      setProjects(
+        res.data.response.map((p) => ({
+          id: p.project_id,
+          name: p.name,
+          description: p.description,
+          status: p.status || "pending",
+          updated: p.updated_at ? p.updated_at.split("T")[0] : "-",
+          image: p.image || "",
+        }))
+      );
 
+      toast.success("Project created successfully!");
       setIsModalOpen(false);
       setNewProject({ name: "", description: "", image: null });
     } catch (err) {
       console.error("Error creating project:", err);
+      toast.error("Failed to create project. Please try again.");
     }
   };
 
@@ -107,8 +114,11 @@ const Projects = () => {
           image: p.image || "",
         }))
       );
+
+      toast.success("Project deleted successfully!");
     } catch (err) {
       console.error("Error deleting project:", err);
+      toast.error("Failed to delete project. Please try again.");
     }
     setIsDeleteModalOpen(false);
     setProjectToDelete(null);
@@ -116,6 +126,9 @@ const Projects = () => {
 
   return (
     <div className="p-6 text-white">
+      {/* Toast Container */}
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
+
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Projects</h1>
@@ -132,13 +145,11 @@ const Projects = () => {
         {projects.map((project) => (
           <div
             key={project.id}
-            onClick={() => {
-              // navigate(`/project/api-testing-suite/api-list/${project.id}`)
-              dispatch(setProjectId(project.id))
-              dispatch(setActiveCollection(null))
-
-              navigate(`/project/manual-test-cases/`)
-            }}
+            onClick={() =>
+              navigate(`/project/ui-automation`, {
+                state: { projectName: project.name },
+              })
+            }
             className="bg-[#1e1e2e] rounded-lg p-5 shadow border border-gray-700 flex flex-col justify-between 
             hover:border-blue-500 hover:-translate-y-1 transition-all duration-200 cursor-pointer"
           >
@@ -158,7 +169,9 @@ const Projects = () => {
                   </div>
                 </div>
               </div>
-              <p className="text-gray-400 text-sm mb-6">{project.description}</p>
+              <p className="text-gray-400 text-sm mb-6">
+                {project.description}
+              </p>
             </div>
             <hr className="my-3 border-gray-700" />
             <div className="flex justify-between items-center text-xs text-gray-500">
@@ -187,21 +200,27 @@ const Projects = () => {
             <input
               type="text"
               value={newProject.name}
-              onChange={(e) => setNewProject({ ...newProject, name: e.target.value })}
+              onChange={(e) =>
+                setNewProject({ ...newProject, name: e.target.value })
+              }
               className="w-full p-2 rounded bg-[#11111b] text-white mb-4"
             />
 
             <label className="block mb-2">Description</label>
             <textarea
               value={newProject.description}
-              onChange={(e) => setNewProject({ ...newProject, description: e.target.value })}
+              onChange={(e) =>
+                setNewProject({ ...newProject, description: e.target.value })
+              }
               className="w-full p-2 rounded bg-[#11111b] text-white mb-4"
             ></textarea>
 
             <label className="block mb-2">Profile Image</label>
             <input
               type="file"
-              onChange={(e) => setNewProject({ ...newProject, image: e.target.files[0] })}
+              onChange={(e) =>
+                setNewProject({ ...newProject, image: e.target.files[0] })
+              }
               className="w-full p-2 rounded bg-[#11111b] text-white mb-4"
             />
 
@@ -230,19 +249,19 @@ const Projects = () => {
           <div className="relative bg-[#1e1e2e] p-6 rounded-lg w-full max-w-sm shadow-lg z-10">
             <h2 className="text-xl font-bold mb-4">Delete Project</h2>
             <p className="text-gray-300 mb-6">
-              Are you sure you want to delete this project? Once deleted, you will lose all data
-              associated with this project.
+              Are you sure you want to delete this project? Once deleted, you
+              will lose all data associated with this project.
             </p>
             <div className="flex gap-5">
               <button
                 onClick={() => setIsDeleteModalOpen(false)}
-                className="bg-gray-600 hover:bg-gray-500 px-18 py-2 rounded-lg text-white"
+                className="bg-gray-600 hover:bg-gray-500 px-6 py-2 rounded-lg text-white"
               >
                 No
               </button>
               <button
                 onClick={confirmDelete}
-                className="bg-red-500 hover:bg-red-600 px-18 py-2 rounded-lg text-white"
+                className="bg-red-500 hover:bg-red-600 px-6 py-2 rounded-lg text-white"
               >
                 Yes
               </button>

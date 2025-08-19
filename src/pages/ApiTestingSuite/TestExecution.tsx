@@ -118,7 +118,7 @@ const TestExecution = () => {
 
 
     return (
-        <div id="execution-content" className="max-w-7xl mx-auto">
+        <div id="execution-content" className="max-w-7xl mx-auto p-4">
             <div className="mb-8">
                 <h1 className="text-3xl font-bold text-[#FFFFFF] mb-2">Test Execution</h1>
                 <p className="text-gray-400">Execute selected test cases and monitor results</p>

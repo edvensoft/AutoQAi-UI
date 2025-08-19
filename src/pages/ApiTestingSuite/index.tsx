@@ -50,10 +50,10 @@ export default function ApiTestingSuite() {
 	}, [apiTesingState])
 
 	return (
-		<>
+		<div className="mt-[40px]">
 			<ApiTesingOptions />
 			{/* {component} */}
-		</>
+		</div>
 
 	);
 }
