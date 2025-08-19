@@ -108,7 +108,7 @@ const ChatSection = () => {
                     }
                 </div>
                 {
-                    chats.length > 0 &&
+                    chats?.length > 0 &&
                     chats.map(chat => (
                         <React.Fragment key={chat.checkId}>
                             {/* Chat messages */}

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import CloudIcon from "../../../assets/cloudIcon.svg"
+import { useNavigate } from "react-router-dom";
 // impo
 
 const tools = [
@@ -12,8 +13,10 @@ const tools = [
   { name: "Azure DevOps", desc: "Microsoft test management", icon: "🟦" },
 ];
 
+
 const TestManagement = () => {
   const [selected, setSelected] = useState("");
+  const navigate=useNavigate();
 
   return (
     <div className="min-h-screen flex w-[100%] justify-center bg-[#0F172A]">
@@ -31,7 +34,10 @@ const TestManagement = () => {
           {tools.map((tool) => (
             <div
               key={tool.name}
-              onClick={() => setSelected(tool.name)}
+              onClick={() => {
+              
+                setSelected(tool.name);
+              }}
               className={`flex flex-col items-center justify-center rounded-xl border cursor-pointer p-6 transition
                 ${
                   selected === tool.name
@@ -51,7 +57,10 @@ const TestManagement = () => {
           <button className="flex items-center gap-2 bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-xl">
             <ArrowLeft size={18} /> Back
           </button>
-          <button className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl">
+          <button className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl" onClick={()=>{
+              if(selected==="Zephyr")
+                        navigate("/zephyr")
+          }}>
             Proceed <ArrowRight size={18} />
           </button>
         </div>

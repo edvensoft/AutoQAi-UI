@@ -59,7 +59,7 @@ function App() {
 						element={<ZephyrIntegration />} 
 					/>
 					<Route 
-					    path="/testcases" 
+					    path="zephyr/testcases" 
 						element={<TestCases />} 
 					/>
 					<Route
