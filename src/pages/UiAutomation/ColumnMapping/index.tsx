@@ -110,7 +110,7 @@ const [mappings, setMappings] = useState<Record<string, string>>({});
    
     let mappedvalues=Object.values(mappings);
     let missedValues=requiredKeys?.filter((key)=>!mappedvalues?.includes(key));
-    let column_mapping = Object.fromEntries(Object.entries(mappings).map(([keyframes, value]) => [value, keyframes]));
+    let column_mapping = Object.fromEntries(Object.entries(mappings).map(([keyframes, value]) =>value&&keyframes? [value, keyframes]:[]));
     if (missedValues.length > 0) {
       missedValues.forEach((key) => {
         column_mapping[key] = ""
