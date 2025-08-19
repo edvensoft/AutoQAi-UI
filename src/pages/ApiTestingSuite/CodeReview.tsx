@@ -135,7 +135,8 @@ const CodeReview = () => {
           if (response.status === 200) {
             alert('Selected APIs approved successfully!');
             setSelectedApis([]);
-            navigate(`/project/api-testing-suite/test-data-review/`)
+            getEndpointsData()
+            // navigate(`/project/api-testing-suite/test-data-review/`)
 
             // getEndpointsData();
           }
@@ -155,7 +156,9 @@ const CodeReview = () => {
           if (response.status === 200) {
             alert('Selected APIs approved successfully!');
             setSelectedApis([]);
-            navigate(`/project/api-testing-suite/test-data-review/`)
+            getEndpointsData()
+
+            // navigate(`/project/api-testing-suite/test-data-review/`)
 
             // getEndpointsData();
           }

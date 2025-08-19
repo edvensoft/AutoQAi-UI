@@ -7,12 +7,14 @@ export default function MainLayout() {
 		<div className="min-h-screen bg-[#0D0D1A] text-white flex flex-col">
 			<Header />
 
-			<div className="flex flex-1" style={{ marginTop: "2.5rem" }}> 
+			<div className="flex flex-1 mt-10" 
+			// style={{ marginTop: "2.5rem" }}
+			> 
 				{/* Sidebar */}
 				<Sidebar children={<></>}/>
 
 				{/* Main content */}
-				<main className="flex-1 p-6 overflow-y-auto">
+				<main className="flex-1  overflow-y-auto">
 					<Outlet />
 				</main>
 			</div>

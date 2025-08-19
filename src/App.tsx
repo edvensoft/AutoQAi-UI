@@ -18,6 +18,7 @@ import ListOfApis from "./pages/ApiTestingSuite/ListOfApis";
 import CodeReview from "./pages/ApiTestingSuite/CodeReview";
 import TestDataReview from "./pages/ApiTestingSuite/TestDataReview";
 import TestExecution from "./pages/ApiTestingSuite/TestExecution";
+import ChatManually from "./pages/ChatManually/index.js";
 
 
 function App() {
@@ -71,7 +72,7 @@ function App() {
 						path='/project/ui-automation/'
 						element={<UiAutomation />}
 					/>
-						<Route
+					<Route
 						path='/project/ui-automation/loader/'
 						element={<Loader />}
 					/>
@@ -83,13 +84,17 @@ function App() {
 						path='/project/ui-automation/report/'
 						element={<ReportPage />}
 					/>
-						<Route
+					<Route
 						path='/project/ui-automation/column-mapping/'
 						element={<ColumnMapping />}
 					/>
-					<Route
+					{/* <Route
 						path='/project/manual-test-cases'
 						element={<ManualTestCases />}
+					/> */}
+					<Route
+						path='/project/manual-test-cases'
+						element={<ChatManually />}
 					/>
 					<Route
 						path='/project/database-testing'

@@ -134,7 +134,8 @@ const TestDataReview = () => {
                     if (response.status === 200) {
                         alert('Selected APIs approved successfully!');
                         setSelectedApis([]);
-                        navigate(`/project/api-testing-suite/test-execution/`)
+                        getEndpointsData()
+                        // navigate(`/project/api-testing-suite/test-execution/`)
 
                         // getEndpointsData();
                     }
@@ -154,7 +155,8 @@ const TestDataReview = () => {
                     if (response.status === 200) {
                         alert('Selected APIs approved successfully!');
                         setSelectedApis([]);
-                        navigate(`/project/api-testing-suite/test-execution/`)
+                        getEndpointsData()
+                        // navigate(`/project/api-testing-suite/test-execution/`)
 
                         // getEndpointsData();
                     }
