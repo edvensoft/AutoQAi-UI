@@ -19,13 +19,17 @@ import CodeReview from "./pages/ApiTestingSuite/CodeReview";
 import TestDataReview from "./pages/ApiTestingSuite/TestDataReview";
 import TestExecution from "./pages/ApiTestingSuite/TestExecution";
 import ExecutionLoader from "./pages/ApiTestingSuite/ExecutionLoader";
+import { UserDetailsProvider } from "./context/UserDetailsContext.jsx";
+import ZephyrIntegration from "./pages/Zephyr/ZephyrIntegration.tsx";
+import TestCases from "./pages/Zephyr/Testcases.tsx";
 
 function App() {
 	return (
+		<UserDetailsProvider>
 		<Router>
 			<Routes>
 				<Route
-					path='*'
+					path='/'
 					element={<Login />}
 				/>
 
@@ -42,6 +46,14 @@ function App() {
 					<Route
 						path='/project/api-testing-suite'
 						element={<ApiTestingSuite />}
+					/>
+					<Route 
+					    path="/zephyr" 
+						element={<ZephyrIntegration />} 
+					/>
+					<Route 
+					    path="/testcases" 
+						element={<TestCases />} 
 					/>
 					<Route
 						path='/project/recent-reports'
@@ -102,6 +114,7 @@ function App() {
 				</Route>
 			</Routes>
 		</Router>
+		</UserDetailsProvider>
 	);
 }
 
