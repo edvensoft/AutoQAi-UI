@@ -6,10 +6,12 @@ import React, {
   useEffect,
 } from "react";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import type { ChangeEvent } from "react";
 import TaskIcon from "@mui/icons-material/Task";
 import ClearIcon from "@mui/icons-material/Clear";
 import * as XLSX from "xlsx";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 // import { useParams } from "react-router-dom";
 // import { useSelector } from "react-redux";
 // import type { RootState } from "@/redux/store";
@@ -67,9 +69,9 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
     const [webBooks, setWebBooks] = useState<WorkbookState | null>(null);
     const [showSheetSelector, setShowSheetSelector] = useState(false);
     const navigate = useNavigate();
-    // const {projectId}=useParams()
-    // const projectId = useSelector((state: RootState) => state.appState.project_id);
+    const { projectId } = useParams();
 
+    console.log(webBooks,"webBooks")
     // ---------- Memoized values ----------
     const isError = useMemo(
       () => Object.values(formErrors).some((error) => !!error),
@@ -79,7 +81,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
     const hasValue = useMemo(
       () =>
         Object.entries(formValues).every(
-          ([key,value]) => template==="Standard Template"&&(key==="sheet_name"||key==="header_starts")?true:value !== null && value !== ""
+          ([key, value]) => template === "Standard Template" && (key === "sheet_name" || key === "header_starts") ? true : value !== null && value !== ""
         ),
       [formValues]
     );
@@ -96,7 +98,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
       onSave: () => {
         if (template) {
           // navigate(`/project/ui-automation/loader/${projectId}`, { state: { formValues } });
-          navigate(`/project/ui-automation/loader/`, { state: { formValues } });
+          navigate(`/project/ui-automation/loader/${projectId}`, { state: { formValues } });
 
         }
         console.log("Save clicked", formValues, webBooks);
@@ -142,7 +144,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
         });
       },
     }));
-console.log(webBooks,"webbooks")
+    console.log(webBooks, "webbooks")
     // ---------- Validation ----------
     const validateExcelSheetName = (name: string): string | null => {
       // if (!name.trim()) return "Sheet name cannot be empty or only spaces.";
@@ -210,6 +212,11 @@ console.log(webBooks,"webbooks")
           [name]: validateTestSuiteName(value),
         }));
       }
+    };
+
+    const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
+      const { value, name } = e.target;
+      setFormValues((prev) => ({ ...prev, [name]: value }));
     };
 
     const formatFileSizeMB = (bytes?: number) => {
@@ -298,7 +305,7 @@ console.log(webBooks,"webbooks")
         {showSheetSelector && (
           <div className="flex gap-2 mt-4">
             {/* Sheet Name */}
-            <div className="w-[50%]">
+            {/* <div className="w-[50%]">
               <label className="block mb-2 text-sm font-medium">
                 Sheet Name <span className="text-red-500">*</span>
               </label>
@@ -314,6 +321,38 @@ console.log(webBooks,"webbooks")
                   {formErrors.sheet_name}
                 </p>
               )}
+            </div> */}
+            <div className="w-[50%]">
+              <label className="block mb-2 text-sm font-medium">
+                Sheet Name<span className="text-red-500">*</span>
+              </label>
+              <div className="relative flex-1">
+                <select
+                  value={formValues?.sheet_name}
+                  name="sheet_name"
+                  onChange={(e) => handleChange(e)}
+                  // className="appearance-none w-full p-2 bg-[#0f0f1a] border border-gray-600 text-white text-sm px-4 py-2 rounded-md pr-8"
+                   className="appearance-none w-full p-2 rounded bg-[#0f0f1a] border border-gray-700 text-white focus:outline-none focus:ring focus:ring-purple-500"
+                >
+                  <option key="" value="">
+                      Select
+                    </option>
+                  {(webBooks?.sheetNames || []).map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+
+                <KeyboardArrowDownIcon className="absolute right-3 top-2.5 text-gray-400 w-4 h-4 pointer-events-none" />
+              </div>
+
+
+              {/* {!selectedFields?.mappedFields?.includes(item) && (
+                      <span className="absolute right-[-10%] top-2.5 inline-flex items-center justify-center w-5 h-5 rounded-full bg-green-500">
+                        <CheckIcon className="w-3.5 h-3.5 text-black bg-green" style={{ fontSize: "15px" }} />
+                      </span>
+                    )} */}
             </div>
 
             {/* Header Starts */}

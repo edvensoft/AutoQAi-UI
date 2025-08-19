@@ -4,8 +4,8 @@ import TestCaseOptions from "./TestCaseOptions";
 export default function UiAutomation() {
 	return (
 
-		<div className="p-4">
-			<h2 className='text-4xl font-bold mb-2 '>
+		<div >
+			<h2 className='text-4xl font-bold mb-2'>
 				UI Automation
 			</h2>
 			<div className="min-h-screen flex flex-col items-start justify-start">

@@ -5,6 +5,9 @@ import {
   ExclamationCircleIcon,
   TrashIcon,
 } from "@heroicons/react/24/solid";
+import { useDispatch} from "react-redux";
+import { setProjectId } from "@/redux/appSlice";
+import { setActiveCollection } from "@/redux/collectionsSlice";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -23,6 +26,7 @@ const Projects = () => {
   });
   const [projectToDelete, setProjectToDelete] = useState(null);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // ✅ Fetch projects once on mount
   useEffect(() => {
@@ -65,7 +69,7 @@ const Projects = () => {
 
     try {
       const formData = new FormData();
-      formData.append("user_id", String(userId));
+      formData.append("user_id", `${userId}`);
       formData.append("name", newProject.name);
       formData.append("description", newProject.description);
       if (newProject.image) formData.append("image", newProject.image);
@@ -86,6 +90,9 @@ const Projects = () => {
           image: p.image || "",
         }))
       );
+         dispatch(setProjectId(res.data.project_id))
+      dispatch(setActiveCollection(null))
+      navigate(`/project/manual-test-cases/`)
 
       toast.success("Project created successfully!");
       setIsModalOpen(false);
@@ -145,10 +152,16 @@ const Projects = () => {
         {projects.map((project) => (
           <div
             key={project.id}
-            onClick={() =>
-              navigate(`/project/ui-automation`, {
-                state: { projectName: project.name },
-              })
+            onClick={() =>{
+              dispatch(setProjectId(project.id))
+              dispatch(setActiveCollection(null))
+
+              navigate(`/project/manual-test-cases/`)
+            }
+              // navigate(`/project/ui-automation`, {
+              //   state: { projectName: project.name },
+              // })
+            
             }
             className="bg-[#1e1e2e] rounded-lg p-5 shadow border border-gray-700 flex flex-col justify-between 
             hover:border-blue-500 hover:-translate-y-1 transition-all duration-200 cursor-pointer"

@@ -19,11 +19,12 @@ import CodeReview from "./pages/ApiTestingSuite/CodeReview";
 import TestDataReview from "./pages/ApiTestingSuite/TestDataReview";
 import TestExecution from "./pages/ApiTestingSuite/TestExecution";
 import ChatManually from "./pages/ChatManually/index.js";
+// import ExecutionLoader from "./pages/ApiTestingSuite/ExecutionLoader";
+import Dashboard from "./pages/Dashboard/Dashboard.jsx";
 import { UserDetailsProvider } from "./context/UserDetailsContext.jsx";
 import ZephyrIntegration from "./pages/Zephyr/ZephyrIntegration.tsx";
 import TestCases from "./pages/Zephyr/TestCases.tsx";
 // import TestCases from "./pages/Zephyr/Testcases.tsx";
-
 
 function App() {
 	return (
@@ -42,6 +43,10 @@ function App() {
 						element={<Projects />}
 					/>
 				</Route>
+					<Route
+						path='/dashboard'
+						element={<Dashboard/>}
+					/>
 
 				{/* Project details with sidebar */}
 				<Route element={<MainLayout />}>

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useSelector } from "react-redux";
+
 // import type { RootState } from '@/redux/store';
 // import RootState from '../../redux/store'
 
@@ -108,10 +109,11 @@ export default function RecentReports() {
     axios
       .get(
         // `${API_URL}/v1/api/projects/${"fce9e73a-9b1f-4cb0-81e2-34506b33edf0"}/reports/`
-        `${API_URL}/v1/api/projects/${projectId}/reports/`
+        `${API_URL}/v1/api/projects/0c32be2e-c485-4aa2-b3fa-3783ab831e4a/reports/`
 
       )
       .then((response) => {
+        console.log()
         if (response?.data?.response?.results?.length) {
           setRecentReports(response.data.response.results);
         } else {
@@ -164,7 +166,11 @@ export default function RecentReports() {
                     key={report.id}
                     className="border-b border-gray-800 hover:bg-gray-800"
                   >
-                    <td className="py-3 px-4 text-blue-500 font-medium cursor-pointer hover:underline">
+                    <td className="py-3 px-4 text-blue-500 font-medium cursor-pointer hover:underline" onClick={()=>{
+                      if(report?.presigned_url){
+                        window.open(report?.presigned_url)
+                      }
+                    }}>
                       {report?.id}
                     </td>
                     <td className="py-3 px-4 font-semibold">
