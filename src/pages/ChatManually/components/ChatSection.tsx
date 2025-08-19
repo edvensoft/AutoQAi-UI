@@ -17,7 +17,7 @@ const ChatSection = () => {
     const chats = useSelector((state: RootState) => state.collections.chats);
     const activeCollectionId = useSelector((state: RootState) => state.collections.activeCollectionId);
 
-    const activeCollection = collections.find(col => col.id === activeCollectionId)
+    const activeCollection = collections.length> 0 && collections.find(col => col.id === activeCollectionId)
     // console.log('chat', chats, activeCollection, activeCollectionId)
 
     const dispatch = useDispatch();

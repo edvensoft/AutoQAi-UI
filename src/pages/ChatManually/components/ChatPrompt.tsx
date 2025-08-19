@@ -155,7 +155,9 @@ const ChatPrompt = () => {
         const files = e?.target?.files;
         const selectedFile = files && files.length > 0 ? files[0] : null;
         console.log('sele', selectedFile)
-        validateFile(selectedFile);
+            setFile(selectedFile);
+
+        // validateFile(selectedFile);
     };
 
     const onBrowse = () => {
@@ -164,16 +166,16 @@ const ChatPrompt = () => {
         }
     }
 
-    const validateFile = (file: File | null) => {
-        console.log('type', file?.type)
-        if (file && file.type === "application/json") {
-            setFile(file);
-            // setError('');
-        } else {
-            // setError("Please upload a valid JSON file.");
-            setFile(null);
-        }
-    };
+    // const validateFile = (file: File | null) => {
+    //     console.log('type', file?.type)
+    //     if (file && file.type === "application/json") {
+    //         setFile(file);
+    //         // setError('');
+    //     } else {
+    //         // setError("Please upload a valid JSON file.");
+    //         setFile(null);
+    //     }
+    // };
 
     // useEffect(()=>{
 
@@ -193,7 +195,7 @@ const ChatPrompt = () => {
                         </button>
                         <input type="file" id="file-input" className="hidden"
                             // accept=".pdf,.doc,.docx,.txt"
-                            accept=".json"
+                            // accept=".json"
                             ref={uploadRef}
                             onChange={handleFileChange}
                         />
