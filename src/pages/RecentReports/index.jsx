@@ -110,7 +110,7 @@ export default function RecentReports() {
     axios
       .get(
         // `${API_URL}/v1/api/projects/${"fce9e73a-9b1f-4cb0-81e2-34506b33edf0"}/reports/`
-        `${API_URL}/v1/api/projects/${projectId}/`
+        `${API_URL}/v1/api/projects/${projectId}/reports`
 
       )
       .then((response) => {
