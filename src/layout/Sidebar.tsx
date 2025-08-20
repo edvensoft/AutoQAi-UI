@@ -68,10 +68,26 @@ import {
 } from "@heroicons/react/24/outline";
 
 const projects = [
-  { name: "API Testing", path: "/project/api-testing-suite", icon: <CodeBracketIcon className="h-5 w-5" /> },
-  { name: "UI Automation", path: "/project/ui-automation", icon: <CpuChipIcon className="h-5 w-5" /> },
-  { name: "Manual Test Cases", path: "/project/manual-test-cases", icon: <ClipboardDocumentCheckIcon className="h-5 w-5" /> },
-  { name: "Database Testing", path: "/project/database-testing", icon: <CircleStackIcon className="h-5 w-5" /> },
+  {
+    name: "API Testing Suite",
+    path: "/project/api-testing-suite",
+    icon: <CodeBracketIcon className="h-5 w-5" />,
+  },
+  {
+    name: "UI Automation",
+    path: "/project/ui-automation",
+    icon: <CpuChipIcon className="h-5 w-5" />,
+  },
+  {
+    name: "Manual Test Cases",
+    path: "/project/manual-test-cases",
+    icon: <ClipboardDocumentCheckIcon className="h-5 w-5" />,
+  },
+  {
+    name: "Database Testing",
+    path: "/project/database-testing",
+    icon: <CircleStackIcon className="h-5 w-5" />,
+  },
 ];
 
 function Sidebar({ children }) {
@@ -93,10 +109,12 @@ function Sidebar({ children }) {
         {/* Sidebar Header */}
         <div className="flex items-center gap-2 p-4 border-b border-gray-700">
           <Bars3Icon className="h-6 w-6 flex-shrink-0 text-gray-300" />
-          {isOpen && <h2 className="text-lg font-bold whitespace-nowrap">Projects</h2>}
+          {isOpen && (
+            <h2 className="text-lg font-bold whitespace-nowrap">Projects</h2>
+          )}
         </div>
 
-        {/* Nav Links */}
+        {/* Nav Links with Icons */}
         <nav className="flex flex-col gap-2 px-2 py-2 overflow-y-auto">
           {projects.map((proj) => (
             <NavLink
