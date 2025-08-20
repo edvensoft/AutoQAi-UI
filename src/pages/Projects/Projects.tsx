@@ -6,7 +6,8 @@ import {
   TrashIcon,
 } from "@heroicons/react/24/solid";
 import { useDispatch } from "react-redux";
-import { setProjectId } from "@/redux/appSlice";
+import { setProjectId, setProjectName } from "../../redux/appSlice";
+// import { setProjectId } from "@/redux/appSlice";
 import { setActiveCollection } from "@/redux/collectionsSlice";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
@@ -28,6 +29,12 @@ const Projects = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+const handleProjectClick = (project: { id: string; name: string }) => {
+    dispatch(setProjectId(project.id));
+    dispatch(setProjectName(project.name));
+    dispatch(setActiveCollection(null));
+    navigate(`/project/manual-test-cases`); // dynamic route
+  };
   // ✅ Fetch projects once on mount
   useEffect(() => {
     const fetchProjects = async () => {
@@ -91,6 +98,10 @@ const Projects = () => {
           image: p.image || "",
         }))
       );
+      handleProjectClick({
+        id: createProj.data.project_id,
+        name: newProject.name,
+      });
       dispatch(setProjectId(createProj.data.project_id))
       dispatch(setActiveCollection(null))
       navigate(`/project/manual-test-cases/`)
@@ -154,10 +165,11 @@ const Projects = () => {
           <div
             key={project.id}
             onClick={() => {
-              dispatch(setProjectId(project.id))
-              dispatch(setActiveCollection(null))
+              handleProjectClick(project)
+              // dispatch(setProjectId(project.id))
+              // dispatch(setActiveCollection(null))
 
-              navigate(`/project/manual-test-cases/`)
+              // navigate(`/project/manual-test-cases/`)
             }
               // navigate(`/project/ui-automation`, {
               //   state: { projectName: project.name },

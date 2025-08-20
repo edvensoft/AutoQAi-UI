@@ -9,6 +9,8 @@ import {
   ChevronDoubleLeftIcon,
   ChevronDoubleRightIcon,
 } from "@heroicons/react/24/outline";
+import { useSelector } from "react-redux";
+import type { RootState } from "../redux/store";
 
 const projects = [
   { name: "API Testing", path: "/project/api-testing-suite", icon: <CodeBracketIcon className="h-5 w-5" /> },
@@ -19,8 +21,15 @@ const projects = [
 
 function Sidebar({ children }) {
   const [isOpen, setIsOpen] = useState(true); // default maximized
-  const location = useLocation();
-const projectName = location.state?.projectName || "My Project";
+   const location = useLocation();
+  const projectName = useSelector(
+    (state: RootState) => state.appState.projectName
+  );
+  const projectId = useSelector(
+    (state: RootState) => state.appState.project_id
+  );
+   console.log("Sidebar Project:", projectId, projectName);
+//const projectName = location.state?.projectName || "My Project";
   // find active project based on current route
   // const activeProject = projects.find((proj) =>
   //   location.pathname.startsWith(proj.path)
@@ -85,7 +94,7 @@ const projectName = location.state?.projectName || "My Project";
             <div className="flex items-center justify-between w-full bg-[#0D0D1A] text-white p-3 rounded-lg">
               <div className="flex items-center gap-2">
                 {/* {activeProject.icon} */}
-                <span className="font-medium truncate">{projectName}</span>
+                <span className="font-medium truncate">{projectName || "No Project"}</span>
               </div>
               <button
                 onClick={() => setIsOpen(false)}
