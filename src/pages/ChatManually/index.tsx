@@ -1,4 +1,4 @@
-import  { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import CollectionsSidebar from './components/CollectionsSidebar'
 // import ChatLayout from './components/ChatSection'
 import ChatPrompt from './components/ChatPrompt'
@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import type { RootState } from '@/redux/store'
 import { setChats, setCollections } from '@/redux/collectionsSlice'
 import ExistingCollections from './components/ExistingCollections'
+import { ToastContainer } from 'react-toastify'
 
 
 const ChatManually = () => {
@@ -28,19 +29,19 @@ const ChatManually = () => {
         axios.get(`${API_URL}/v1/api/test-cases/get-collections/${projectId}/`).then(
             response => {
                 if (response.status === 200) {
-                // console.log('Fetched Data', response.data)
-                   
+                    // console.log('Fetched Data', response.data)
+
                     dispatch(setCollections(response.data.response))
                     if (response.data.response.length > 0) {
                         setIsExistColModalOpen(true)
-                        
-                    }else{
+
+                    } else {
                         dispatch(setChats([]))
                     }
                 }
             }
         ).catch(
-            ()=>{
+            () => {
                 dispatch(setChats([]))
             }
         )
@@ -58,6 +59,8 @@ const ChatManually = () => {
 
     return (
         <div className='flex flex-row w-full h-full '>
+            <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
+
             <div className='flex flex-col w-[70%]'>
                 <ChatHeader
                 />
@@ -66,7 +69,7 @@ const ChatManually = () => {
                 <ChatPrompt />
             </div>
             <div className='w-[30%]'>
-                <CollectionsSidebar getCollections={getCollections}/>
+                <CollectionsSidebar getCollections={getCollections} />
             </div>
             {
                 isExistColModalOpen &&

@@ -2,14 +2,17 @@ import React, { useEffect, useRef, useState } from 'react'
 import ViewTestCaseModal from './ViewTestCaseModal'
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState } from '@/redux/store';
-import { setActiveCollection } from '@/redux/collectionsSlice';
+import { setActiveCollection, setTestCases } from '@/redux/collectionsSlice';
 import { API_URL } from '@/config';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
-const CollectionsSidebar = ({getCollections}) => {
+const CollectionsSidebar = ({ getCollections }) => {
     const [isTestCasesOpen, setIsTestCasesOpen] = useState(false)
     const [selectedCollections, setSelectedCollections] = useState([])
     const collections = useSelector((state: RootState) => state.collections.list);
+    const testCases = useSelector((state: RootState) => state.collections.testCases);
+
     const activeCollectionId = useSelector((state: RootState) => state.collections.activeCollectionId);
 
     const selectAllRef = useRef<HTMLInputElement>(null)
@@ -24,6 +27,8 @@ const CollectionsSidebar = ({getCollections}) => {
     }
     const closeTestCases = () => {
         setIsTestCasesOpen(false)
+        let updateTestCases = testCases.filter(item => item.id !== 'new')
+        dispatch(setTestCases(updateTestCases))
     }
 
     const handleSection = (event: React.MouseEvent<HTMLDivElement>, colId) => {
@@ -83,6 +88,8 @@ const CollectionsSidebar = ({getCollections}) => {
                 console.log('res', res)
                 if (res.data.message === "Sucessfully Deleted collections") {
                     getCollections()
+                    toast.success("Test Case deleted successfully!");
+
                 }
             }
         )
