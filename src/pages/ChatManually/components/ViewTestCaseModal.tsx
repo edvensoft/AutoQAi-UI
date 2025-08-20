@@ -3,7 +3,7 @@ import { addTestCases } from '@/redux/collectionsSlice';
 import type { RootState } from '@/redux/store';
 import { Portal } from '@mui/material'
 // import axios from 'axios';
-import  { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import TestCaseRow from './TestCaseRow';
 
@@ -27,7 +27,9 @@ const ViewTestCaseModal = (props: Props) => {
     const activeCollection = collections.find(col => col.id === activeCollectionId)
     const dispatch = useDispatch();
 
-    console.log(testCases, 'testCase')
+    // console.log(testCases, 'testCase')
+
+    const lastRow = useRef(null)
 
 
     // const getTestCases = () => {
@@ -39,17 +41,32 @@ const ViewTestCaseModal = (props: Props) => {
     //     })
     // }
 
+    function incrementString(input: string): string {
+        const match = input.match(/^([a-zA-Z]+)(\d+)$/);
+
+        if (!match) return input; // Return unchanged if it doesn't match the pattern
+
+        const [, prefix, numberPart] = match;
+        const incremented = parseInt(numberPart, 10) + 1;
+
+        return `${prefix}${incremented}`;
+    }
+
     const handleAddTestCase = () => {
         const emptyTestCase = {
             // id: `${Date.now()}-${Math.floor(Math.random() * 10000)}`,
             id: 'new',
-            test_case_id: '',
+            test_case_id: incrementString(testCases[testCases.length - 1].test_case_id),
             name: '',
             steps: '',
             expected_output: ''
         }
         // dispatch(setTestCases([{...emptyTestCase}]))
         dispatch(addTestCases(emptyTestCase))
+        if (lastRow.current) {
+            lastRow.current?.scrollIntoView({ behavior: 'smooth' })
+        }
+        // lastRow.current?.scrollIntoView({ behavior: 'smooth' });
         // setTestCases((prev) => [...prev, emptyTestCase])
     }
 
@@ -214,7 +231,7 @@ const ViewTestCaseModal = (props: Props) => {
 
                         }
                         <button id="close-collection-modal"
-                            className="text-gray-400 hover:text-white"
+                            className="text-gray-400 hover:text-white cursor-pointer"
                             onClick={close}
                         >
                             {/* <i className="text-xl" data-fa-i2svg=""><svg className="svg-inline--fa fa-xmark" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" data-fa-i2svg=""><path fill="currentColor" d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"></path></svg></i> */}
@@ -251,9 +268,13 @@ const ViewTestCaseModal = (props: Props) => {
                                 <tbody id="collection-test-cases-tbody">
                                     {
                                         testCases.length > 0 ?
-                                            testCases.map(test => (
+                                            testCases.map((test, index) => (
                                                 // <TableRow test={test} />
-                                                <TestCaseRow test={test}/>
+                                                <TestCaseRow test={test}
+                                                    // index={index} 
+                                                    ref={lastRow}
+                                                //ref={collections.length - 1 === index ? lastRow : null} 
+                                                />
                                             ))
                                             :
                                             <p className='text-red-500'>No TestCases Found</p>
