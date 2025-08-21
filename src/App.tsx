@@ -120,7 +120,7 @@ function App() {
 					/>
 					<Route
 						path='/testcases/'
-						element={<Index />}
+						element={<Index key={window.location.pathname}/>}
 					/>
 				</Route>
 			</Routes>

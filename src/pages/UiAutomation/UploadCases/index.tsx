@@ -63,7 +63,7 @@ export default function UploadCases({ setTestCase }: UploadCasesProps) {
 
   return (
     <UploadTestCaseContext.Provider value={{template,setTemplate}}>
-       <div className="bg-[#1A1B2E] rounded-lg p-8 w-full max-w-5xl border border-white/20 shadow-lg">
+       <div className="bg-[#1A1B2E] rounded-lg p-8 w-[1200px]  border border-white/20 shadow-lg">
       <h1 className="text-white text-2xl font-semibold mb-4">Upload Test Cases</h1>
       <h2 className="text-white text-lg font-medium mb-2">Select Template Type</h2>
       <p className="text-gray-400 mb-8">
