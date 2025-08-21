@@ -216,7 +216,7 @@ export default function AutomationAnalysis() {
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center gap-3">
           <div className="bg-purple-500 p-3 rounded-lg">
-            <svg
+            {/* <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-6 w-6 text-white"
               fill="none"
@@ -228,6 +228,20 @@ export default function AutomationAnalysis() {
                 strokeLinejoin="round"
                 strokeWidth={2}
                 d="M9 17v-6a2 2 0 012-2h2a2 2 0 012 2v6m-6 4h6"
+              />
+            </svg> */}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6 text-white"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M3 3v18h18M3 12h18M3 6h18M3 18h18"
               />
             </svg>
           </div>

@@ -198,7 +198,7 @@ const CompareValuesModal = ({ onClose, selectedEndpoint }: ModalProps) => {
 
                                     {
 
-                                        selectedPair.map(item => (
+                                        selectedPair.map(_ => (
 
                                             <div className="comparison-match-item flex items-center justify-between p-3 bg-[#1A1A2E] rounded-lg border border-[#374151]">
                                                 <div className="flex items-center space-x-4">

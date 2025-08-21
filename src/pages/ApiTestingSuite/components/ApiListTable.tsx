@@ -85,6 +85,7 @@ const ApiListTable = (props: TableProps) => {
     const { currentPage, data, noApisPerPage, handleSelection, handleSelectAll, selectedApis } = props
     const [isReturnValue, setIsReturnValue] = useState<boolean>(false)
     const [inputValue, setInputValue] = React.useState('');
+    console.log(inputValue)
 
     const [isCompareValue, setIsCompareValue] = useState<boolean>(false)
     const [isSchemaModal, setIsSchemaModal] = useState<boolean>(false)
