@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink} from "react-router-dom";
 import {
   Bars3Icon,
   CodeBracketIcon,
@@ -21,7 +21,6 @@ const projects = [
 
 function Sidebar({ children }) {
   const [isOpen, setIsOpen] = useState(true); // default maximized
-   const location = useLocation();
   const projectName = useSelector(
     (state: RootState) => state.appState.projectName
   );

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -12,6 +12,11 @@ import {
 } from "chart.js";
 import { Scatter } from "react-chartjs-2";
 import { Line, Bar } from "react-chartjs-2";
+import axios from "axios";
+import { API_URL } from "@/config";
+import { useSelector } from "react-redux";
+import { execution } from "./functions/lastFiveExecution";
+import { lastexecution } from "./functions/lastExecution";
 
 ChartJS.register(
   CategoryScale,
@@ -25,41 +30,10 @@ ChartJS.register(
 );
 
 export default function PerformanceMetrics() {
+  const projectId = useSelector((state) => state.appState.project_id);
+  const [scatterConfig, setScatterConfig] = useState();
+  const [barConfig,setBarConfig]=useState()
   // Line chart data (Response Time)
-  const lineData = {
-    labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-    datasets: [
-      {
-        label: "Response Time (ms)",
-        data: [200, 220, 190, 260, 185, 230, 210],
-        borderColor: "#3b82f6",
-        backgroundColor: "#3b82f6",
-        fill: false,
-        tension: 0.3,
-        pointRadius: 5,
-        pointBackgroundColor: "#3b82f6",
-      },
-    ],
-  };
-
-  const lineOptions = {
-    responsive: true,
-    plugins: {
-      legend: { labels: { color: "#fff" } },
-      title: { display: true, text: "Response Time", color: "#fff" },
-    },
-    scales: {
-      x: { ticks: { color: "#ccc" } },
-      y: {
-        ticks: {
-          color: "#ccc",
-          display: true,
-          text: "Seconds",
-          // color: "gray",
-        },
-      },
-    },
-  };
 
   // Bar chart data (Success Rate)
   const barData = {
@@ -77,106 +51,272 @@ export default function PerformanceMetrics() {
   const barOptions = {
     responsive: true,
     plugins: {
-      legend: { labels: { color: "#fff" }, position:"bottom",display: false },
+      legend: { labels: { color: "#fff" }, position: "bottom", display: false },
       title: { display: false, text: "Success Rate", color: "#fff" },
-     
+      datalabels: {
+        display: false,
+      },
     },
     scales: {
       x: { ticks: { color: "#ccc" } },
       y: {
         ticks: { color: "#ccc" },
         title: { text: "Seconds", color: "gray", display: true },
-        grid: { drawTicks: true, drawOnChartArea: true,color: "gray" },
+        grid: { drawTicks: true, drawOnChartArea: true, color: "gray" },
       },
     },
   };
 
-  const scatterData = {
-    labels: ["UserAuth", "Payment", "Data Sync", "Upload", "Notify"], // X-axis API names
+  console.log(scatterConfig,"scatterConfig")
+
+  // const scatterData = {
+  //   labels: ["UserAuth", "Payment", "Data Sync", "Upload", "Notify"], // X-axis API names
+  //   datasets: [
+  //     {
+  //       label: "Exec-001",
+  //       data: [4.0, 3.8, 4.1, 3.9, 4.2], // Seconds for each API
+  //       pointStyle: "circle",
+  //       pointBackgroundColor: "teal",
+  //       borderColor: "teal",
+  //       showLine: false,
+  //     },
+  //     {
+  //       label: "Exec-002",
+  //       data: [3.7, 3.9, 4.0, 3.8, 3.9],
+  //       pointStyle: "rectRot",
+  //       pointBackgroundColor: "blue",
+  //       borderColor: "blue",
+  //       showLine: false,
+  //     },
+  //     {
+  //       label: "Exec-003",
+  //       data: [3.9, 4.1, 3.8, 3.7, 4.0],
+  //       pointStyle: "rect",
+  //       pointBackgroundColor: "purple",
+  //       borderColor: "purple",
+  //       showLine: false,
+  //     },
+  //     {
+  //       label: "Exec-004",
+  //       data: [4.2, 4.0, 3.9, 4.1, 4.3],
+  //       pointStyle: "triangle",
+  //       pointBackgroundColor: "orange",
+  //       borderColor: "orange",
+  //       showLine: false,
+  //     },
+  //     {
+  //       label: "Exec-005",
+  //       data: [3.6, 3.7, 3.8, 3.9, 4.0],
+  //       pointStyle: "triangle", // inverted triangle is not built-in, need custom plugin
+  //       rotation: 180, // rotate to make it upside-down
+  //       pointBackgroundColor: "red",
+  //       borderColor: "red",
+  //       showLine: false,
+  //     },
+  //   ],
+  // };
+
+  // const scatterOptions = {
+  //   responsive: true,
+  //   plugins: {
+  //     title: {
+  //       display: true,
+  //       text: "Seconds vs API Name",
+  //       font: { size: 20 },
+  //       color: "white",
+  //     },
+  //     legend: {
+  //       position: "bottom",
+  //       labels: {
+  //         color: "white",
+  //         padding: 20, // space between legend items
+  //         usePointStyle: true, // show as circle/triangle instead of box
+  //       },
+  //     },
+  //     datalabels: {
+  //     display: false
+  //   },
+
+  //   },
+  //   scales: {
+  //     x: {
+  //       type: "category",
+  //       labels: ["UserAuth", "Payment", "Data Sync", "Upload", "Notify"],
+  //       ticks: { color: "white" },
+  //       grid: { display: false },
+  //       offset: true,
+  //     },
+  //     y: {
+  //       // beginAtZero: true,
+  //       title: {
+  //         display: true,
+  //         text: "Seconds",
+  //         color: "gray",
+  //       },
+  //       ticks: { color: "white" },
+  //       grid: { display: false },
+  //     },
+  //   },
+  // };
+
+  const formatScatterConfig = (response) => {
+    console.log(response,"response-scatter")
+    const apiNames = response.response.map((api) => api?.api_name);
+    const colors = ["teal", "blue", "purple", "orange", "red"]; // rotate colors
+    const shapes = ["circle", "rectRot", "rect", "triangle", "triangle"];
+
+    const executions = {};
+
+   ( response.response||[]).forEach((api) => {
+      api.last_5_executions.forEach((exec, index) => {
+        const label = `Exec-${exec.id}`;
+        if (!executions[label]) {
+          executions[label] = {
+            label,
+            data: [],
+            pointStyle: shapes[index % shapes.length],
+            pointBackgroundColor: colors[index % colors.length],
+            borderColor: colors[index % colors.length],
+            showLine: false,
+          };
+        }
+      });
+    });
+
+  
+
+    // Now push API execution times aligned with apiNames
+    response.response.forEach((api) => {
+      api.last_5_executions.forEach((exec) => {
+        executions[`Exec-${exec.id}`].data.push(exec.response_time);
+      });
+    });
+    const scatterData = {
+      labels: apiNames,
+      datasets: Object.values(executions),
+    };
+    const scatterOptions = {
+      responsive: true,
+      plugins: {
+        title: {
+          display: true,
+          text: "Seconds vs API Name",
+          font: { size: 14 },
+          color: "white",
+        },
+        legend: {
+          position: "bottom",
+          labels: {
+            color: "white",
+            padding: 20,
+            usePointStyle: true,
+          },
+        },
+        datalabels: {
+          display: false,
+        },
+      },
+      scales: {
+        x: {
+          type: "category",
+          labels: apiNames, // 👈 dynamic labels
+          ticks: { color: "white" },
+          grid: { display: false, color: "gray" },
+          offset: true,
+        },
+        y: {
+          title: {
+            display: true,
+            text: "Seconds",
+            color: "gray",
+          },
+          ticks: { color: "white" },
+          grid: { display: true, color: "gray" },
+        },
+      },
+    };
+console.log(scatterData,scatterOptions,"Checking")
+    setScatterConfig({ scatterData, scatterOptions });
+  };
+
+  const formatBarConfig=(response)=>{
+ const executedApis = response?.response?.executed_apis;
+
+  // labels will be api_name
+  const labels = executedApis.map(api => api.api_name);
+
+  // data will be response_time (null -> 0 fallback)
+  const dataValues = executedApis.map(api => api.response_time ?? 0);
+
+  const barData = {
+    labels,
     datasets: [
       {
-        label: "Exec-001",
-        data: [4.0, 3.8, 4.1, 3.9, 4.2], // Seconds for each API
-        pointStyle: "circle",
-        pointBackgroundColor: "teal",
-        borderColor: "teal",
-        showLine: false,
+        label: "Response Time (ms)",
+        data: dataValues,
+        backgroundColor: "#4ade80",
+        borderRadius: 6,
+        barThickness: 50,
       },
-      {
-        label: "Exec-002",
-        data: [3.7, 3.9, 4.0, 3.8, 3.9],
-        pointStyle: "rectRot",
-        pointBackgroundColor: "blue",
-        borderColor: "blue",
-        showLine: false,
-      },
-      {
-        label: "Exec-003",
-        data: [3.9, 4.1, 3.8, 3.7, 4.0],
-        pointStyle: "rect",
-        pointBackgroundColor: "purple",
-        borderColor: "purple",
-        showLine: false,
-      },
-      {
-        label: "Exec-004",
-        data: [4.2, 4.0, 3.9, 4.1, 4.3],
-        pointStyle: "triangle",
-        pointBackgroundColor: "orange",
-        borderColor: "orange",
-        showLine: false,
-      },
-      {
-        label: "Exec-005",
-        data: [3.6, 3.7, 3.8, 3.9, 4.0],
-        pointStyle: "triangle", // inverted triangle is not built-in, need custom plugin
-        rotation: 180, // rotate to make it upside-down
-        pointBackgroundColor: "red",
-        borderColor: "red",
-        showLine: false,
-      },
+   
     ],
   };
 
-  const scatterOptions = {
+  const barOptions = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
-      title: {
-        display: true,
-        text: "Seconds vs API Name",
-        font: { size: 20 },
-        color: "white",
-      },
-      legend: {
-        position: "bottom",
-        labels: {
-          color: "white",
-          padding: 20, // space between legend items
-          usePointStyle: true, // show as circle/triangle instead of box
-        },
-      },
-      
+      legend: { display: false },
+       datalabels:{display:false}
     },
     scales: {
-      x: {
-        type: "category",
-        labels: ["UserAuth", "Payment", "Data Sync", "Upload", "Notify"],
-        ticks: { color: "white" },
-        grid: { display: false },
-        offset: true,
-      },
+      x: { ticks: { color: "#ccc" }, grid: { display: false } },
       y: {
-        // beginAtZero: true,
-        title: {
-          display: true,
-          text: "Seconds",
-          color: "gray",
-        },
-        ticks: { color: "white" },
-        grid: { display: false },
+        ticks: { color: "#ccc" },
+        title: { text: "Response Time (ms)", color: "gray", display: true },
+        grid: { drawTicks: true, drawOnChartArea: true, color: "gray" },
       },
     },
   };
+
+  setBarConfig({barData,barOptions})
+  }
+
+  const getLastFiveExexutions = async () => {
+    try {
+      let response = await axios.get(
+        `${API_URL}/v1/api/projects/last-five-executions/${projectId}/`
+      );
+      console.log(response, "response");
+      if (response?.data?.response?.length) {
+    
+         formatScatterConfig(execution);
+      } else {
+      }
+    } catch {
+    } finally {
+    }
+  };
+
+   const getLastExexutions = async () => {
+    try {
+      let response = await axios.get(
+        `${API_URL}/v1/api/projects/latest-execution/${projectId}/`
+      );
+      console.log(response, "response");
+      if (response?.data?.response) {
+           formatBarConfig(lastexecution);
+      } else {
+      }
+    } catch {
+    } finally {
+    }
+  };
+
+  useEffect(() => {
+    getLastFiveExexutions();
+    getLastExexutions();
+  }, []);
 
   return (
     <div className="bg-[#1a1a2e] rounded-2xl p-6 w-full text-white border-gray-500 border hover:border-blue-500 mt-5">
@@ -206,13 +346,21 @@ export default function PerformanceMetrics() {
 
       {/* Charts Row */}
       <div className="grid grid-cols-2 gap-4">
-        <div className="bg-[#0f0f1a] rounded-lg p-4">
-          <Bar data={barData} options={barOptions} />
-        </div>
-        <div className="bg-[#0f0f1a] rounded-lg p-4">
-          {/* <Line data={lineData} options={lineOptions} /> */}
-          <Scatter data={scatterData} options={scatterOptions} />
-        </div>
+       {barConfig&& <div className="bg-[#0f0f1a] h-90 rounded-lg p-4">
+           <h2 className="font-bold text-start">Last Execution Response Time</h2>
+           <h2 className="font-bold text-center">Seconds Vs API Name</h2>
+          <Bar data={barConfig?.barData} options={barConfig?.barOptions} />
+        </div>}
+        {scatterConfig && (
+          <div className="bg-[#0f0f1a] rounded-lg p-4">
+            {/* <Line data={lineData} options={lineOptions} /> */}
+             <h2 className="font-bold  text-md text-start">Last 5 Execution Response Time</h2>
+            <Scatter
+              data={scatterConfig?.scatterData}
+              options={scatterConfig?.scatterOptions}
+            />
+          </div>
+        )}
       </div>
 
       {/* Stats Row */}

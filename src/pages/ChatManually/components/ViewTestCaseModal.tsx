@@ -268,7 +268,7 @@ const ViewTestCaseModal = (props: Props) => {
                                 <tbody id="collection-test-cases-tbody">
                                     {
                                         testCases.length > 0 ?
-                                            testCases.map((test, index) => (
+                                            testCases.map((test) => (
                                                 // <TableRow test={test} />
                                                 <TestCaseRow test={test}
                                                     // index={index} 

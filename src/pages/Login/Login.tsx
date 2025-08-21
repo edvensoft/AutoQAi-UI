@@ -34,7 +34,8 @@ const Login = () => {
   const handleProceedDashboard = () => {
     if (fullName && orgName) {
       setFullName(fullName); // save to context
-      navigate("/projects");
+      // navigate("/projects");
+      navigate("/dashboard");
     }
   };
 

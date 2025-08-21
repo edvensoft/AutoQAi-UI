@@ -82,7 +82,7 @@ const DesignQuality = () => {
   };
 
   return (
-    <div className="bg-[#0F172A] p-6 rounded-2xl shadow-lg mt-3 mb-3" style={{ height: "400px" }}>
+    <div className="bg-[#1a1a2e] border-gray-500 border hover:border-blue-500 p-6 rounded-2xl shadow-lg mt-3 mb-3" style={{ height: "400px" }}>
       <Bar data={data} options={options} />
       {/* <h3 className="text-center text-white font-bold mt-2">API Quality Metrics</h3> */}
     </div>
