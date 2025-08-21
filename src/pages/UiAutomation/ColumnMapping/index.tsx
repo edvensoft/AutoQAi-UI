@@ -66,7 +66,7 @@ const [mappings, setMappings] = useState<Record<string, string>>({});
 
   useEffect(() => {
     if (!file || headers.length === 0) {
-      navigate('/upload');
+     navigate("/testcases",{state:{from:"column-mapping"}})
     }
   }, [file]);
 

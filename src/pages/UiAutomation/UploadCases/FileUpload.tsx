@@ -239,7 +239,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
           value={formValues.test_suite_name}
           onChange={handleValueChange}
           placeholder="e.g., Regression, Sanity, Smoke, Integration"
-          className="w-full p-2 rounded bg-[#0f0f1a] border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 mb-0"
+          className="w-full p-2 h-13 rounded bg-[#0f0f1a] border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 mb-0"
         />
         {formErrors.test_suite_name && (
           <p className="text-xm text-red-500 mt-1">
@@ -259,7 +259,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
               className="hidden"
               onChange={handleFileUpload}
             />
-            <span className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded cursor-pointer">
+            <span className="bg-blue-500 h-13 hover:bg-blue-600 text-white px-4 py-2 rounded cursor-pointer">
               Browse Files
             </span>
           </label>
@@ -332,7 +332,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
                   name="sheet_name"
                   onChange={(e) => handleChange(e)}
                   // className="appearance-none w-full p-2 bg-[#0f0f1a] border border-gray-600 text-white text-sm px-4 py-2 rounded-md pr-8"
-                   className="appearance-none w-full p-2 rounded bg-[#0f0f1a] border border-gray-700 text-white focus:outline-none focus:ring focus:ring-purple-500"
+                   className="appearance-none w-full p-2 h-13 rounded bg-[#0f0f1a] border border-gray-700 text-white focus:outline-none focus:ring focus:ring-purple-500"
                 >
                   <option key="" value="">
                       Select
@@ -365,7 +365,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
                 name="header_starts"
                 value={formValues.header_starts}
                 onChange={handleValueChange}
-                className="w-full p-2 rounded bg-[#0f0f1a] border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full p-2 rounded h-13 bg-[#0f0f1a] border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
               {formErrors.header_starts && (
                 <p className="text-xm text-red-500 mt-2">
