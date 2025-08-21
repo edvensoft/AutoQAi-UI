@@ -1,6 +1,13 @@
+import { API_URL } from '@/config'
 import { Editor } from '@monaco-editor/react'
 import { Portal } from '@mui/material'
+import axios from 'axios'
 import { useState } from 'react'
+import { toast } from 'react-toastify'
+// import properties from 'properties'
+// import { parse } from 'dot-properties';
+import copyToClipboard from '@/utilities/copyToClipboard'
+
 
 
 
@@ -15,12 +22,13 @@ interface ModalProps {
     onClose: () => void,
     // codeData:
     data: CodeData,
-    language: string
+    language: string,
+    tableName: string
 }
 
 
 
-const CodeEditorModal = ({ onClose, data, language }: ModalProps) => {
+const CodeEditorModal = ({ onClose, data, language, tableName }: ModalProps) => {
     const [isEditable, setIsEditable] = useState<boolean>(false)
     const [editData, setEditData] = useState<any | null>(data.code)
     // const [currentData, setCurrentData] = useState<any | null>(data.code)
@@ -42,7 +50,52 @@ const CodeEditorModal = ({ onClose, data, language }: ModalProps) => {
         setIsEditable(false)
     }
 
+    console.log(data, 'incodata')
+
+    
+
+    const saveChanges = () => {
+        // Logic to save changes
+        let payLoad = tableName === 'code_review' ? {
+            // ...codeData[0],
+            'code': editData,
+            "test_case_id": data.id,
+            'filename': data.file_name,
+        } : tableName === 'test_data' ? {
+            // ...codeData[0],
+            "test_data_id": data.id,
+            // 'data': parse(editData),
+            'data':editData,
+            'filename': data.file_name,
+        } : {};
   
+       
+        console.log('Payload to save:', payLoad);
+        if (tableName === 'code_review') {
+            axios.put(`${API_URL}/v1/api/endpoints/update-test-case/`, payLoad).then((response) => {
+                console.log('Response after saving:', response.data);
+                toast.success('Saved Successfully!')
+                setIsEditable(false)
+
+            }).catch(e => {
+                toast.error(e.response.data.error)
+            })
+        } else if (tableName === 'test_data') {
+            axios.put(`${API_URL}/v1/api/endpoints/update-test-data/`, payLoad).then((response) => {
+                console.log('Response after saving:', response.data);
+                toast.success('Saved Successfully!')
+                setIsEditable(false)
+
+            }).catch(e => {
+                toast.error(e.response.data.error)
+            })
+        }
+        // 
+        // setEditEnabled(false);
+    };
+
+
+
 
     return (
         <Portal>
@@ -59,12 +112,18 @@ const CodeEditorModal = ({ onClose, data, language }: ModalProps) => {
                             </div>
                         </div>
                         <div className="flex items-center space-x-3">
-                            <button id="copy-code-btn" className="bg-[#8B5CF6] cursor-pointer hover:bg-[#8B5CF6]/80 text-white px-4 py-2 rounded-lg transition-colors">
+                            <button id="copy-code-btn" 
+                            className="bg-[#8B5CF6] cursor-pointer hover:bg-[#8B5CF6]/80 text-white px-4 py-2 rounded-lg transition-colors"
+                            onClick={()=>copyToClipboard(editData)}
+                            >
                                 <i className="fa-solid fa-copy mr-2"></i>Copy
                             </button>
                             {
                                 isEditable ? <>
-                                    <button id="save-code-btn" className=" bg-green-600 cursor-pointer hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors">
+                                    <button id="save-code-btn"
+                                        className=" bg-green-600 cursor-pointer hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors"
+                                        onClick={saveChanges}
+                                    >
                                         <i className="fa-solid fa-save mr-2"></i>Save
                                     </button>
                                     <button id="cancel-edit-btn"

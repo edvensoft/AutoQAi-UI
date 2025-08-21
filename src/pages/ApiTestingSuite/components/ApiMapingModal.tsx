@@ -4,10 +4,11 @@ import CloseIcon from '@mui/icons-material/Close';
 interface ModalProps {
     onClose: (modal: string) => void
     setApiMappingStatus: React.Dispatch<React.SetStateAction<any>>,
+    selectedEndpoint:object
 }
 
 
-const ApiMapingModal = ({ onClose, setApiMappingStatus }: ModalProps) => {
+const ApiMapingModal = ({ onClose, setApiMappingStatus,selectedEndpoint }: ModalProps) => {
     return (
         <Portal>
             <div id="api-mapping-modal" className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">

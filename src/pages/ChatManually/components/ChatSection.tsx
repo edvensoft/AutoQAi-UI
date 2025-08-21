@@ -17,13 +17,21 @@ const ChatSection = () => {
     const chats = useSelector((state: RootState) => state.collections.chats);
     const activeCollectionId = useSelector((state: RootState) => state.collections.activeCollectionId);
 
-    const activeCollection = collections.length> 0 && collections.find(col => col.id === activeCollectionId)
+    const activeCollection = collections.length > 0 && collections.find(col => col.id === activeCollectionId)
     // console.log('chat', chats, activeCollection, activeCollectionId)
 
     const dispatch = useDispatch();
 
     const openTestCases = () => {
-        setIsTestCasesOpen(true)
+        axios.get(`${API_URL}/v1/api/test-cases/get-chat/${activeCollectionId}/`).then(
+            response => {
+                if (response.status === 200) {
+                    dispatch(setTestCases(response.data.response.test_cases))
+                    setIsTestCasesOpen(true)
+
+                }
+            }
+        )
     }
     const closeTestCases = () => {
         setIsTestCasesOpen(false)

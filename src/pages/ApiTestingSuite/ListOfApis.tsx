@@ -5,10 +5,11 @@ import ApiListTable from './components/ApiListTable';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { API_URL } from '@/config';
-import { Backdrop, CircularProgress,} from '@mui/material';
+import { Backdrop, CircularProgress, } from '@mui/material';
 import TestCaseHeader from './components/TestCaseHeader';
 import { useSelector } from 'react-redux';
 import type { RootState } from '@/redux/store';
+import { toast, ToastContainer } from 'react-toastify';
 
 // interface Data {
 //     api_header: string,
@@ -98,15 +99,21 @@ const ListOfApis = () => {
             // const response = await axios.get(`${API_URL}/v1/api/projects/get-apis/${projectId}/`);
 
             axios.get(`${API_URL}/v1/api/projects/get-apis/${projectId}/`).then((response) => {
-                console.log('Fetched APIs:', response);
+                // console.log('Fetched APIs:', response,);
 
+                console.log('filterData', response.data.response.filter(i => Object.keys(i.path_variables).length >0 ))
                 if (response?.data?.response && response?.data?.response.length > 0) {
                     setAllApis(response.data.response);
                     setTotalPages(Math.ceil(response.data.response.length / noApisPerPage));
                 }
+
             }).catch(e => {
-                console.log('Fetched APIs:', e);
+                console.log('Fetched APIs:', e, e.status);
+                if (e.status === 500) {
+                    toast.error('Server error Please try again')
+                }
                 setError(e.response.data.error)
+                toast.error(e.response.data.error)
             })
 
             // console.log('Fetched APIs:', response);
@@ -115,6 +122,8 @@ const ListOfApis = () => {
         } catch (err) {
             console.error('Error fetching users:', err);
             setError('Failed to fetch users');
+            toast.error('Failed to fetch users')
+
         } finally {
             setLoading(false);
         }
@@ -150,6 +159,7 @@ const ListOfApis = () => {
             }
         } catch (error) {
             console.error('Error generating code:', error);
+            toast.error(error)
         } finally {
             setLoading(false);
         }
@@ -163,6 +173,8 @@ const ListOfApis = () => {
 
     return (
         <div id="api-list-content" className="max-w-7xl mx-auto p-4">
+            <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
+
             <div className="mb-8">
                 <h1 className="text-3xl font-bold text-[#FFFFFF] mb-2">API List</h1>
                 <p className="text-gray-400">Manage and configure your API endpoints for testing</p>

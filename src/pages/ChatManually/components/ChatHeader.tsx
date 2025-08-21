@@ -26,7 +26,7 @@ const ChatHeader = (props: Props) => {
             <div className="flex items-center space-x-2">
                 <span id="selected-feature-name" className="text-sm text-gray-400 hidden">Selected: </span>
                 <button id="new-chat-btn"
-                    className="bg-[#3B82F6] hover:bg-[#2563EB] text-white px-4 py-2 rounded-lg transition-colors flex items-center space-x-2"
+                    className="bg-[#3B82F6] cursor-pointer hover:bg-[#2563EB] text-white px-4 py-2 rounded-lg transition-colors flex items-center space-x-2"
                     onClick={() => openCreateCollection()}
                 >
                     <i className="fa-solid fa-plus"></i>

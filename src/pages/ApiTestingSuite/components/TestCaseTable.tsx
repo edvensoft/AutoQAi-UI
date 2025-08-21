@@ -2,6 +2,7 @@ import  { useEffect, useRef, useState } from 'react'
 import CodeEditorModal from './CodeEditorModal'
 import { API_URL } from '@/config'
 import axios from 'axios'
+import { stringify } from 'dot-properties';
 
 interface Data {
     id: string,
@@ -45,11 +46,7 @@ const TestCaseTable = (props: TableProps) => {
     const [isViewCodeModal, setIsViewCodeModal] = useState<boolean>(false)
     const [codeData, setCodeData] = useState<CodeData | null>(null)
 
-    function objectToPropertiesFromObject(obj: Record<string, string>): string {
-        return Object.entries(obj)
-            .map(([key, value]) => `${key}=${value}`)
-            .join('\n');
-    }
+   
 
 
     const handleCodeView = (id: string) => {
@@ -64,8 +61,12 @@ const TestCaseTable = (props: TableProps) => {
             } else if (tableName === "test_data") {
                 axios.get(`${API_URL}/v1/api/endpoints/get-test-data/${id}/`).then((response) => {
                     console.log('Code response:', response);
+                    // let findData= response.data.response.find(item=>item.id===id)
+                    // console.log('ss',findData,id)
                     let customizeData: CodeData = {
-                        code: objectToPropertiesFromObject(response.data.response[0].data),
+                        // code: response.data.response[0].data === 'string'?response.data.response[0].data:  stringify(response.data.response[0].data),
+                        code: response.data.response[0].data,
+
                         file_name: response.data.response[0].file_name,
                         id: response.data.response[0].id,
                         status: response.data.response[0].status
@@ -130,7 +131,7 @@ const TestCaseTable = (props: TableProps) => {
                 {
                     tableName === "code_review" &&
                     <td className="px-6 py-4">
-                        <span className="px-2 py-1 text-xs font-medium bg-green-600 text-white rounded capitalize">{item.language}</span>
+                        <span className="px-2 py-1 text-xs font-medium bg-green-600 text-white rounded capitalize">{'Java'}</span>
                     </td>
                 }
 
@@ -291,7 +292,11 @@ const TestCaseTable = (props: TableProps) => {
                 </tbody>
             </table>
             {
-                isViewCodeModal && <CodeEditorModal language={tableName === "code_review" ? 'java' : 'plaintext'} data={codeData} onClose={handleClose} />
+                isViewCodeModal && <CodeEditorModal 
+                language={tableName === "code_review" ? 'java' : 'ini'} 
+                data={codeData} onClose={handleClose} 
+                tableName={tableName}
+                />
             }
         </>
     )

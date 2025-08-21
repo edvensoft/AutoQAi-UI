@@ -8,6 +8,7 @@ import axios from 'axios';
 import { API_URL } from '@/config';
 import { CircularProgress } from '@mui/material';
 import type { RootState } from '@/redux/store';
+import { ToastContainer } from 'react-toastify';
 
 
 interface Data {
@@ -211,6 +212,8 @@ const TestDataReview = () => {
 
     return (
         <div id="code-review-content" className="max-w-7xl mx-auto p-4">
+            <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
+
             <div className="mb-8">
                 <h1 className="text-3xl font-bold text-[#FFFFFF] mb-2">Test Data Review</h1>
                 <p className="text-gray-400">Review and approve generated test data for seamless integration</p>

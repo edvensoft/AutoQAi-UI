@@ -47,7 +47,7 @@ const TestCaseRow = ({ test, ref }) => {
             } else {
                 const payLoad = {
                     "collection_id": activeCollectionId,
-                    "test_case_chat_id": testCases.length > 0 ? testCases[0].test_case_chat_id : '',
+                    "test_case_chat_id":  testCases[0].test_case_chat_id ,
                     "name": 'new',
                     "steps": testSteps,
                     "expected_output": expectedResult
@@ -65,7 +65,6 @@ const TestCaseRow = ({ test, ref }) => {
                             filteredCases.push(resp.data.response)
                             dispatch(setTestCases(filteredCases))
                             toast.success("Test Case created successfully!");
-
                             // setIsEdit(true)
                         }
                     }
@@ -164,13 +163,14 @@ const TestCaseRow = ({ test, ref }) => {
                 </td>
                 <td className="border border-[#374151] p-3">
                     <div className={test.id === 'new' ? 'border border-[#374151]' : ''}>
-                        <textarea className="bg-transparent text-[#FFFFFF] border-none outline-none w-full resize-none"
+                        <textarea
+                            className="bg-transparent overflow-hidden text-[#FFFFFF] border-none outline-none w-full resize-none"
                             // rows="3"
                             // readOnly={isEdit}
                             value={testSteps}
                             onChange={handleTestCaseStep}
                             placeholder={test.id === 'new' ? 'Enter Test Steps' : ''}
-
+                            rows={3}
                         />
                     </div>
                     {/* 1. Navigate to login page
@@ -182,7 +182,10 @@ const TestCaseRow = ({ test, ref }) => {
                 <td className="border border-[#374151] p-3">
                     <div className={test.id === 'new' ? 'border border-[#374151]' : ''}>
 
-                        <textarea className="bg-transparent text-[#FFFFFF] border-none outline-none w-full resize-none"
+                        <textarea
+                            className="bg-transparent text-[#FFFFFF] border-none overflow-hidden outline-none w-full resize-none"
+                            // className="w-full h-full resize-none p-2 overflow-hidden rounded text-sm "
+                            rows={3}
                             // rows="3"
                             // readOnly={isEdit}
                             value={expectedResult}
@@ -234,7 +237,7 @@ const TestCaseRow = ({ test, ref }) => {
                         <button
                             // className="delete-test-case-btn text-red-500 hover:text-red-400 transition-colors"
                             className="cursor-pointer  text-red-500 hover:text-red-400 p-2 rounded transition-colors group relative"
-                            onClick={()=>handleDeleteTestcase(test.id)}
+                            onClick={() => handleDeleteTestcase(test.id)}
                         >
                             {/* <i data-fa-i2svg=""><svg className="svg-inline--fa fa-trash" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="trash" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><path fill="currentColor" d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"></path></svg></i> */}
                             <i className="fa-solid fa-trash"></i>

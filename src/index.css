@@ -14,3 +14,25 @@
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }
+
+
+.custom-scrollbar {
+  scrollbar-color: inherit;
+  scrollbar-width: auto;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #1A1A2E;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: currentColor;
+  border-radius: 4px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+

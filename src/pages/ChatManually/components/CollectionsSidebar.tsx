@@ -6,6 +6,7 @@ import { setActiveCollection, setTestCases } from '@/redux/collectionsSlice';
 import { API_URL } from '@/config';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import exportToExcel from '@/utilities/exportCsv';
 
 const CollectionsSidebar = ({ getCollections }) => {
     const [isTestCasesOpen, setIsTestCasesOpen] = useState(false)
@@ -22,8 +23,18 @@ const CollectionsSidebar = ({ getCollections }) => {
 
     const openTestCases = (e: React.MouseEvent<HTMLDivElement>, colId) => {
         e.stopPropagation()
-        setIsTestCasesOpen(true)
-        dispatch(setActiveCollection(colId))
+        axios.get(`${API_URL}/v1/api/test-cases/get-test-cases/${colId}/`).then(
+            response => {
+                if (response.status === 200) {
+                    dispatch(setTestCases(response.data.test_cases))
+                    dispatch(setActiveCollection(colId))
+                    setIsTestCasesOpen(true)
+
+                }
+            }
+        )
+
+
     }
     const closeTestCases = () => {
         setIsTestCasesOpen(false)
@@ -79,7 +90,7 @@ const CollectionsSidebar = ({ getCollections }) => {
         const collectionIds = collections.map(item => item.id);
         console.log('ids', collectionIds)
         const payLoad = {
-            "collection_ids": [...collectionIds]
+            "collection_ids": [...selectedCollections]
         }
         axios.delete(`${API_URL}/v1/api/test-cases/delete-collection/`, {
             data: payLoad
@@ -97,7 +108,7 @@ const CollectionsSidebar = ({ getCollections }) => {
 
     return (
         <div id="collections-sidebar" className="w-full h-full bg-[#1A1A2E] border-l border-[#374151]">
-            <div className="p-6 border-b border-[#374151]">
+            <div className="p-[22px] border-b border-[#374151]">
                 <h2 className="text-lg font-semibold text-[#FFFFFF]">Test Collections</h2>
             </div>
             <div id="collections-list" className="p-4 space-y-4">
@@ -120,6 +131,7 @@ const CollectionsSidebar = ({ getCollections }) => {
                                     data-api-id="API_001"
                                     data-api-name="Export Selected"
                                     title="Export Selected"
+                                    onClick={()=>exportToExcel(collections,'download')}
                                 >
                                     <i className="fa-solid fa-download"></i>
                                     <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
@@ -167,7 +179,7 @@ const CollectionsSidebar = ({ getCollections }) => {
                                 // onclick="openCollectionDetails('Login Feature', 'login-feature')"
                                 >
                                     <h3 className="font-semibold text-[#FFFFFF]">{col.name}</h3>
-                                    <p className="text-sm text-gray-400">5 test cases</p>
+                                    {/* <p className="text-sm text-gray-400">5 test cases</p> */}
                                 </div>
                             </div>
                         </div>
