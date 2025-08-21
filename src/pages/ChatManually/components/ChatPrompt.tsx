@@ -35,7 +35,7 @@ const ChatPrompt = () => {
     }, [chats]);
 
     useEffect(() => {
-        collections.length === 0 ? setIsSubmit(true) :setIsSubmit(false)
+        collections.length === 0 ? setIsSubmit(true) : setIsSubmit(false)
     }, [collections])
     const handleSend = () => {
         console.log('submit', file)
@@ -155,7 +155,7 @@ const ChatPrompt = () => {
         const files = e?.target?.files;
         const selectedFile = files && files.length > 0 ? files[0] : null;
         console.log('sele', selectedFile)
-            setFile(selectedFile);
+        setFile(selectedFile);
 
         // validateFile(selectedFile);
     };
@@ -183,7 +183,7 @@ const ChatPrompt = () => {
     return (
         <div id="chat-input-section" className="border-t border-[#374151] p-4">
             <div className="flex items-center space-x-4">
-                <div className="flex flex-row items-center w-full">
+                <div className="flex flex-col items-center w-full">
                     <div className="flex items-center space-x-2 mb-2">
                         <button id="file-upload-btn"
                             className="bg-[#1A1A2E] cursor-pointer hover:bg-gray-600 text-gray-300 p-2 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
@@ -200,23 +200,26 @@ const ChatPrompt = () => {
                             onChange={handleFileChange}
                         />
                     </div>
-                    <textarea id="chat-input"
-                        value={input}
-                        placeholder="Select a collection first to start generating test cases..."
-                        className="w-full bg-[#1A1A2E] border border-[#374151] rounded-lg p-3 text-[#FFFFFF] placeholder-gray-400 resize-none focus:outline-none focus:ring-2 focus:ring-[#3B82F6] disabled:opacity-50 disabled:cursor-not-allowed"
-                        // rows="3" 
-                        onChange={(e) => setInput(e.target.value)}
+                    <div className='w-full flex gap-3'>
+                        <textarea id="chat-input"
+                            value={input}
+                            placeholder="Select a collection first to start generating test cases..."
+                            className="w-full bg-[#1A1A2E] border border-[#374151] rounded-lg p-3 text-[#FFFFFF] placeholder-gray-400 resize-none focus:outline-none focus:ring-2 focus:ring-[#3B82F6] disabled:opacity-50 disabled:cursor-not-allowed"
+                            // rows="3" 
+                            onChange={(e) => setInput(e.target.value)}
 
-                        disabled={isSubmit}
-                    ></textarea>
+                            disabled={isSubmit}
+                        ></textarea>
+                        <button id="send-btn"
+                            className={`bg-gray-600 text-gray-400 p-3 rounded-lg ${isSubmit ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                            onClick={handleSend}
+                        // disabled={isSubmit}
+                        >
+                            <i className="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </div>
                 </div>
-                <button id="send-btn"
-                    className={`bg-gray-600 text-gray-400 p-3 rounded-lg ${isSubmit ? 'cursor-not-allowed' : 'cursor-pointer'}`}
-                    onClick={handleSend}
-                // disabled={isSubmit}
-                >
-                    <i className="fa-solid fa-paper-plane"></i>
-                </button>
+
                 <div ref={chatEndRef} />
             </div>
         </div>

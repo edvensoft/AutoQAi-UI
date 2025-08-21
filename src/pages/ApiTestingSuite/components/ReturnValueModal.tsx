@@ -1,7 +1,9 @@
 
-// import extractSchemaNodes from '@/utilities/extractSchemaNodes';
+import extractSchemaNodes from '@/utilities/extractSchemaNodes';
+import { Editor } from '@monaco-editor/react';
 import CloseIcon from '@mui/icons-material/Close';
 import { Portal } from '@mui/material';
+import { useEffect, useRef } from 'react';
 
 
 interface ModalProps {
@@ -16,21 +18,35 @@ interface ModalProps {
 //   // Add more fields if needed
 // };
 
-// const dummyJson={
+// const dummyJson = {
 //     "user": {
-//     "id": "string",
-//     "name": "string",
-//     "email": "string",
-//     "profile": {
-//       "avatar": "string",
-//       "preferences": {}
-//     }
-//   },
-//   "token": "string",
-//   "expires": "datetime",
-//   "status": "string"
+//         "id": "string",
+//         "name": "string",
+//         "email": "string",
+//         "profile": {
+//             "avatar": "string",
+//             "preferences": {}
+//         }
+//     },
+//     "token": "string",
+//     "expires": "datetime",
+//     "status": "string"
 
 // }
+const dummyJson = {
+    "user": {
+        "id": "123",
+        "name": "John",
+        "email": "john@example.com",
+        "profile": {
+            "avatar": "url-to-avatar",
+            "preferences": {}
+        }
+    },
+    "token": "abc123",
+    "expires": "2025-08-20T00:00:00Z",
+    "status": "active"
+}
 
 const ReturnValueModal = ({ onClose }: ModalProps) => {
     // const exampleSchema: JSONSchema = {
@@ -56,8 +72,29 @@ const ReturnValueModal = ({ onClose }: ModalProps) => {
 
 
 
-    // const nodes = extractSchemaNodes(dummyJson);
-    // console.log(nodes,'noses');
+    const nodes = extractSchemaNodes((dummyJson));
+    console.log(nodes, 'noses');
+
+    const editorRef = useRef<any>(null);
+
+    function handleEditorDidMount(editor: any) {
+        editorRef.current = editor;
+        editorRef.current.getAction('editor.action.formatDocument').run();
+        editor.getAction('editor.action.formatDocument').run();
+    }
+
+    // const formatJson = () => {
+    //     if (editorRef.current) {
+    //         editorRef.current.getAction('editor.action.formatDocument').run();
+    //     }
+    // };
+
+    useEffect(() => {
+        if (editorRef.current) {
+            editorRef.current.getAction('editor.action.formatDocument').run();
+        }
+    }, [editorRef])
+
     return (
         <Portal>
             <div id="return-values-modal"
@@ -77,11 +114,25 @@ const ReturnValueModal = ({ onClose }: ModalProps) => {
                         </button>
                     </div>
 
-                    <div className="mb-2">
+                    <div className="mb-2 flex-1">
                         <label className="block text-sm font-medium text-[#FFFFFF] mb-2">Response JSON Schema</label>
-                        <textarea className="w-full h-40 bg-[#0F0F23] border border-[#374151] rounded-lg p-3 text-[#FFFFFF] font-mono text-sm" >
+                        <div className="h-46 w-full">
+                            <Editor
+                                language="json"
 
-                        </textarea>
+                                value={JSON.stringify(dummyJson)}
+                                // defaultValue='{"ugly":true,"nested":{"thing":1}}'
+                                theme="vs-dark"
+                                options={{
+                                    // automaticLayout: true,
+                                    readOnly: true,
+                                }}
+                                onMount={handleEditorDidMount}
+                            />
+                        </div>
+                        {/* <textarea className="w-full h-40 bg-[#0F0F23] border border-[#374151] rounded-lg p-3 text-[#FFFFFF] font-mono text-sm" >
+                            {JSON.stringify(dummyJson)}
+                        </textarea> */}
                     </div>
 
                     <div className="mb-2">
