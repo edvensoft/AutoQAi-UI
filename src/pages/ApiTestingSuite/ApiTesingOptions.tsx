@@ -8,6 +8,7 @@ import axios from 'axios'
 import React, { useRef, useState, type DragEvent } from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate, } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 const ApiTesingOptions = () => {
     const [activeFormate, setActiveFormate] = useState<number | null>(null)
@@ -137,6 +138,7 @@ const ApiTesingOptions = () => {
                     }
                 ).catch(() => {
                     setIsSubmitting(false)
+                    toast.error("Server error Please try again")
                 })
 
             }

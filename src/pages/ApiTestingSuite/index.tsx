@@ -1,12 +1,13 @@
 import { useSelector } from "react-redux";
 import ApiTesingOptions from "./ApiTesingOptions";
 import type { RootState } from "@/redux/store";
-import  { useEffect, } from "react";
+import { useEffect, } from "react";
 import ListOfApis from "./ListOfApis";
 import CodeReview from "./CodeReview";
 import TestDataReview from "./TestDataReview";
 import TestExecution from "./TestExecution";
 import ExecutionLoader from "./ExecutionLoader";
+import { ToastContainer } from "react-toastify";
 
 
 const StepData = [
@@ -51,6 +52,8 @@ export default function ApiTestingSuite() {
 
 	return (
 		<div className="mt-[40px]">
+			<ToastContainer position="top-right" autoClose={3000} hideProgressBar />
+
 			<ApiTesingOptions />
 			{/* {component} */}
 		</div>

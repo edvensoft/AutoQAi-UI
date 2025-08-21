@@ -1,13 +1,17 @@
 
+import { API_URL } from '@/config';
 import extractSchemaNodes from '@/utilities/extractSchemaNodes';
 import { Editor } from '@monaco-editor/react';
 import CloseIcon from '@mui/icons-material/Close';
 import { Portal } from '@mui/material';
-import { useEffect, useRef } from 'react';
+import axios from 'axios';
+import { useEffect, useRef, useState } from 'react';
+import { toast } from 'react-toastify';
 
 
 interface ModalProps {
     onClose: (modal: string) => void,
+    selectedEndpoint: number
 }
 // type JSONSchema = {
 //   type?: string;
@@ -48,7 +52,10 @@ const dummyJson = {
     "status": "active"
 }
 
-const ReturnValueModal = ({ onClose }: ModalProps) => {
+const ReturnValueModal = ({ onClose, selectedEndpoint }: ModalProps) => {
+
+    const [selectedNodes, setSelectedNodes] = useState([])
+
     // const exampleSchema: JSONSchema = {
     //     type: 'object',
     //     properties: {
@@ -81,6 +88,30 @@ const ReturnValueModal = ({ onClose }: ModalProps) => {
         editorRef.current = editor;
         editorRef.current.getAction('editor.action.formatDocument').run();
         editor.getAction('editor.action.formatDocument').run();
+    }
+
+    const handleSave = () => {
+        const payload = {
+            "api_endpoint_id": selectedEndpoint,
+            "return_value": selectedNodes
+        }
+        axios.post(`${API_URL}/v1/api/projects/save-return-value/`, payload).then(
+            res => {
+                if (res.status === 201 ) {
+                    toast.success("Saved Successfully")
+                }
+            }
+        )
+    }
+
+    const handleSection = (path) => {
+        if (selectedNodes.includes(path)) {
+            let updateNodes = selectedNodes.filter(p => p !== path)
+            setSelectedNodes(updateNodes)
+        } else {
+            setSelectedNodes((prev) => [...prev, path])
+
+        }
     }
 
     // const formatJson = () => {
@@ -138,12 +169,27 @@ const ReturnValueModal = ({ onClose }: ModalProps) => {
                     <div className="mb-2">
                         <label className="block text-sm font-medium text-[#FFFFFF] mb-2">Select Multiple Nodes to Return</label>
                         <div className="space-y-2 max-h-60 overflow-y-auto bg-[#0F0F23] border border-[#374151] rounded-lg p-4">
-                            <label className="flex items-center hover:bg-[#1A1A2E] p-2 rounded">
-                                <input type="checkbox" className=" w-4 h-4 text-[#3B82F6] bg-transparent border-[#374151] rounded" data-node="user.id" />
-                                <span className="ml-3 text-sm text-gray-300 font-mono">user.id</span>
-                                <span className="ml-auto text-xs text-[#3B82F6] bg-[#3B82F6]/20 px-2 py-1 rounded">string</span>
-                            </label>
-                            <label className="flex items-center hover:bg-[#1A1A2E] p-2 rounded">
+                            {
+                                nodes.length > 0 && nodes.map(
+                                    item => (
+                                        <label key={item.id}
+                                            className="flex items-center hover:bg-[#1A1A2E] p-2 rounded"
+
+                                        >
+                                            <input type="checkbox"
+                                                checked={selectedNodes.includes(item.path)}
+                                                className=" w-4 h-4 text-[#3B82F6] bg-transparent border-[#374151] rounded" data-node="user.id"
+                                                onChange={() => handleSection(item.path)}
+                                            />
+                                            <span className="ml-3 text-sm text-gray-300 font-mono">{item.path}</span>
+                                            <span className="ml-auto text-xs text-[#3B82F6] bg-[#3B82F6]/20 px-2 py-1 rounded">{item.type}</span>
+                                        </label>
+                                    )
+                                )
+                            }
+
+
+                            {/* <label className="flex items-center hover:bg-[#1A1A2E] p-2 rounded">
                                 <input type="checkbox" className=" w-4 h-4 text-[#3B82F6] bg-transparent border-[#374151] rounded" data-node="user.name" />
                                 <span className="ml-3 text-sm text-gray-300 font-mono">user.name</span>
                                 <span className="ml-auto text-xs text-[#3B82F6] bg-[#3B82F6]/20 px-2 py-1 rounded">string</span>
@@ -172,13 +218,27 @@ const ReturnValueModal = ({ onClose }: ModalProps) => {
                                 <input type="checkbox" className=" w-4 h-4 text-[#3B82F6] bg-transparent border-[#374151] rounded" data-node="status" />
                                 <span className="ml-3 text-sm text-gray-300 font-mono">status</span>
                                 <span className="ml-auto text-xs text-[#3B82F6] bg-[#3B82F6]/20 px-2 py-1 rounded">string</span>
-                            </label>
+                            </label> */}
                         </div>
                     </div>
 
                     <div className="mb-2">
                         <div id="selected-return-nodes" className="flex flex-wrap gap-2">
                             {/* Selected nodes will appear here as tags  */}
+                            {
+                                selectedNodes.length > 0 && selectedNodes.map(selected =>
+                                (
+                                    <span className="bg-[#3B82F6] text-white px-2 py-1 rounded text-xs flex items-center">
+                                        {selected}
+                                        <button className="ml-1 text-white hover:text-gray-300 cursor-pointer"
+                                            onClick={() => handleSection(selected)}
+                                        >
+                                            <i className="fa-solid fa-times"></i>
+                                        </button>
+                                    </span>
+                                )
+                                )
+                            }
                         </div>
                     </div>
 
@@ -187,7 +247,12 @@ const ReturnValueModal = ({ onClose }: ModalProps) => {
                             className="cursor-pointer bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors"
                             onClick={() => onClose('return')}
                         >Cancel</button>
-                        <button id="save-return-values" className="bg-[#3B82F6] cursor-pointer hover:bg-[#2563EB] text-white px-4 py-2 rounded-lg transition-colors">Save Selection</button>
+                        <button id="save-return-values"
+                            onClick={handleSave}
+                            className="bg-[#3B82F6] cursor-pointer hover:bg-[#2563EB] text-white px-4 py-2 rounded-lg transition-colors"
+                        >
+                            Save Selection
+                        </button>
                     </div>
                 </div>
             </div>
