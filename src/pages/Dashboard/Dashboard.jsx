@@ -16,7 +16,7 @@ const Dashboard = () => {
   const projectId = useSelector((state) => state.appState.project_id);
   const [scatterConfig, setScatterConfig] = useState();
   const [barConfig, setBarConfig] = useState();
-  const [designGrapgh,setDesignGraph]=useState();
+  const [designGrapgh, setDesignGraph] = useState();
 
   const formatScatterConfig = (response) => {
     console.log(response, "response-scatter");
@@ -69,10 +69,16 @@ const Dashboard = () => {
             usePointStyle: true,
           },
         },
+            tooltip: {
+          backgroundColor: "#fff",
+          titleColor: "#0f0f1a",
+           bodyColor: "#0f0f1a",
+        },
         datalabels: {
           display: false,
         },
       },
+   
       scales: {
         x: {
           type: "category",
@@ -124,6 +130,11 @@ const Dashboard = () => {
       plugins: {
         legend: { display: false },
         datalabels: { display: false },
+          tooltip: {
+          backgroundColor: "#fff",
+          titleColor: "#0f0f1a",
+           bodyColor: "#0f0f1a",
+        },
       },
       scales: {
         x: { ticks: { color: "#ccc" }, grid: { display: false } },
@@ -178,6 +189,11 @@ const Dashboard = () => {
           font: { size: 20, weight: "bold" },
           padding: { bottom: 20 },
         },
+        tooltip: {
+          backgroundColor: "#fff",
+          titleColor: "#0f0f1a",
+           bodyColor: "#0f0f1a",
+        },
         datalabels: {
           color: "white",
           anchor: "end",
@@ -186,6 +202,7 @@ const Dashboard = () => {
           font: { weight: "bold", size: 14 },
         },
       },
+
       scales: {
         x: {
           min: 0,
@@ -206,7 +223,7 @@ const Dashboard = () => {
       },
     };
 
-    setDesignGraph({data,options})
+    setDesignGraph({ data, options });
   };
 
   const getLastFiveExexutions = async () => {
@@ -265,7 +282,7 @@ const Dashboard = () => {
           barConfig={barConfig}
         />
       )}
-     {designGrapgh&& <DesignQuality designGrapgh={designGrapgh} />}
+      {designGrapgh && <DesignQuality designGrapgh={designGrapgh} />}
       <Pages />
       {/* <ApexChartsExample/> */}
     </div>

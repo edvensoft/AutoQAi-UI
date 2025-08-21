@@ -28,6 +28,11 @@ const chartOptions = {
     datalabels: {
       display: false,
     },
+        tooltip: {
+          backgroundColor: "#fff",
+          titleColor: "#0f0f1a",
+           bodyColor: "#0f0f1a",
+        },
     legend: {
       labels: {
         color: "#fff",
