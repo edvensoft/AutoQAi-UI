@@ -290,10 +290,12 @@ console.log(scatterData,scatterOptions,"Checking")
       console.log(response, "response");
       if (response?.data?.response?.length) {
     
-         formatScatterConfig(execution);
+         formatScatterConfig(response?.data);
       } else {
+          formatScatterConfig(execution);
       }
     } catch {
+       formatScatterConfig(execution);
     } finally {
     }
   };
@@ -304,11 +306,14 @@ console.log(scatterData,scatterOptions,"Checking")
         `${API_URL}/v1/api/projects/latest-execution/${projectId}/`
       );
       console.log(response, "response");
+         formatBarConfig(lastexecution);
       if (response?.data?.response) {
-           formatBarConfig(lastexecution);
+        formatBarConfig(response?.data)
       } else {
+         formatBarConfig(lastexecution);
       }
     } catch {
+       formatBarConfig(lastexecution);
     } finally {
     }
   };
