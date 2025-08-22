@@ -1,48 +1,57 @@
-type Node = {
+type SchemaNode = {
+  id:string,
   path: string;
   type: string;
-  id: string;
+  // format?: string;
+  // enum?: string[];
+  // description?: string;
 };
 
+type JSONSchema = {
+  type: string;
+  properties?: Record<string, any>;
+  items?: any;
+  format?: string;
+  enum?: string[];
+  description?: string;
+  additionalProperties?: any;
+};
 
-
-function extractNodesFromShape(
-  obj: Record<string, any>,
+function extractSchemaPaths(
+  schema: JSONSchema,
   basePath: string = ''
-): Node[] {
-  const nodes: Node[] = [];
+): SchemaNode[] {
+  const nodes: SchemaNode[] = [];
 
-
-
-  for (const key in obj) {
-    const value = obj[key];
-    const currentPath = basePath ? `${basePath}.${key}` : key;
-
-    if (typeof value === 'object' && value !== null) {
-      if (Object.keys(value).length === 0) {
-        nodes.push({ id: `${Date.now()}-${Math.floor(Math.random() * 10000)}`, path: currentPath, type: typeof value });
-      } else {
-        nodes.push(...extractNodesFromShape(value, currentPath));
-      }
-    } else {
-      nodes.push({ id: `${Date.now()}-${Math.floor(Math.random() * 10000)}`, path: currentPath, type: typeof value });
+  if (schema.type === 'object' && schema.properties) {
+    for (const [key, propSchema] of Object.entries(schema.properties)) {
+      const newPath = basePath ? `${basePath}.${key}` : key;
+      nodes.push(...extractSchemaPaths(propSchema, newPath));
     }
-
-
-
-    // if (typeof value === 'string') {
-    //   nodes.push({ id: `${Date.now()}-${Math.floor(Math.random() * 10000)}`, path: currentPath, type: value });
-    // } else if (typeof value === 'object' && value !== null) {
-    //   // If value is an empty object, treat it as a generic object
-    //   if (Object.keys(value).length === 0) {
-    //     nodes.push({ id: `${Date.now()}-${Math.floor(Math.random() * 10000)}`, path: currentPath, type: 'object' });
-    //   } else {
-    //     nodes.push(...extractNodesFromShape(value, currentPath));
-    //   }
-    // }
+  } else if (schema.type === 'array' && schema.items) {
+    const arrayPath = basePath + '[]';
+    nodes.push(...extractSchemaPaths(schema.items, arrayPath));
+  } else if (schema.type === 'object' && schema.additionalProperties) {
+    // Handle dynamic object (map)
+    nodes.push({
+      id:`${Date.now()}-${Math.floor(Math.random() * 10000)}`,
+      path: basePath,
+      type: 'object',
+      ...schema
+    });
+  } else {
+    // Leaf node
+    nodes.push({
+      id:`${Date.now()}-${Math.floor(Math.random() * 10000)}`,
+      path: basePath,
+      type: schema.type,
+      // format: schema.format,
+      // enum: schema.enum,
+      // description: schema.description,
+    });
   }
 
   return nodes;
 }
 
-export default extractNodesFromShape
+export default extractSchemaPaths

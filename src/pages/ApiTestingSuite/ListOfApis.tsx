@@ -101,7 +101,7 @@ const ListOfApis = () => {
             axios.get(`${API_URL}/v1/api/projects/get-apis/${projectId}/`).then((response) => {
                 // console.log('Fetched APIs:', response,);
 
-                console.log('filterData', response.data.response.filter(i => Object.keys(i.path_variables).length >0 ))
+                // console.log('filterData', response.data.response.filter(i => Object.keys(i.path_variables).length >0 ))
                 if (response?.data?.response && response?.data?.response.length > 0) {
                     setAllApis(response.data.response);
                     setTotalPages(Math.ceil(response.data.response.length / noApisPerPage));

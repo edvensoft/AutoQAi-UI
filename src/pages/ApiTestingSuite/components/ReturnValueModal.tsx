@@ -1,6 +1,7 @@
 
 import { API_URL } from '@/config';
-import extractSchemaNodes from '@/utilities/extractSchemaNodes';
+import extractSchemaPaths from '@/utilities/extractSchemaNodes';
+
 import { Editor } from '@monaco-editor/react';
 import CloseIcon from '@mui/icons-material/Close';
 import { Portal } from '@mui/material';
@@ -11,93 +12,125 @@ import { toast } from 'react-toastify';
 
 interface ModalProps {
     onClose: (modal: string) => void,
-    selectedEndpoint: number
+    selectedEndpoint: any
 }
-// type JSONSchema = {
-//   type?: string;
-//   properties?: {
-//     [key: string]: JSONSchema;
-//   };
-//   items?: JSONSchema;
-//   // Add more fields if needed
-// };
+;
+
 
 // const dummyJson = {
-//     "user": {
-//         "id": "string",
-//         "name": "string",
-//         "email": "string",
-//         "profile": {
-//             "avatar": "string",
-//             "preferences": {}
+//     "type": "object",
+//     "required": ["status", "data"],
+//     "properties": {
+//         "status": {
+//             "type": "object",
+//             "required": ["code", "message"],
+//             "properties": {
+//                 "code": { "type": "integer" },
+//                 "message": { "type": "string" }
+//             }
+//         },
+//         "data": {
+//             "type": "object",
+//             "required": [
+//                 "_id", "workspace_id", "linked_store_id", "store_name", "store_website",
+//                 "country", "source_marketplace", "store_taxonomy", "product_sale_type",
+//                 "channels", "languages", "active", "last_modified_time", "billing_tier"
+//             ],
+//             "properties": {
+//                 "_id": { "type": "string" },
+//                 "workspace_id": { "type": "string" },
+//                 "linked_store_id": { "type": "string" },
+//                 "store_name": { "type": "string" },
+//                 "store_website": { "type": "string" },
+//                 "country": {
+//                     "type": "array",
+//                     "items": { "type": "string" }
+//                 },
+//                 "source_marketplace": { "type": "string" },
+//                 "store_taxonomy": { "type": "string" },
+//                 "product_sale_type": {
+//                     "type": "array",
+//                     "items": { "type": "string" }
+//                 },
+//                 "channels": {
+//                     "type": "object",
+//                     "additionalProperties": { "type": "integer" }
+//                 },
+//                 "languages": {
+//                     "type": "array",
+//                     "items": { "type": "string" }
+//                 },
+//                 "active": { "type": "boolean" },
+//                 "last_modified_time": { "type": "integer" },
+//                 "billing_tier": { "type": "string" }
+//             }
 //         }
-//     },
-//     "token": "string",
-//     "expires": "datetime",
-//     "status": "string"
-
+//     }
 // }
+
 const dummyJson = {
-    "user": {
-        "id": "123",
-        "name": "John",
-        "email": "john@example.com",
-        "profile": {
-            "avatar": "url-to-avatar",
-            "preferences": {}
+    "type": "object",
+    "properties": {
+        "id": {
+            "type": "integer",
+            "format": "int64"
+        },
+        "petId": {
+            "type": "integer",
+            "format": "int64"
+        },
+        "quantity": {
+            "type": "integer",
+            "format": "int32"
+        },
+        "shipDate": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "status": {
+            "type": "string",
+            "description": "Order Status",
+            "enum": [
+                "placed",
+                "approved",
+                "delivered"
+            ]
+        },
+        "complete": {
+            "type": "boolean"
         }
     },
-    "token": "abc123",
-    "expires": "2025-08-20T00:00:00Z",
-    "status": "active"
+    "xml": {
+        "name": "Order"
+    }
 }
+
 
 const ReturnValueModal = ({ onClose, selectedEndpoint }: ModalProps) => {
 
     const [selectedNodes, setSelectedNodes] = useState([])
-
-    // const exampleSchema: JSONSchema = {
-    //     type: 'object',
-    //     properties: {
-    //         name: { type: 'string' },
-    //         age: { type: 'number' },
-    //         address: {
-    //             type: 'object',
-    //             properties: {
-    //                 street: { type: 'string' },
-    //                 city: { type: 'string' }
-    //             }
-    //         },
-    //         tags: {
-    //             type: 'array',
-    //             items: {
-    //                 type: 'string'
-    //             }
-    //         }
-    //     }
-    // };
-
-
-
-    const nodes = extractSchemaNodes((dummyJson));
-    console.log(nodes, 'noses');
+    console.log('sele', selectedEndpoint)
+    // const parsed = dummyJson;
+    // const nodes = extractSchemaNodes(dummyJson);
+    const nodes = Object.keys(selectedEndpoint.response_schema).length > 0 ? extractSchemaPaths(selectedEndpoint.response_schema.properties.data) : []
+    console.log(nodes, 'noses', selectedEndpoint);
 
     const editorRef = useRef<any>(null);
 
-    function handleEditorDidMount(editor: any) {
-        editorRef.current = editor;
-        editorRef.current.getAction('editor.action.formatDocument').run();
-        editor.getAction('editor.action.formatDocument').run();
-    }
+    // function handleEditorDidMount(editor: any) {
+    //     editorRef.current = editor;
+    //     editorRef.current.getAction('editor.action.formatDocument').run();
+    //     editor.getAction('editor.action.formatDocument').run();
+    // }
 
     const handleSave = () => {
         const payload = {
-            "api_endpoint_id": selectedEndpoint,
-            "return_value": selectedNodes
+            "api_endpoint_id": selectedEndpoint?.id,
+            "return_value": [...selectedNodes]
         }
         axios.post(`${API_URL}/v1/api/projects/save-return-value/`, payload).then(
             res => {
-                if (res.status === 201 ) {
+                if (res.status === 201) {
                     toast.success("Saved Successfully")
                 }
             }
@@ -147,49 +180,59 @@ const ReturnValueModal = ({ onClose, selectedEndpoint }: ModalProps) => {
 
                     <div className="mb-2 flex-1">
                         <label className="block text-sm font-medium text-[#FFFFFF] mb-2">Response JSON Schema</label>
-                        <div className="h-46 w-full">
-                            <Editor
-                                language="json"
+                        <div className="h-46 w-full overflow-auto overflow-y-auto">
+                            {
+                                nodes.length > 0 ?
+                                    <Editor
+                                        language="json"
 
-                                value={JSON.stringify(dummyJson)}
-                                // defaultValue='{"ugly":true,"nested":{"thing":1}}'
-                                theme="vs-dark"
-                                options={{
-                                    // automaticLayout: true,
-                                    readOnly: true,
-                                }}
-                                onMount={handleEditorDidMount}
-                            />
+                                        // value={JSON.stringify(dummyJson)}
+                                        value={JSON.stringify(selectedEndpoint.response_schema.properties)}
+                                        // defaultValue='{"ugly":true,"nested":{"thing":1}}'
+                                        theme="vs-dark"
+                                        options={{
+                                            // automaticLayout: true,
+                                            readOnly: true,
+                                        }}
+                                    // onMount={handleEditorDidMount}
+                                    />
+                                    : <div className='flex justify-center items-center'>
+                                        <p className='text-red-500'>No JSON Schema</p>
+                                    </div>
+                            }
+
                         </div>
                         {/* <textarea className="w-full h-40 bg-[#0F0F23] border border-[#374151] rounded-lg p-3 text-[#FFFFFF] font-mono text-sm" >
                             {JSON.stringify(dummyJson)}
                         </textarea> */}
                     </div>
+                    {
+                        nodes.length > 0 ?
+                            <div className="mb-2">
+                                <label className="block text-sm font-medium text-[#FFFFFF] mb-2">Select Multiple Nodes to Return</label>
+                                <div className="space-y-2 max-h-60 overflow-y-auto bg-[#0F0F23] border border-[#374151] rounded-lg p-4">
+                                    {
 
-                    <div className="mb-2">
-                        <label className="block text-sm font-medium text-[#FFFFFF] mb-2">Select Multiple Nodes to Return</label>
-                        <div className="space-y-2 max-h-60 overflow-y-auto bg-[#0F0F23] border border-[#374151] rounded-lg p-4">
-                            {
-                                nodes.length > 0 && nodes.map(
-                                    item => (
-                                        <label key={item.id}
-                                            className="flex items-center hover:bg-[#1A1A2E] p-2 rounded"
+                                        nodes.map(
+                                            item => (
+                                                <label key={item.id}
+                                                    className="flex items-center hover:bg-[#1A1A2E] p-2 rounded"
 
-                                        >
-                                            <input type="checkbox"
-                                                checked={selectedNodes.includes(item.path)}
-                                                className=" w-4 h-4 text-[#3B82F6] bg-transparent border-[#374151] rounded" data-node="user.id"
-                                                onChange={() => handleSection(item.path)}
-                                            />
-                                            <span className="ml-3 text-sm text-gray-300 font-mono">{item.path}</span>
-                                            <span className="ml-auto text-xs text-[#3B82F6] bg-[#3B82F6]/20 px-2 py-1 rounded">{item.type}</span>
-                                        </label>
-                                    )
-                                )
-                            }
+                                                >
+                                                    <input type="checkbox"
+                                                        checked={selectedNodes.includes(item.path)}
+                                                        className=" w-4 h-4 text-[#3B82F6] bg-transparent border-[#374151] rounded" data-node="user.id"
+                                                        onChange={() => handleSection(item.path)}
+                                                    />
+                                                    <span className="ml-3 text-sm text-gray-300 font-mono">{item.path}</span>
+                                                    <span className="ml-auto text-xs text-[#3B82F6] bg-[#3B82F6]/20 px-2 py-1 rounded">{item.type}</span>
+                                                </label>
+                                            )
+                                        )
+                                    }
 
 
-                            {/* <label className="flex items-center hover:bg-[#1A1A2E] p-2 rounded">
+                                    {/* <label className="flex items-center hover:bg-[#1A1A2E] p-2 rounded">
                                 <input type="checkbox" className=" w-4 h-4 text-[#3B82F6] bg-transparent border-[#374151] rounded" data-node="user.name" />
                                 <span className="ml-3 text-sm text-gray-300 font-mono">user.name</span>
                                 <span className="ml-auto text-xs text-[#3B82F6] bg-[#3B82F6]/20 px-2 py-1 rounded">string</span>
@@ -219,8 +262,10 @@ const ReturnValueModal = ({ onClose, selectedEndpoint }: ModalProps) => {
                                 <span className="ml-3 text-sm text-gray-300 font-mono">status</span>
                                 <span className="ml-auto text-xs text-[#3B82F6] bg-[#3B82F6]/20 px-2 py-1 rounded">string</span>
                             </label> */}
-                        </div>
-                    </div>
+                                </div>
+                            </div>
+                            : <></>
+                    }
 
                     <div className="mb-2">
                         <div id="selected-return-nodes" className="flex flex-wrap gap-2">
