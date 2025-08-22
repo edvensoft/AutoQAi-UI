@@ -21,7 +21,7 @@ export default function TestCaseGenerator() {
 	// const [testCases, setTestCases] = useState<TestCases[]>([])
 
 	const collections = useSelector((state: RootState) => state.collections.list);
-	const testCases = useSelector((state: RootState) => state.collections.testCases);
+	// const testCases = useSelector((state: RootState) => state.collections.testCases);
 
 	const activeCollectionId = useSelector(
 		(state: RootState) => state.collections.activeCollectionId,
@@ -58,7 +58,7 @@ export default function TestCaseGenerator() {
 
 		const formData = new FormData();
 
-		formData.append('collection_id', '0c32be2e-c485-4aa2-b3fa-3783ab831e4a');
+		formData.append('collection_id', activeCollectionId);
 		formData.append('user_message', input);
 		formData.append('filepath', 'null');
 
@@ -128,18 +128,25 @@ export default function TestCaseGenerator() {
 	};
 
 	const getChatByCollection = () => {
-		const userMessage: Message = { type: "user", text: 'Generating' };
-		const loaderMessage: Message = {
-			type: "system",
-			text: "Generating test cases...",
-			loading: true,
-		};
-		setMessages(() => [userMessage, loaderMessage]);
+		// const userMessage: Message = { type: "user", text: 'Generating' };
+		// const loaderMessage: Message = {
+		// 	type: "system",
+		// 	text: "Generating test cases...",
+		// 	loading: true,
+		// };
+		// setMessages(() => [userMessage, loaderMessage]);
 
 		axios.get(`${API_URL}/v1/api/test-cases/get-chat/${activeCollectionId}/`).then(
 			response => {
 				console.log('responseChats', response)
 				if (response.status === 200) {
+					const userMessage: Message = { type: "user", text: 'Generating' };
+					const loaderMessage: Message = {
+						type: "system",
+						text: "Generating test cases...",
+						loading: true,
+					};
+					setMessages(() => [userMessage, loaderMessage]);
 					setMessages((prev) => {
 						const updated = [...prev];
 						//replace message
@@ -163,23 +170,26 @@ export default function TestCaseGenerator() {
 			console.log('error', err)
 			if (err.response.data.error === "No test cases found for this collection") {
 				console.log('incoming')
-				setMessages((prev) => {
-					const updated = [...prev];
-					//replace message
-					updated[updated.length - 2] = {
-						type: "user",
-						text: '',
-						// error: 'No test cases found for this collection',
-					};
+				setMessages([])
+				dispatch(setTestCases([]))
 
-					// Replace loader
-					updated[updated.length - 1] = {
-						type: "system",
-						text: "Test cases generated successfully! Click to view and edit.",
-						error: "No test cases found for this collection",
-					};
-					return updated;
-				});
+				// setMessages((prev) => {
+				// 	const updated = [...prev];
+				// 	//replace message
+				// 	updated[updated.length - 2] = {
+				// 		type: "user",
+				// 		text: '',
+				// 		// error: 'No test cases found for this collection',
+				// 	};
+
+				// 	// Replace loader
+				// 	updated[updated.length - 1] = {
+				// 		type: "system",
+				// 		text: "Test cases generated successfully! Click to view and edit.",
+				// 		error: "No test cases found for this collection",
+				// 	};
+				// 	return updated;
+				// });
 			}
 			// 
 		})
@@ -224,7 +234,7 @@ export default function TestCaseGenerator() {
 						className={`flex ${msg.type === "user" ? "justify-end" : "justify-start"
 							}`}>
 						<div
-							className={`p-3 rounded max-w-xs ${msg.type === "user" && msg.text === '' ?'bg-inherit':msg.type === "user"?"bg-gray-700 text-right" : "bg-blue-700"
+							className={`p-3 rounded max-w-xs ${msg.type === "user" && msg.text === '' ? 'bg-inherit' : msg.type === "user" ? "bg-gray-700 text-right" : "bg-blue-700"
 								}`}>
 							{
 								msg.error?.length > 0 ?
@@ -294,6 +304,7 @@ export default function TestCaseGenerator() {
 				// testCases={testCases}
 				// setTestCases={setTestCases}
 				onClose={() => setOpenModal(false)}
+				// onBlur={()=>setOpenModal(true)}
 				collectionId={activeCollectionId}
 			/>
 		</>

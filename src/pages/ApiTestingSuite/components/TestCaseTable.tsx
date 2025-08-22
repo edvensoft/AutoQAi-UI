@@ -1,7 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react'
+import  { useEffect, useRef, useState } from 'react'
 import CodeEditorModal from './CodeEditorModal'
 import { API_URL } from '@/config'
 import axios from 'axios'
+// import { stringify } from 'dot-properties';
 
 interface Data {
     id: string,
@@ -36,19 +37,16 @@ interface TableProps {
     selectedApis: any[],
     handleSelectAll: (e: any) => void,
     totalNoApi: number,
-    handleSelection: (e: any, apiId: string) => void
+    handleSelection: (e: any, apiId: string) => void,
+    approve: (id) => void
 }
 
 const TestCaseTable = (props: TableProps) => {
-    const { apiData, tableName, selectedApis, handleSelectAll, totalNoApi, handleSelection } = props
+    const { apiData, tableName, selectedApis, handleSelectAll, totalNoApi, handleSelection, approve } = props
     const [isViewCodeModal, setIsViewCodeModal] = useState<boolean>(false)
     const [codeData, setCodeData] = useState<CodeData | null>(null)
 
-    function objectToPropertiesFromObject(obj: Record<string, string>): string {
-        return Object.entries(obj)
-            .map(([key, value]) => `${key}=${value}`)
-            .join('\n');
-    }
+   
 
 
     const handleCodeView = (id: string) => {
@@ -63,8 +61,12 @@ const TestCaseTable = (props: TableProps) => {
             } else if (tableName === "test_data") {
                 axios.get(`${API_URL}/v1/api/endpoints/get-test-data/${id}/`).then((response) => {
                     console.log('Code response:', response);
+                    // let findData= response.data.response.find(item=>item.id===id)
+                    // console.log('ss',findData,id)
                     let customizeData: CodeData = {
-                        code: objectToPropertiesFromObject(response.data.response[0].data),
+                        // code: response.data.response[0].data === 'string'?response.data.response[0].data:  stringify(response.data.response[0].data),
+                        code: response.data.response[0].data,
+
                         file_name: response.data.response[0].file_name,
                         id: response.data.response[0].id,
                         status: response.data.response[0].status
@@ -114,7 +116,7 @@ const TestCaseTable = (props: TableProps) => {
                     <input type="checkbox"
                         checked={selectedApis.includes(item.id)}
                         onChange={(e) => handleSelection(e, item.id)}
-                        className="code-checkbox w-4 h-4 text-[#3B82F6] bg-transparent border-[#374151] rounded focus:ring-[#3B82F6]"
+                        className="code-checkbox w-4 h-4 cursor-pointer text-[#3B82F6] bg-transparent border-[#374151] rounded focus:ring-[#3B82F6]"
                     />
                 </td>
                 <td className="px-6 py-4 text-sm text-[#FFFFFF]">{item.id}</td>
@@ -129,7 +131,7 @@ const TestCaseTable = (props: TableProps) => {
                 {
                     tableName === "code_review" &&
                     <td className="px-6 py-4">
-                        <span className="px-2 py-1 text-xs font-medium bg-green-600 text-white rounded capitalize">{item.language}</span>
+                        <span className="px-2 py-1 text-xs font-medium bg-green-600 text-white rounded capitalize">{'Java'}</span>
                     </td>
                 }
 
@@ -145,7 +147,9 @@ const TestCaseTable = (props: TableProps) => {
                 <td className="px-6 py-4">
                     <div className="flex space-x-2">
                         <button
-                            className="open-code-editor cursor-pointer bg-[#3B82F6] hover:bg-[#2563EB] text-white p-2 rounded transition-colors group relative" data-api-id="API_001" data-api-name="User Authentication" title="View Code"
+                            className="open-code-editor cursor-pointer bg-[#3B82F6] hover:bg-[#2563EB] text-white p-2 rounded transition-colors group relative" 
+                            data-api-id="API_001" 
+                            data-api-name="User Authentication" title="View Code"
                             onClick={() => handleCodeView(item.id)}
                         >
                             <i className="fa-solid fa-eye"></i>
@@ -153,12 +157,29 @@ const TestCaseTable = (props: TableProps) => {
                                 View Code
                             </div>
                         </button>
-                        <button className="approve-single cursor-pointer bg-green-600 hover:bg-green-700 text-white p-2 rounded transition-colors group relative" data-api-id="API_001" title="Approve">
-                            <i className="fa-solid fa-check"></i>
-                            <div className="absolute bottom-full  left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                Approve
-                            </div>
-                        </button>
+                        {
+                            item.status === 'approved' ?
+                                <button className="text-green-600 hover:text-green-400 p-2 rounded transition-colors group relative cursor-default" title="Already Approved">
+                                    <i className="fa-solid fa-check"></i>
+                                    <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                        Already Approved
+                                    </div>
+                                </button>
+                                :
+                                <button
+                                    className="approve-single cursor-pointer bg-green-600 hover:bg-green-700 text-white p-2 rounded transition-colors group relative"
+                                    data-api-id="API_001"
+                                    title="Approve"
+                                    onClick={()=>approve(item.id)}
+
+                                >
+                                    <i className="fa-solid fa-check"></i>
+                                    <div className="absolute bottom-full  left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                        Approve
+                                    </div>
+                                </button>
+                        }
+
                     </div>
                 </td>
             </tr>
@@ -173,7 +194,7 @@ const TestCaseTable = (props: TableProps) => {
                         <th className="px-6 py-4 text-left">
                             <input type="checkbox" id="select-all-codes"
                                 ref={selectAllRef}
-                                className="w-4 h-4 text-[#3B82F6] bg-transparent border-[#374151] rounded focus:ring-[#3B82F6]"
+                                className="w-4 h-4 text-[#3B82F6] cursor-pointer bg-transparent border-[#374151] rounded focus:ring-[#3B82F6]"
                                 onChange={handleSelectAll}
                             />
                         </th>
@@ -271,7 +292,11 @@ const TestCaseTable = (props: TableProps) => {
                 </tbody>
             </table>
             {
-                isViewCodeModal && <CodeEditorModal language={tableName === "code_review" ? 'java' : 'plaintext'} data={codeData} onClose={handleClose} />
+                isViewCodeModal && <CodeEditorModal 
+                language={tableName === "code_review" ? 'java' : 'ini'} 
+                data={codeData} onClose={handleClose} 
+                tableName={tableName}
+                />
             }
         </>
     )

@@ -7,7 +7,7 @@ const ReportPage = () => {
 
   if (!htmlReport || typeof htmlReport !== "string") {
     return (
-      <div className="text-center text-red-500 mt-10">
+      <div className="text-center text-red-500 mt-10 p-4">
         No data available
       </div>
     );

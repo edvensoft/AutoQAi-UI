@@ -6,11 +6,15 @@ import React, {
   useEffect,
 } from "react";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import type { ChangeEvent } from "react";
 import TaskIcon from "@mui/icons-material/Task";
 import ClearIcon from "@mui/icons-material/Clear";
 import * as XLSX from "xlsx";
 import { useNavigate } from 'react-router-dom';
-import { useParams } from "react-router-dom";
+// import { useParams } from "react-router-dom";
+// import { useSelector } from "react-redux";
+// import type { RootState } from "@/redux/store";
 
 // =================== Types ===================
 interface FormValues {
@@ -59,13 +63,15 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
     const [formErrors, setFormErrors] = useState<FormErrors>({
       file: null,
       test_suite_name: null,
-      sheet_name: null,
-      header_starts: null,
+      sheet_name: "",
+      header_starts: "",
     });
     const [webBooks, setWebBooks] = useState<WorkbookState | null>(null);
     const [showSheetSelector, setShowSheetSelector] = useState(false);
     const navigate = useNavigate();
-    const {projectId}=useParams()
+
+
+    console.log(webBooks, "webBooks")
     // ---------- Memoized values ----------
     const isError = useMemo(
       () => Object.values(formErrors).some((error) => !!error),
@@ -75,7 +81,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
     const hasValue = useMemo(
       () =>
         Object.entries(formValues).every(
-          ([key,value]) => template==="Standard Template"&&(key==="sheet_name"||key==="header_starts")?true:value !== null && value !== ""
+          ([key, value]) => template === "Standard Template" && (key === "sheet_name" || key === "header_starts") ? true : value !== null && value !== ""
         ),
       [formValues]
     );
@@ -91,7 +97,9 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
       hasValue,
       onSave: () => {
         if (template) {
-          navigate(`/project/ui-automation/loader/${projectId}`, { state: { formValues } });
+          // navigate(`/project/ui-automation/loader/${projectId}`, { state: { formValues } });
+          navigate(`/project/ui-automation/loader/`, { state: { formValues } });
+
         }
         console.log("Save clicked", formValues, webBooks);
       },
@@ -120,7 +128,14 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
 
         if (!headers.length) return;
 
-        navigate(`/project/ui-automation/column-mapping/${projectId}`, {
+        // navigate(`/project/ui-automation/column-mapping/${projectId}`, {
+        //   state: {
+        //     ...formValues,
+        //     rows: parsedRows,
+        //     headers
+        //   },
+        // });
+        navigate(`/project/ui-automation/column-mapping/`, {
           state: {
             ...formValues,
             rows: parsedRows,
@@ -129,7 +144,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
         });
       },
     }));
-console.log(webBooks,"webbooks")
+    console.log(webBooks, "webbooks")
     // ---------- Validation ----------
     const validateExcelSheetName = (name: string): string | null => {
       // if (!name.trim()) return "Sheet name cannot be empty or only spaces.";
@@ -163,6 +178,8 @@ console.log(webBooks,"webbooks")
       }
 
       setFormErrors((prev) => ({ ...prev, file: null }));
+
+      console.log(template, "template")
 
       if (template !== "standard") {
         const reader = new FileReader();
@@ -199,6 +216,11 @@ console.log(webBooks,"webbooks")
       }
     };
 
+    const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
+      const { value, name } = e.target;
+      setFormValues((prev) => ({ ...prev, [name]: value }));
+    };
+
     const formatFileSizeMB = (bytes?: number) => {
       if (!bytes) return "";
       return (bytes / (1024 * 1024)).toFixed(2) + " MB";
@@ -206,7 +228,7 @@ console.log(webBooks,"webbooks")
 
     // ---------- JSX ----------
     return (
-      <div className="mt-6 min-h-screen text-white space-y-6">
+      <div className="mt-6 text-white space-y-6">
         <h2 className="text-lg font-semibold mb-4">Upload Your File</h2>
 
         {/* Test Suite Name */}
@@ -219,7 +241,7 @@ console.log(webBooks,"webbooks")
           value={formValues.test_suite_name}
           onChange={handleValueChange}
           placeholder="e.g., Regression, Sanity, Smoke, Integration"
-          className="w-full p-2 rounded bg-[#0f0f1a] border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 mb-0"
+          className="w-full p-2 h-13 rounded bg-[#0f0f1a] border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 mb-0"
         />
         {formErrors.test_suite_name && (
           <p className="text-xm text-red-500 mt-1">
@@ -239,7 +261,7 @@ console.log(webBooks,"webbooks")
               className="hidden"
               onChange={handleFileUpload}
             />
-            <span className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded cursor-pointer">
+            <span className="bg-blue-500 h-13 hover:bg-blue-600 text-white px-4 py-2 rounded cursor-pointer">
               Browse Files
             </span>
           </label>
@@ -285,7 +307,7 @@ console.log(webBooks,"webbooks")
         {showSheetSelector && (
           <div className="flex gap-2 mt-4">
             {/* Sheet Name */}
-            <div className="w-[50%]">
+            {/* <div className="w-[50%]">
               <label className="block mb-2 text-sm font-medium">
                 Sheet Name <span className="text-red-500">*</span>
               </label>
@@ -301,6 +323,38 @@ console.log(webBooks,"webbooks")
                   {formErrors.sheet_name}
                 </p>
               )}
+            </div> */}
+            <div className="w-[50%]">
+              <label className="block mb-2 text-sm font-medium">
+                Sheet Name<span className="text-red-500">*</span>
+              </label>
+              <div className="relative flex-1">
+                <select
+                  value={formValues?.sheet_name}
+                  name="sheet_name"
+                  onChange={(e) => handleChange(e)}
+                  // className="appearance-none w-full p-2 bg-[#0f0f1a] border border-gray-600 text-white text-sm px-4 py-2 rounded-md pr-8"
+                  className="appearance-none w-full p-2 h-13 rounded bg-[#0f0f1a] border border-gray-700 text-white focus:outline-none focus:ring focus:ring-purple-500"
+                >
+                  <option key="" value="">
+                    Select
+                  </option>
+                  {(webBooks?.sheetNames || []).map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+
+                <KeyboardArrowDownIcon className="absolute right-3 top-2.5 text-gray-400 w-4 h-4 pointer-events-none" />
+              </div>
+
+
+              {/* {!selectedFields?.mappedFields?.includes(item) && (
+                      <span className="absolute right-[-10%] top-2.5 inline-flex items-center justify-center w-5 h-5 rounded-full bg-green-500">
+                        <CheckIcon className="w-3.5 h-3.5 text-black bg-green" style={{ fontSize: "15px" }} />
+                      </span>
+                    )} */}
             </div>
 
             {/* Header Starts */}
@@ -313,7 +367,7 @@ console.log(webBooks,"webbooks")
                 name="header_starts"
                 value={formValues.header_starts}
                 onChange={handleValueChange}
-                className="w-full p-2 rounded bg-[#0f0f1a] border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full p-2 rounded h-13 bg-[#0f0f1a] border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
               {formErrors.header_starts && (
                 <p className="text-xm text-red-500 mt-2">

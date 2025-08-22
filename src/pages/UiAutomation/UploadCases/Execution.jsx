@@ -6,6 +6,7 @@ const Execution = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const testResult = location.state?.testResult;
+  
 
   // ✅ Debug log to verify data is received
   useEffect(() => {
@@ -17,11 +18,11 @@ const Execution = () => {
       alert("No test result found!");
       return;
     }
-    navigate('/project/ui-automation/report', { state: { testResult } });
+    navigate(`/project/ui-automation/report/`, { state: { testResult } });
   };
 
   return (
-    <div className="bg-gradient-to-br from-black-100 via-black to-black-100 flex flex-col items-center justify-center px-4">
+    <div className="bg-gradient-to-br p-4 from-black-100 via-black to-black-100 flex flex-col items-center justify-center px-4">
       <div className="bg-black shadow-xl border border-gray-500 rounded-2xl p-10 w-full max-w-xl text-center">
         <CheckCircle className="mx-auto text-green-500 animate-bounce mb-4" size={48} />
         <h2 className="text-2xl font-bold text-white-800 mb-2">Execution Completed Successfully</h2>

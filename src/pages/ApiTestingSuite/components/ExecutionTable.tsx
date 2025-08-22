@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import  { useEffect, useRef } from 'react'
 
 interface Data {
     id: string,
@@ -20,15 +20,15 @@ interface TableRowProps {
 }
 interface TableProps {
     apiData: Data[],
-    tableName: string,
+    tableName?: string,
     selectedApis: any[],
     handleSelectAll: (e: any) => void,
-    totalNoApi: number,
+    totalNoApi?: number,
     handleSelection: (e: any, apiId: string) => void
 }
 
 const ExecutionTable = (props: TableProps) => {
-    const { apiData, tableName, selectedApis, handleSelectAll, totalNoApi, handleSelection } = props
+    const { apiData,  selectedApis, handleSelectAll,  handleSelection } = props
 
     const selectAllRef = useRef<HTMLInputElement>(null)
 
@@ -58,7 +58,7 @@ const ExecutionTable = (props: TableProps) => {
                     <input type="checkbox"
                         checked={selectedApis.includes(item.id)}
                         onChange={(e) => handleSelection(e, item.id)}
-                        className="test-checkbox w-4 h-4 text-[#3B82F6] bg-transparent border-[#374151] rounded focus:ring-[#3B82F6]" />
+                        className="test-checkbox cursor-pointer w-4 h-4 text-[#3B82F6] bg-transparent border-[#374151] rounded focus:ring-[#3B82F6]" />
                 </td>
                 <td className="px-6 py-4 text-sm text-[#FFFFFF]">{item.id}</td>
                 <td className="px-6 py-4">
@@ -67,6 +67,7 @@ const ExecutionTable = (props: TableProps) => {
             </tr>
         )
     }
+    
     return (
         <table className="w-full">
             <thead className="bg-[#0F0F23]">
@@ -75,7 +76,7 @@ const ExecutionTable = (props: TableProps) => {
                         <input type="checkbox" id="select-all-tests"
                             ref={selectAllRef}
                             onChange={handleSelectAll}
-                            className="w-4 h-4 text-[#3B82F6] bg-transparent border-[#374151] rounded focus:ring-[#3B82F6]" />
+                            className="w-4 h-4 cursor-pointer text-[#3B82F6] bg-transparent border-[#374151] rounded focus:ring-[#3B82F6]" />
                     </th>
                     <th className="px-6 py-4 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">Test ID</th>
                     <th className="px-6 py-4 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">Test Name</th>
