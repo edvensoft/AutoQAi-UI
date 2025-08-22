@@ -92,6 +92,7 @@ const ApiListTable = (props: TableProps) => {
     const [isApiMapingModal, setIsApiMapingModal] = useState<boolean>(false)
     const [apiMappingStatus, setApiMappingStatus] = useState({ status: false })
     const [selectedEndpoint, setSelectedEndpoint] = useState(null)
+    // const [dependentEndpoint, setDependentEndpoint] = useState(null)
 
 
 
@@ -192,62 +193,13 @@ const ApiListTable = (props: TableProps) => {
                                 setIsApiMapingModal={setIsApiMapingModal}
                                 apiMappingStatus={apiMappingStatus}
                                 setApiMappingStatus={setApiMappingStatus}
+                                // setDependentEndpoint={setDependentEndpoint}
                                 isApiMapingModal={isApiMapingModal}
                             // setInputValue={setInputValue}
                             // inputValue={inputValue}
                             />
                         ))
                     }
-                    {/* <tr className="hover:bg-[#0F0F23]/50">
-                    <td className="px-6 py-4">
-                        <input type="checkbox" className="api-checkbox w-4 h-4 text-[#3B82F6] bg-transparent border-[#374151] rounded focus:ring-[#3B82F6]" />
-                    </td>
-                    <td className="px-6 py-4 text-sm text-[#FFFFFF]">API_002</td>
-                    <td className="px-6 py-4 text-sm text-[#FFFFFF]">User Profile</td>
-                    <td className="px-6 py-4">
-                        <span className="px-2 py-1 text-xs font-medium bg-blue-600 text-white rounded">GET</span>
-                    </td>
-                    <td className="px-6 py-4">
-                        <div className="relative">
-                            <input type="text" className="dependent-api-input bg-[#0F0F23] border border-[#374151] rounded-lg px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:ring-2 focus:ring-[#3B82F6] w-full" placeholder="Type to search APIs..."
-                            // autocomplete="off"
-                            />
-                            <div className="dependent-api-suggestions hidden absolute top-full left-0 right-0 bg-[#1A1A2E] border border-[#374151] rounded-lg mt-1 max-h-40 overflow-y-auto z-10">
-                                <div className="suggestion-item px-3 py-2 text-sm text-gray-300 hover:bg-[#3B82F6] hover:text-white cursor-pointer" data-value="api_001">User Authentication API</div>
-                                <div className="suggestion-item px-3 py-2 text-sm text-gray-300 hover:bg-[#3B82F6] hover:text-white cursor-pointer" data-value="api_003">Session Management API</div>
-                                <div className="suggestion-item px-3 py-2 text-sm text-gray-300 hover:bg-[#3B82F6] hover:text-white cursor-pointer" data-value="api_004">Payment Gateway API</div>
-                                <div className="suggestion-item px-3 py-2 text-sm text-gray-300 hover:bg-[#3B82F6] hover:text-white cursor-pointer" data-value="api_005">Notification Service API</div>
-                            </div>
-                            <div className="selected-apis mt-2 flex flex-wrap gap-1">
-                                <span className="bg-[#3B82F6] text-white px-2 py-1 rounded text-xs flex items-center">
-                                    User Authentication API
-                                    <button className="ml-1 text-white hover:text-gray-300"
-                                    // onclick="removeSelectedApi(this)"
-                                    >
-                                        <i className="fa-solid fa-times text-xs"></i>
-                                    </button>
-                                </span>
-                            </div>
-                        </div>
-                    </td>
-                    <td className="px-6 py-4">
-                        <div className="flex space-x-2">
-                            <label className="flex items-center">
-                                <input type="checkbox" className="return-values-cb w-4 h-4 text-[#3B82F6] bg-transparent border-[#374151] rounded" />
-                                <span className="ml-2 text-sm text-gray-300">Return Values</span>
-                            </label>
-                            <label className="flex items-center">
-                                <input type="checkbox" className="compare-values-cb w-4 h-4 text-[#3B82F6] bg-transparent border-[#374151] rounded" />
-                                <span className="ml-2 text-sm text-gray-300">Compare Values</span>
-                            </label>
-                        </div>
-                    </td>
-                    <td className="px-6 py-4">
-                        <span className="text-sm text-green-400">
-                            <i className="fa-solid fa-check-circle"></i> Complete
-                        </span>
-                    </td>
-                </tr> */}
                 </tbody>
             </table>
 
@@ -275,7 +227,9 @@ const ApiListTable = (props: TableProps) => {
                 isApiMapingModal &&
                 <ApiMapingModal onClose={closeModal}
                     setApiMappingStatus={setApiMappingStatus}
+                    apiMappingStatus={apiMappingStatus}
                     selectedEndpoint={selectedEndpoint}
+                    currentItems={currentItems}
                 />
             }
 

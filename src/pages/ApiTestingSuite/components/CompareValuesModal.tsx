@@ -20,7 +20,7 @@ const CompareValuesModal = ({ onClose, selectedEndpoint }: ModalProps) => {
     const [selectedNode, setselectedNode] = useState(null)
     const [selectedPair, setSelectedPair] = useState([])
 
-    const nodes = Object.keys(selectedEndpoint.response_schema).length > 0 ? extractSchemaPaths(selectedEndpoint.response_schema.properties.data) : []
+    const nodes = Object.keys(selectedEndpoint.response_schema).length > 0 && selectedEndpoint.response_schema.hasOwnProperty('properties') ? extractSchemaPaths(selectedEndpoint.response_schema.properties.data) : []
     // console.log(nodes, 'noses', selectedEndpoint);
 
     console.log('sele', selectedEndpoint, nodes, selectedPair)

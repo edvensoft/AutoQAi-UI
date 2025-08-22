@@ -112,7 +112,8 @@ const ReturnValueModal = ({ onClose, selectedEndpoint }: ModalProps) => {
     console.log('sele', selectedEndpoint)
     // const parsed = dummyJson;
     // const nodes = extractSchemaNodes(dummyJson);
-    const nodes = Object.keys(selectedEndpoint.response_schema).length > 0 ? extractSchemaPaths(selectedEndpoint.response_schema.properties.data) : []
+    const nodes = Object.keys(selectedEndpoint.response_schema).length > 0 && selectedEndpoint.response_schema.hasOwnProperty('properties') ? extractSchemaPaths(selectedEndpoint.response_schema.properties.data) : []
+
     console.log(nodes, 'noses', selectedEndpoint);
 
     const editorRef = useRef<any>(null);

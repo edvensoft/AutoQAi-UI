@@ -41,83 +41,99 @@ const TestCaseRow = ({ test, ref }) => {
         console.log('save', testCases)
         // const checkNewTestCase = testCases.find(item => item.id === "new")
         // let copyTestcases = JSON.parse(JSON.stringify(testCases))
-        if (test.id === 'new') {
-            if (!testCaseId && !testSteps && !expectedResult) {
-                alert('no dat')
+        if (testSteps && expectedResult) {
+            if (test.id === 'new') {
+                if (!testCaseId && !testSteps && !expectedResult) {
+                    alert('no dat')
+                } else {
+                    const payLoad = {
+                        "collection_id": activeCollectionId,
+                        "test_case_chat_id": testCases[0].test_case_chat_id,
+                        "name": 'new',
+                        "steps": testSteps,
+                        "expected_output": expectedResult
+                    }
+                    // setIsEditing(false)
+                    // dispatch(deleteTestCaseById(checkNewTestCase.id))
+
+                    console.log(payLoad, testCases.length, 'payloa')
+                    axios.post(`${API_URL}/v1/api/test-cases/add-testcase/`, payLoad).then(
+                        resp => {
+                            console.log('res', resp)
+                            if (resp.data.message === "Test case added sucessfully") {
+                                let copyTestcases = JSON.parse(JSON.stringify(testCases))
+                                let filteredCases = copyTestcases.filter(item => item.id !== 'new')
+                                filteredCases.push(resp.data.response)
+                                dispatch(setTestCases(filteredCases))
+                                toast.success("Test Case created successfully!");
+                                // setIsEdit(true)
+                            }
+                        }
+                    )
+                }
+                // alert('dat')
+
             } else {
-                const payLoad = {
-                    "collection_id": activeCollectionId,
-                    "test_case_chat_id":  testCases[0].test_case_chat_id ,
-                    "name": 'new',
+                const payload = {
+                    "id": test.id, //this is generate testcase id
+                    "test_case_chat_id": test.test_case_chat_id,
+                    "name": test.name,
                     "steps": testSteps,
                     "expected_output": expectedResult
                 }
-                // setIsEditing(false)
-                // dispatch(deleteTestCaseById(checkNewTestCase.id))
-
-                console.log(payLoad, testCases.length, 'payloa')
-                axios.post(`${API_URL}/v1/api/test-cases/add-testcase/`, payLoad).then(
+                console.log(payload, testCases.length, 'payload old')
+                axios.put(`${API_URL}/v1/api/test-cases/update-testcase/`, payload).then(
                     resp => {
                         console.log('res', resp)
-                        if (resp.data.message === "Test case added sucessfully") {
+                        if (resp.data.message === "updated sucessfully") {
                             let copyTestcases = JSON.parse(JSON.stringify(testCases))
-                            let filteredCases = copyTestcases.filter(item => item.id !== 'new')
-                            filteredCases.push(resp.data.response)
+                            let filteredCases = copyTestcases.map(item => {
+                                if (item.id === test.id) {
+                                    item = {
+                                        ...item,
+                                        steps: testSteps,
+                                        expected_output: expectedResult
+                                    }
+                                }
+                                return item
+                            })
+                            // filteredCases.push(resp.data.response)
+                            console.log('filter', filteredCases)
                             dispatch(setTestCases(filteredCases))
                             toast.success("Test Case created successfully!");
-                            // setIsEdit(true)
+
+                            setIsEdit(true)
+
                         }
                     }
                 )
             }
-            // alert('dat')
-
-        } else {
-            const payload = {
-                "id": test.id, //this is generate testcase id
-                "test_case_chat_id": test.test_case_chat_id,
-                "name": test.name,
-                "steps": testSteps,
-                "expected_output": expectedResult
-            }
-            console.log(payload, testCases.length, 'payload old')
-            axios.put(`${API_URL}/v1/api/test-cases/update-testcase/`, payload).then(
-                resp => {
-                    console.log('res', resp)
-                    if (resp.data.message === "updated sucessfully") {
-                        let copyTestcases = JSON.parse(JSON.stringify(testCases))
-                        let filteredCases = copyTestcases.map(item => {
-                            if (item.id === test.id) {
-                                item = {
-                                    ...item,
-                                    steps: testSteps,
-                                    expected_output: expectedResult
-                                }
-                            }
-                            return item
-                        })
-                        // filteredCases.push(resp.data.response)
-                        console.log('filter', filteredCases)
-                        dispatch(setTestCases(filteredCases))
-                        toast.success("Test Case created successfully!");
-
-                        setIsEdit(true)
-
-                    }
-                }
-            )
         }
+
 
     }
 
+    const getTestCases = (colId) => {
+        axios.get(`${API_URL}/v1/api/test-cases/get-test-cases/${colId}/`).then(
+            response => {
+                if (response.status === 200) {
+                    dispatch(setTestCases(response.data.test_cases))
+                    // dispatch(setActiveCollection(colId))
+                    // setIsTestCasesOpen(true)
+
+                }
+            }
+        )
+    }
     const handleDeleteTestcase = (id) => {
         axios.delete(`${API_URL}/v1/api/test-cases/delete-testcase/${id}/`).then((
             resp => {
                 console.log('res', resp)
                 if (resp.data.message === "Test case deleted successfully") {
-                    let copyTestcases = JSON.parse(JSON.stringify(testCases))
-                    let filteredCases = copyTestcases.filter(item => item.id !== id)
-                    dispatch(setTestCases(filteredCases))
+                    // let copyTestcases = JSON.parse(JSON.stringify(testCases))
+                    // let filteredCases = copyTestcases.filter(item => item.id !== id)
+                    // dispatch(setTestCases(filteredCases))
+                    getTestCases(activeCollectionId)
                     toast.success("Test Case deleted successfully!");
 
 
@@ -164,15 +180,19 @@ const TestCaseRow = ({ test, ref }) => {
                 <td className="border border-[#374151] p-3">
                     <div className={test.id === 'new' ? 'border border-[#374151]' : ''}>
                         <textarea
-                            className="bg-transparent overflow-hidden text-[#FFFFFF] border-none outline-none w-full resize-none"
+                            className="bg-transparent h-full overflow-hidden text-[#FFFFFF] border-none outline-none w-full resize-none"
                             // rows="3"
                             // readOnly={isEdit}
                             value={testSteps}
                             onChange={handleTestCaseStep}
                             placeholder={test.id === 'new' ? 'Enter Test Steps' : ''}
-                            rows={3}
+                        // rows={3}
                         />
+
                     </div>
+                    {testSteps.length === 0 &&
+                        <p className='text-red-500'>Please Enter Test case Steps </p>
+                    }
                     {/* 1. Navigate to login page
                         2. Enter valid credentials
                         3. Click login button */}
@@ -183,7 +203,7 @@ const TestCaseRow = ({ test, ref }) => {
                     <div className={test.id === 'new' ? 'border border-[#374151]' : ''}>
 
                         <textarea
-                            className="bg-transparent text-[#FFFFFF] border-none overflow-hidden outline-none w-full resize-none"
+                            className="bg-transparent custom-scrollbar text-[#FFFFFF] border-none overflow-hidden outline-none w-full resize-none"
                             // className="w-full h-full resize-none p-2 overflow-hidden rounded text-sm "
                             rows={3}
                             // rows="3"
@@ -195,6 +215,9 @@ const TestCaseRow = ({ test, ref }) => {
 
                         />
                     </div>
+                    {expectedResult.length === 0 &&
+                        <p className='text-red-500'>Please Enter Expected Result </p>
+                    }
                     {/* User should be successfully logged in and redirected to dashboard */}
                     {/* {test.expected_output}
 
