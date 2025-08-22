@@ -74,6 +74,7 @@ const collectionsSlice = createSlice({
       const chat = state.chats.find((c) => c.checkId === action.payload.checkId);
       if (chat) {
         chat.generateMessage = action.payload.generateMessage;
+        chat.user_message = action.payload.user_message;
         chat.showVTC = action.payload.showVTC
         chat.loading = action.payload.loading
       }

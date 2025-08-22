@@ -40,7 +40,117 @@ const ChatPrompt = () => {
     const handleSend = () => {
         console.log('submit', file)
 
-        if (!input.trim()) return;
+        // if (!input.trim()) return;
+
+
+        // if (file) {
+        //     setIsSubmit(true)
+        //     let newChat = {
+        //         checkId: `${Date.now()}-${Math.floor(Math.random() * 10000)}`,
+        //         // id:'',
+        //         collection_id: '',
+        //         // test_case_chat_id:'',
+        //         user_message: 'file upload',
+        //         // test_cases:[],
+        //         generateMessage: 'Generating test cases...',
+        //         showVTC: false,
+        //         loading: true
+        //     }
+        //     dispatch(addChat(newChat))
+        //     setInput("");
+        //     const formData = new FormData();
+        //     formData.append('collection_id', activeCollectionId);
+        //     formData.append('user_message', `File uploaded: ${file.name}`);
+        //     formData.append('filepath', file);
+
+        //     axios.post(`${API_URL}/v1/api/test-cases/generate-test-cases/`, formData).then(
+        //         response => {
+        //             console.log('res', response)
+        //             dispatch(updateChat({
+        //                 ...newChat,
+        //                 // id:response.data.response.id,
+        //                 user_message: response.data.response.user_message,
+        //                 collection_id: response.data.response.collection_id,
+        //                 // test_case_chat_id:response.data.response.test_case_chat_id,
+        //                 // test_cases:response.data.response.test_cases,
+        //                 generateMessage: 'Test cases generated successfully! Click to view and edit.',
+        //                 showVTC: true,
+        //                 loading: false
+        //             }))
+        //             setIsSubmit(false)
+        //             setFile(null)
+        //             dispatch(setTestCases(response.data.response.test_cases))
+        //         }
+        //     ).catch(e => {
+        //         console.log('err', e)
+        //         dispatch(updateChat({
+        //             ...newChat,
+        //             // id:response.data.response.id,
+        //             // collection_id: response.data.response.collection_id,
+        //             // test_case_chat_id:response.data.response.test_case_chat_id,
+        //             // test_cases:response.data.response.test_cases,
+        //             generateMessage: 'Error try again',
+        //             showVTC: false,
+        //             loading: false
+        //         }))
+        //         setIsSubmit(false)
+        //     })
+
+        // } 
+        // else if (file && input) {
+        //     setIsSubmit(true)
+        //     let newChat = {
+        //         checkId: `${Date.now()}-${Math.floor(Math.random() * 10000)}`,
+        //         // id:'',
+        //         collection_id: '',
+        //         // test_case_chat_id:'',
+        //         user_message: input,
+        //         // test_cases:[],
+        //         generateMessage: 'Generating test cases...',
+        //         showVTC: false,
+        //         loading: true
+        //     }
+
+        //     dispatch(addChat(newChat))
+
+        //     setInput("");
+        //     const formData = new FormData();
+        //     formData.append('collection_id', activeCollectionId);
+        //     formData.append('user_message', input);
+        //     formData.append('filepath', file);
+
+        //     axios.post(`${API_URL}/v1/api/test-cases/generate-test-cases/`, formData).then(
+        //         response => {
+        //             console.log('res', response)
+        //             dispatch(updateChat({
+        //                 ...newChat,
+        //                 // id:response.data.response.id,
+        //                 collection_id: response.data.response.collection_id,
+        //                 // test_case_chat_id:response.data.response.test_case_chat_id,
+        //                 // test_cases:response.data.response.test_cases,
+        //                 generateMessage: 'Test cases generated successfully! Click to view and edit.',
+        //                 showVTC: true,
+        //                 loading: false
+        //             }))
+        //             setIsSubmit(false)
+        //             dispatch(setTestCases(response.data.response.test_cases))
+        //         }
+        //     ).catch(e => {
+        //         console.log('err', e)
+        //         dispatch(updateChat({
+        //             ...newChat,
+        //             // id:response.data.response.id,
+        //             // collection_id: response.data.response.collection_id,
+        //             // test_case_chat_id:response.data.response.test_case_chat_id,
+        //             // test_cases:response.data.response.test_cases,
+        //             generateMessage: 'Error try again',
+        //             showVTC: false,
+        //             loading: false
+        //         }))
+        //         setIsSubmit(false)
+        //     })
+        // } 
+        // else {
         setIsSubmit(true)
         let newChat = {
             checkId: `${Date.now()}-${Math.floor(Math.random() * 10000)}`,
@@ -60,7 +170,7 @@ const ChatPrompt = () => {
         const formData = new FormData();
         formData.append('collection_id', activeCollectionId);
         formData.append('user_message', input);
-        formData.append('filepath', 'null');
+        formData.append('filepath', file);
 
         axios.post(`${API_URL}/v1/api/test-cases/generate-test-cases/`, formData).then(
             response => {
@@ -76,12 +186,14 @@ const ChatPrompt = () => {
                     loading: false
                 }))
                 setIsSubmit(false)
+                setFile(null)
                 dispatch(setTestCases(response.data.response.test_cases))
             }
         ).catch(e => {
             console.log('err', e)
             dispatch(updateChat({
                 ...newChat,
+                user_message: file ? file.name : 'Failure',
                 // id:response.data.response.id,
                 // collection_id: response.data.response.collection_id,
                 // test_case_chat_id:response.data.response.test_case_chat_id,
@@ -91,13 +203,9 @@ const ChatPrompt = () => {
                 loading: false
             }))
             setIsSubmit(false)
+            setFile(null)
         })
-
-        if (file) {
-
-        } else {
-
-        }
+        // }
 
     };
 
@@ -107,60 +215,7 @@ const ChatPrompt = () => {
         const selectedFile = files && files.length > 0 ? files[0] : null;
         console.log('sele', selectedFile)
         setFile(selectedFile);
-        if (selectedFile) {
-            setIsSubmit(true)
-            let newChat = {
-                checkId: `${Date.now()}-${Math.floor(Math.random() * 10000)}`,
-                // id:'',
-                collection_id: '',
-                // test_case_chat_id:'',
-                user_message: 'file upload',
-                // test_cases:[],
-                generateMessage: 'Generating test cases...',
-                showVTC: false,
-                loading: true
-            }
 
-            dispatch(addChat(newChat))
-
-            setInput("");
-            const formData = new FormData();
-            formData.append('collection_id', activeCollectionId);
-            formData.append('user_message', `File uploaded: ${selectedFile.name}`);
-            formData.append('filepath', selectedFile);
-
-            axios.post(`${API_URL}/v1/api/test-cases/generate-test-cases/`, formData).then(
-                response => {
-                    console.log('res', response)
-                    dispatch(updateChat({
-                        ...newChat,
-                        // id:response.data.response.id,
-                        user_message: response.data.response.user_message,
-                        collection_id: response.data.response.collection_id,
-                        // test_case_chat_id:response.data.response.test_case_chat_id,
-                        // test_cases:response.data.response.test_cases,
-                        generateMessage: 'Test cases generated successfully! Click to view and edit.',
-                        showVTC: true,
-                        loading: false
-                    }))
-                    setIsSubmit(false)
-                    dispatch(setTestCases(response.data.response.test_cases))
-                }
-            ).catch(e => {
-                console.log('err', e)
-                dispatch(updateChat({
-                    ...newChat,
-                    // id:response.data.response.id,
-                    // collection_id: response.data.response.collection_id,
-                    // test_case_chat_id:response.data.response.test_case_chat_id,
-                    // test_cases:response.data.response.test_cases,
-                    generateMessage: 'Error try again',
-                    showVTC: false,
-                    loading: false
-                }))
-                setIsSubmit(false)
-            })
-        }
         // validateFile(selectedFile);
     };
 
