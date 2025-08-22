@@ -228,7 +228,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
 
     // ---------- JSX ----------
     return (
-      <div className="mt-6 min-h-screen text-white space-y-6">
+      <div className="mt-6 text-white space-y-6">
         <h2 className="text-lg font-semibold mb-4">Upload Your File</h2>
 
         {/* Test Suite Name */}

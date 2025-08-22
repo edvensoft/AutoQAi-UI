@@ -9,6 +9,7 @@ interface Data {
     custom_instruction: string,
     description: string | null,
     id: number,
+    missing_schema_status_codes: Array<any>,
     is_selected: boolean,
     operation_id: string,
     project_id: string,
@@ -20,11 +21,11 @@ interface TableRowProps {
     selectedApis: any[],
     handleSelection: (e: any, apiId: number) => void,
     currentItems: Data[],
-    handleAditionalActions: (e: React.ChangeEvent<HTMLInputElement>, action: string, id: number,item:object) => void,
+    handleAditionalActions: (e: React.ChangeEvent<HTMLInputElement>, action: string, id: number, item: object) => void,
     setIsApiMapingModal: React.Dispatch<React.SetStateAction<boolean>>,
     apiMappingStatus: boolean | any,
     setApiMappingStatus: React.Dispatch<React.SetStateAction<any>>,
-    isApiMapingModal:boolean
+    isApiMapingModal: boolean
     // inputValue:string,
     // setInputValue:React.Dispatch<React.SetStateAction<any>>
 }
@@ -35,10 +36,11 @@ const ApiListTableRow = (props: TableRowProps) => {
     const [inputValue, setInputValue] = React.useState<{ label: string; id: number } | null>(null);
     const [selectedDependeAPi, setSelectedDependeAPi] = useState([])
 
-    const handleDependentApi = (val, id) => {
-        console.log('value', val, id)
-        let selected = { label: val.label, id: id, depId: val.id }
+    const handleDependentApi = (val, item) => {
+        console.log('value', val, item.id)
+        let selected = { label: val.label, id: item.id, depId: val.id }
         setInputValue(val ? { label: val.label, id: val.id } : null)
+
         setApiMappingStatus((prev) => ({ ...prev, data: selected }))
         // setSelectedDependeAPi((prev) => {
         //     let updated = prev.filter(s => s.depId !== selected.depId)
@@ -50,7 +52,7 @@ const ApiListTableRow = (props: TableRowProps) => {
         // setInputValue('')
     }
 
-    
+
 
     useEffect(() => {
         if (apiMappingStatus.status) {
@@ -60,12 +62,12 @@ const ApiListTableRow = (props: TableRowProps) => {
                 return [...updated, apiMappingStatus.data]
             })
         }
-        if(isApiMapingModal){
+        if (isApiMapingModal) {
             setInputValue(null)
         }
         // setInputValue('')
 
-    },[apiMappingStatus])
+    }, [apiMappingStatus])
 
     const handleRemoveDependt = (depId) => {
 
@@ -85,7 +87,11 @@ const ApiListTableRow = (props: TableRowProps) => {
                     className="api-checkbox w-4 h-4 cursor-pointer text-[#3B82F6] bg-transparent border-[#374151] rounded focus:ring-[#3B82F6]" />
             </td>
             <td className="px-6 py-4 text-sm text-[#FFFFFF]">{item?.id}</td>
-            <td className="px-6 py-4 text-sm w-36 text-[#FFFFFF]">{item?.api_name}</td>
+            <td 
+            title={item?.api_name}
+            className="px-6 py-4 text-sm w-36 truncate whitespace-nowrap overflow-hidden max-w-xs text-[#FFFFFF]">
+                {item?.api_name}
+            </td>
             <td className="px-6 py-4">
                 {
                     item.api_method === 'Get' ?
@@ -115,12 +121,12 @@ const ApiListTableRow = (props: TableRowProps) => {
                     <Autocomplete
                         // id="free-solo-demo"
                         // id='Type to search APIs...'
-                        
+
                         // inputValue={inputValue}
                         // defaultValue={''}
                         // onInputChange={(_event, newInputValue) => setInputValue(newInputValue)}
                         value={inputValue}
-                        onChange={(_event, value: any) => handleDependentApi(value, item.id)}
+                        onChange={(_event, value: any) => handleDependentApi(value, item)}
                         options={currentItems.filter(i => i.id !== item.id).map(s => ({ label: s.api_name, id: s.id }))}
                         renderInput={(params) => <TextField
                             // className='w-full'
@@ -177,7 +183,7 @@ const ApiListTableRow = (props: TableRowProps) => {
                     <label className="flex items-center">
                         <input type="checkbox"
                             // checked={item.additional_actions.return_value}
-                            onChange={(e) => handleAditionalActions(e, 'return', item.id,item)}
+                            onChange={(e) => handleAditionalActions(e, 'return', item.id, item)}
                             className="w-4 h-4 text-[#3B82F6] cursor-pointer bg-transparent border-[#374151] rounded"
                         />
                         <span className="ml-2 text-sm text-gray-300">Return Values</span>
@@ -185,7 +191,7 @@ const ApiListTableRow = (props: TableRowProps) => {
                     <label className="flex items-center">
                         <input type="checkbox"
                             // checked={item.additional_actions.compared_value}
-                            onChange={(e) => handleAditionalActions(e, 'compare', item.id,item)}
+                            onChange={(e) => handleAditionalActions(e, 'compare', item.id, item)}
                             className="compare-values-cb w-4 h-4 cursor-pointer text-[#3B82F6] bg-transparent border-[#374151] rounded" />
                         <span className="ml-2 text-sm text-gray-300">Compare Values</span>
                     </label>
@@ -193,33 +199,42 @@ const ApiListTableRow = (props: TableRowProps) => {
             </td>
             <td className="px-6 py-4">
                 <div className="flex items-center space-x-2">
-                    {/* {
-                                item.missing_schema === 'completed' ?
-                                    <div className='flex items-center gap-1'>
-                                        <CheckCircleIcon className='text-sm text-green-400 ' />
-                                        <div className="text-sm text-green-400 capitalize">
-                                            
-                            {item.missing_schema}
-                        </div>
-                    </div>
-                    :
-                    <div className='flex items-center gap-1'>
-                        <div className="text-sm text-red-400">{item.missing_schema}</div>
-                        <button className="add-schema-btn text-[#3B82F6] hover:text-[#2563EB]" title="Add JSON Schema"
+                    {
+                        item.missing_schema_status_codes.length > 0 ?
+                            item.missing_schema_status_codes.map((missing, index) => (
+                                <div className='flex items-center gap-1'
+                                    key={index}
+                                >
+                                    <div className="text-sm text-red-400">
+                                        {missing}
+                                        {index !== item.missing_schema_status_codes.length-1 && ','}
+                                    </div>
+                                    {/* <button className="add-schema-btn cursor-pointer text-[#3B82F6] hover:text-[#2563EB]" title="Add JSON Schema"
+                                    // onClick={() => handleSchema(item.id)}
+                                    >
+                                        <i className="fa-solid fa-plus-circle"></i>
+                                    </button> */}
+                                    {/* <button className="add-schema-btn text-[#3B82F6] hover:text-[#2563EB]" title="Add JSON Schema"
                             onClick={() => handleSchema(item.id)}
                         >
                            
                             <AddCircleIcon className='text-sm' />
-                        </button>
-                    </div>
-                            } */}
+                        </button> */}
+                                </div>
+                            )) : <span className="text-sm text-green-400">
+                                <i className="fa fa-check-circle" aria-hidden="true"></i>
+                                Complete
+                            </span>
 
-                    <div className="flex items-center space-x-2">
+
+                    }
+
+                    {/* <div className="flex items-center space-x-2">
                         <span className="text-sm text-red-400">400, 500</span>
                         {/* <button className="add-schema-btn cursor-pointer text-[#3B82F6] hover:text-[#2563EB]" title="Add JSON Schema">
                             <i className="fa-solid fa-plus-circle"></i>
-                        </button> */}
-                    </div>
+                        </button> 
+                    </div> */}
 
                 </div>
             </td >

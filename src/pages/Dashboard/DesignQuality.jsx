@@ -10,6 +10,7 @@ import {
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import ChartDataLabels from "chartjs-plugin-datalabels";
+import pdf from "./pdf/API_Design_Quality_Report (2).pdf"
 
 ChartJS.register(
   CategoryScale,
@@ -87,6 +88,13 @@ const DesignQuality = ({ designGrapgh }) => {
     },
   };
 
+  function downloadPDF() {
+  const link = document.createElement("a");
+  link.href = pdf; // path relative to public folder or server
+  link.download = "API_Design_Quality_Report.pdf";    // suggested file name
+  link.click();
+}
+
   return (
     <div className="bg-[#1a1a2e] border-gray-500 border h-200 hover:border-blue-500 p-6 h-140 rounded-2xl shadow-lg mt-3 mb-3">
       <div className="flex justify-between items-center mb-4">
@@ -119,9 +127,11 @@ const DesignQuality = ({ designGrapgh }) => {
               />
             </svg>
           </div>
-          <h2 className="text-xl font-bold">API Design Qual;ity Analysis</h2>
+          <h2 className="text-xl font-bold">API Design Quality Analysis</h2>
         </div>
-        <div className="font-medium text-[#2979FF] border border-gray-500 bg-black rounded-lg pl-5 pt-1 pb-1 pr-5 flex items-center gap-2">
+        <div className="font-medium text-[#2979FF] border border-gray-500 bg-black rounded-lg pl-5 pt-1 pb-1 pr-5 flex items-center gap-2" onClick={()=>{
+          downloadPDF()
+        }}>
           More Details{" "}
           <svg
             xmlns="http://www.w3.org/2000/svg"

@@ -13,7 +13,7 @@ import { setChats, setCollections } from '@/redux/collectionsSlice'
 import ExistingCollections from './components/ExistingCollections'
 import { ToastContainer } from 'react-toastify'
 
-
+const MODAL_SHOWN_KEY = 'modalShownInSession';
 const ChatManually = () => {
     const projectId = useSelector((state: RootState) => state.appState.project_id);
     // const collections = useSelector((state: RootState) => state.collections.list);
@@ -33,7 +33,17 @@ const ChatManually = () => {
 
                     dispatch(setCollections(response.data.response))
                     if (response.data.response.length > 0) {
-                        setIsExistColModalOpen(true)
+                        // const hasShownModal = sessionStorage.getItem(MODAL_SHOWN_SESSION_KEY);
+                        // if (!hasShownModal) {
+                        //     setIsExistColModalOpen(true)
+                        //     sessionStorage.setItem(MODAL_SHOWN_SESSION_KEY, 'true');
+                        // }
+                        const hasShownModal = localStorage.getItem(MODAL_SHOWN_KEY);
+                        if (!hasShownModal) {
+                             setIsExistColModalOpen(true)
+                            localStorage.setItem(MODAL_SHOWN_KEY, 'true');
+                        }
+
 
                     } else {
                         dispatch(setChats([]))

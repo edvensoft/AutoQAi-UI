@@ -13,18 +13,18 @@ export default function TestCaseOptions() {
 
   const options = [
     {
-      icon: <FileUploadIcon className="text-blue-500" style={{ fontSize: 50 }} />,
+      icon: <FileUploadIcon className="text-blue-500" style={{ fontSize: 45 }} />,
       title: "Upload Cases",
       description: "Upload test cases from CSV or Excel files",
     },
     {
-      icon: <img src={LinkIcon} alt="link" className="w-15 h-15" />,
+      icon: <img src={LinkIcon} alt="link" className="w-14 h-14" />,
       //<LinkIcon className="text-blue-500" style={{ fontSize: 40 }} />,
       title: "Test Management",
       description: "Integrate with external test management tools",
     },
     {
-      icon:<img src={FolderIcon} alt="link" className="w-15 h-15" />,
+      icon:<img src={FolderIcon} alt="link" className="w-14 h-14" />,
       // <FolderIcon className="text-blue-500" style={{ fontSize: 40 }} />,
       title: "Manual Collections",
       description: "Select from existing manual test case collections",
@@ -45,14 +45,14 @@ export default function TestCaseOptions() {
           {options.map((item, index) => (
             <div
               key={index}
-              className="bg-[#1A1B2E] border border-white/20 rounded-lg p-7 flex flex-col items-center text-center shadow-lg hover:shadow-xl hover:scale-105 transition-all cursor-pointer hover:border-blue-500"
+              className="bg-[#1A1B2E] border border-white/20 rounded-lg p-5 flex flex-col items-center text-center shadow-lg hover:shadow-xl hover:scale-105 transition-all cursor-pointer hover:border-blue-500"
               onClick={() => {
                 setTestCase(item.title);
               }}
             >
               {item.icon}
-              <h3 className="text-white font-semibold text-3xl mt-4">{item.title}</h3>
-              <p className="text-gray-400 text-2xl mt-2">{item.description}</p>
+              <h3 className="text-white font-semibold text-2xl mt-4">{item.title}</h3>
+              <p className="text-gray-400 text-xl mt-2">{item.description}</p>
             </div>
           ))}
         </div>

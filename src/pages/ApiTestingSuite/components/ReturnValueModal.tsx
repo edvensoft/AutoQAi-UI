@@ -68,42 +68,42 @@ interface ModalProps {
 //     }
 // }
 
-const dummyJson = {
-    "type": "object",
-    "properties": {
-        "id": {
-            "type": "integer",
-            "format": "int64"
-        },
-        "petId": {
-            "type": "integer",
-            "format": "int64"
-        },
-        "quantity": {
-            "type": "integer",
-            "format": "int32"
-        },
-        "shipDate": {
-            "type": "string",
-            "format": "date-time"
-        },
-        "status": {
-            "type": "string",
-            "description": "Order Status",
-            "enum": [
-                "placed",
-                "approved",
-                "delivered"
-            ]
-        },
-        "complete": {
-            "type": "boolean"
-        }
-    },
-    "xml": {
-        "name": "Order"
-    }
-}
+// const dummyJson = {
+//     "type": "object",
+//     "properties": {
+//         "id": {
+//             "type": "integer",
+//             "format": "int64"
+//         },
+//         "petId": {
+//             "type": "integer",
+//             "format": "int64"
+//         },
+//         "quantity": {
+//             "type": "integer",
+//             "format": "int32"
+//         },
+//         "shipDate": {
+//             "type": "string",
+//             "format": "date-time"
+//         },
+//         "status": {
+//             "type": "string",
+//             "description": "Order Status",
+//             "enum": [
+//                 "placed",
+//                 "approved",
+//                 "delivered"
+//             ]
+//         },
+//         "complete": {
+//             "type": "boolean"
+//         }
+//     },
+//     "xml": {
+//         "name": "Order"
+//     }
+// }
 
 
 const ReturnValueModal = ({ onClose, selectedEndpoint }: ModalProps) => {
@@ -112,7 +112,8 @@ const ReturnValueModal = ({ onClose, selectedEndpoint }: ModalProps) => {
     console.log('sele', selectedEndpoint)
     // const parsed = dummyJson;
     // const nodes = extractSchemaNodes(dummyJson);
-    const nodes = Object.keys(selectedEndpoint.response_schema).length > 0 ? extractSchemaPaths(selectedEndpoint.response_schema.properties.data) : []
+    const nodes = Object.keys(selectedEndpoint.response_schema).length > 0 && selectedEndpoint.response_schema.hasOwnProperty('properties') ? extractSchemaPaths(selectedEndpoint.response_schema.properties.data) : []
+
     console.log(nodes, 'noses', selectedEndpoint);
 
     const editorRef = useRef<any>(null);

@@ -77,7 +77,7 @@ function Loader() {
   }, [location.state, navigate]);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4">
+    <div className="flex flex-col items-center justify-center p-4">
       <ExecutionLoader/>
       {/* <ToastContainer/>
       <div className="w-14 h-14 border-4 border-blue-500 border-t-transparent rounded-full color-white animate-spin mb-4" />
