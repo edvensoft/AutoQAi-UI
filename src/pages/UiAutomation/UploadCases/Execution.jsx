@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 import { CheckCircle, ArrowLeft } from 'lucide-react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const Execution = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const testResult = location.state?.testResult;
-  const {projectId}=useParams()
+  
 
   // ✅ Debug log to verify data is received
   useEffect(() => {
@@ -18,7 +18,7 @@ const Execution = () => {
       alert("No test result found!");
       return;
     }
-    navigate(`/project/ui-automation/report/${projectId}`, { state: { testResult } });
+    navigate(`/project/ui-automation/report/`, { state: { testResult } });
   };
 
   return (

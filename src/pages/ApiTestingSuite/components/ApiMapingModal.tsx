@@ -8,7 +8,7 @@ interface ModalProps {
 }
 
 
-const ApiMapingModal = ({ onClose, setApiMappingStatus,selectedEndpoint }: ModalProps) => {
+const ApiMapingModal = ({ onClose, setApiMappingStatus }: ModalProps) => {
     return (
         <Portal>
             <div id="api-mapping-modal" className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">

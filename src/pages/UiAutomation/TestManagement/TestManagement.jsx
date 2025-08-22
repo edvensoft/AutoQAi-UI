@@ -54,7 +54,9 @@ const TestManagement = () => {
 
         {/* Footer Buttons */}
         <div className="flex justify-between items-center">
-          <button className="flex items-center gap-2 bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-xl">
+          <button className="flex items-center gap-2 bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-xl"
+          onClick={()=> { navigate("/testcases") }}>
+            
             <ArrowLeft size={18} /> Back
           </button>
           <button className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl" onClick={()=>{

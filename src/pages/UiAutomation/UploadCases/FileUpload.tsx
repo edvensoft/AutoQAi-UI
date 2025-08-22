@@ -11,7 +11,7 @@ import type { ChangeEvent } from "react";
 import TaskIcon from "@mui/icons-material/Task";
 import ClearIcon from "@mui/icons-material/Clear";
 import * as XLSX from "xlsx";
-import { useNavigate,useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 // import { useParams } from "react-router-dom";
 // import { useSelector } from "react-redux";
 // import type { RootState } from "@/redux/store";
@@ -63,15 +63,15 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
     const [formErrors, setFormErrors] = useState<FormErrors>({
       file: null,
       test_suite_name: null,
-      sheet_name: null,
-      header_starts: null,
+      sheet_name: "",
+      header_starts: "",
     });
     const [webBooks, setWebBooks] = useState<WorkbookState | null>(null);
     const [showSheetSelector, setShowSheetSelector] = useState(false);
     const navigate = useNavigate();
-    const { projectId } = useParams();
 
-    console.log(webBooks,"webBooks")
+
+    console.log(webBooks, "webBooks")
     // ---------- Memoized values ----------
     const isError = useMemo(
       () => Object.values(formErrors).some((error) => !!error),
@@ -98,7 +98,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
       onSave: () => {
         if (template) {
           // navigate(`/project/ui-automation/loader/${projectId}`, { state: { formValues } });
-          navigate(`/project/ui-automation/loader/${projectId}`, { state: { formValues } });
+          navigate(`/project/ui-automation/loader/`, { state: { formValues } });
 
         }
         console.log("Save clicked", formValues, webBooks);
@@ -135,7 +135,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
         //     headers
         //   },
         // });
-         navigate(`/project/ui-automation/column-mapping/`, {
+        navigate(`/project/ui-automation/column-mapping/`, {
           state: {
             ...formValues,
             rows: parsedRows,
@@ -178,6 +178,8 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
       }
 
       setFormErrors((prev) => ({ ...prev, file: null }));
+
+      console.log(template, "template")
 
       if (template !== "standard") {
         const reader = new FileReader();
@@ -239,7 +241,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
           value={formValues.test_suite_name}
           onChange={handleValueChange}
           placeholder="e.g., Regression, Sanity, Smoke, Integration"
-          className="w-full p-2 rounded bg-[#0f0f1a] border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 mb-0"
+          className="w-full p-2 h-13 rounded bg-[#0f0f1a] border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 mb-0"
         />
         {formErrors.test_suite_name && (
           <p className="text-xm text-red-500 mt-1">
@@ -259,7 +261,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
               className="hidden"
               onChange={handleFileUpload}
             />
-            <span className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded cursor-pointer">
+            <span className="bg-blue-500 h-13 hover:bg-blue-600 text-white px-4 py-2 rounded cursor-pointer">
               Browse Files
             </span>
           </label>
@@ -332,11 +334,11 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
                   name="sheet_name"
                   onChange={(e) => handleChange(e)}
                   // className="appearance-none w-full p-2 bg-[#0f0f1a] border border-gray-600 text-white text-sm px-4 py-2 rounded-md pr-8"
-                   className="appearance-none w-full p-2 rounded bg-[#0f0f1a] border border-gray-700 text-white focus:outline-none focus:ring focus:ring-purple-500"
+                  className="appearance-none w-full p-2 h-13 rounded bg-[#0f0f1a] border border-gray-700 text-white focus:outline-none focus:ring focus:ring-purple-500"
                 >
                   <option key="" value="">
-                      Select
-                    </option>
+                    Select
+                  </option>
                   {(webBooks?.sheetNames || []).map((option) => (
                     <option key={option} value={option}>
                       {option}
@@ -365,7 +367,7 @@ const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(
                 name="header_starts"
                 value={formValues.header_starts}
                 onChange={handleValueChange}
-                className="w-full p-2 rounded bg-[#0f0f1a] border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full p-2 rounded h-13 bg-[#0f0f1a] border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
               {formErrors.header_starts && (
                 <p className="text-xm text-red-500 mt-2">

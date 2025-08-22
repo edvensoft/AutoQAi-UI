@@ -63,7 +63,7 @@ export default function UploadCases({ setTestCase }: UploadCasesProps) {
 
   return (
     <UploadTestCaseContext.Provider value={{template,setTemplate}}>
-       <div className="bg-[#1A1B2E] rounded-lg p-8 w-full max-w-5xl border border-white/20 shadow-lg">
+       <div className="bg-[#1A1B2E] rounded-lg p-8 w-[100%]  border border-white/20 shadow-lg">
       <h1 className="text-white text-2xl font-semibold mb-4">Upload Test Cases</h1>
       <h2 className="text-white text-lg font-medium mb-2">Select Template Type</h2>
       <p className="text-gray-400 mb-8">
@@ -77,13 +77,13 @@ export default function UploadCases({ setTestCase }: UploadCasesProps) {
           return (
             <div
               key={index}
-              className={`rounded-lg p-6 border flex flex-col items-center text-center cursor-pointer transition-all shadow-md
+              className={`rounded-lg p-6 border flex flex-col h-50 items-center text-center cursor-pointer transition-all shadow-md
                 ${isActive ? "border-blue-600 shadow-blue-600/50 bg-[#0D0D1A]" : "border-white/20 hover:border-blue-600 hover:shadow-xl bg-[#0D0D1A]"}`}
               onClick={() => handleTemplateSelect(item.title)}
             >
               {item.icon}
-              <h3 className="text-white font-semibold text-lg mt-4">{item.title}</h3>
-              <p className="text-gray-300 text-sm mt-2">{item.description}</p>
+              <h3 className="text-white text-3xl font-semibold mt-4">{item.title}</h3>
+              <p className="text-gray-300 text-lg  mt-2">{item.description}</p>
               <p className="text-gray-500 text-xs mt-1">{item.subtext}</p>
             </div>
           );

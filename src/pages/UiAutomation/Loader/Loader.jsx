@@ -4,6 +4,8 @@ import axios from 'axios';
 import { API_URL } from '@/config';
 import { useSelector } from 'react-redux';
 import { toast, ToastContainer } from 'react-toastify';
+import ExecutionLoader from '@/pages/ApiTestingSuite/ExecutionLoader';
+
 
 function Loader() {
   const location = useLocation();
@@ -76,9 +78,10 @@ function Loader() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4">
-      <ToastContainer/>
+      <ExecutionLoader/>
+      {/* <ToastContainer/>
       <div className="w-14 h-14 border-4 border-blue-500 border-t-transparent rounded-full color-white animate-spin mb-4" />
-      <p className="text-white-600 text-lg font-medium">Executing... Please wait</p>
+      <p className="text-white-600 text-lg font-medium">Executing... Please wait</p> */}
     </div>
   );
 }
