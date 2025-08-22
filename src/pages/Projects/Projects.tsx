@@ -33,7 +33,8 @@ const handleProjectClick = (project: { id: string; name: string }) => {
     dispatch(setProjectId(project.id));
     dispatch(setProjectName(project.name));
     dispatch(setActiveCollection(null));
-    navigate(`/project/manual-test-cases`); // dynamic route
+    // navigate(`/project/manual-test-cases`); // dynamic route
+     navigate("/dashboard");
   };
   // ✅ Fetch projects once on mount
   useEffect(() => {

@@ -68,42 +68,42 @@ interface ModalProps {
 //     }
 // }
 
-const dummyJson = {
-    "type": "object",
-    "properties": {
-        "id": {
-            "type": "integer",
-            "format": "int64"
-        },
-        "petId": {
-            "type": "integer",
-            "format": "int64"
-        },
-        "quantity": {
-            "type": "integer",
-            "format": "int32"
-        },
-        "shipDate": {
-            "type": "string",
-            "format": "date-time"
-        },
-        "status": {
-            "type": "string",
-            "description": "Order Status",
-            "enum": [
-                "placed",
-                "approved",
-                "delivered"
-            ]
-        },
-        "complete": {
-            "type": "boolean"
-        }
-    },
-    "xml": {
-        "name": "Order"
-    }
-}
+// const dummyJson = {
+//     "type": "object",
+//     "properties": {
+//         "id": {
+//             "type": "integer",
+//             "format": "int64"
+//         },
+//         "petId": {
+//             "type": "integer",
+//             "format": "int64"
+//         },
+//         "quantity": {
+//             "type": "integer",
+//             "format": "int32"
+//         },
+//         "shipDate": {
+//             "type": "string",
+//             "format": "date-time"
+//         },
+//         "status": {
+//             "type": "string",
+//             "description": "Order Status",
+//             "enum": [
+//                 "placed",
+//                 "approved",
+//                 "delivered"
+//             ]
+//         },
+//         "complete": {
+//             "type": "boolean"
+//         }
+//     },
+//     "xml": {
+//         "name": "Order"
+//     }
+// }
 
 
 const ReturnValueModal = ({ onClose, selectedEndpoint }: ModalProps) => {
