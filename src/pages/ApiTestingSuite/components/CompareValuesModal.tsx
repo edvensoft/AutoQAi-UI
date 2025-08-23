@@ -74,7 +74,7 @@ const CompareValuesModal = ({ onClose, selectedEndpoint }: ModalProps) => {
                 "comparisons": [...updateSelected]
             }
             console.log('payloa',payload)
-            axios.post(`${API_URL}//v1/api/projects/save-comparison-value/`,payload).then(
+            axios.post(`${API_URL}/v1/api/projects/save-comparison-value/`,payload).then(
                 resp=>{
                     console.log('resp',resp)
                     if(resp.status ===200){
