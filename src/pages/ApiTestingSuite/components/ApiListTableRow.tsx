@@ -87,9 +87,9 @@ const ApiListTableRow = (props: TableRowProps) => {
                     className="api-checkbox w-4 h-4 cursor-pointer text-[#3B82F6] bg-transparent border-[#374151] rounded focus:ring-[#3B82F6]" />
             </td>
             <td className="px-6 py-4 text-sm text-[#FFFFFF]">{item?.id}</td>
-            <td 
-            title={item?.api_name}
-            className="px-6 py-4 text-sm w-36 truncate whitespace-nowrap overflow-hidden max-w-xs text-[#FFFFFF]">
+            <td
+                title={item?.api_name}
+                className="px-6 py-4 text-sm w-32 truncate whitespace-nowrap overflow-hidden max-w-xs text-[#FFFFFF]">
                 {item?.api_name}
             </td>
             <td className="px-6 py-4">
@@ -101,7 +101,7 @@ const ApiListTableRow = (props: TableRowProps) => {
 
                 }
             </td>
-            <td className="px-6 py-4">
+            <td className="px-6 py-4 w-40">
                 <div className="relative">
                     {/* <input type="text" 
                             className="dependent-api-input bg-[#0F0F23] border border-[#374151] rounded-lg px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:ring-2 focus:ring-[#3B82F6] w-full"
@@ -119,15 +119,16 @@ const ApiListTableRow = (props: TableRowProps) => {
                             </div> */}
 
                     <Autocomplete
-                        // id="free-solo-demo"
-                        // id='Type to search APIs...'
-
-                        // inputValue={inputValue}
-                        // defaultValue={''}
-                        // onInputChange={(_event, newInputValue) => setInputValue(newInputValue)}
                         value={inputValue}
+                        disableClearable
+                        getOptionLabel={(option) => option.label}
+
+                        isOptionEqualToValue={(option, value) => {
+                            console.log('check', option.label, value.label)
+                            return option.label === value.label;
+                        }}
                         onChange={(_event, value: any) => handleDependentApi(value, item)}
-                        options={currentItems.filter(i => i.id !== item.id).map(s => ({ label: s.api_name, id: s.id }))}
+                        options={currentItems.filter(i => i.id !== item.id).map(s => ({ id: s.id, label: s.api_name, value: s.api_name }))}
                         renderInput={(params) => <TextField
                             // className='w-full'
                             placeholder="Type to search APIs..."
@@ -151,8 +152,24 @@ const ApiListTableRow = (props: TableRowProps) => {
                                 },
                             }}
                             {...params}
+                            slotProps={{
+                                input: {
+                                    ...params.InputProps,
+                                    type: 'search',
+                                },
+                            }}
 
                         />}
+                        renderOption={(props, option) => (
+                            <li {...props} key={option.id}> {/* ✅ Use unique key here */}
+                                {option.label}
+                            </li>
+                        )}
+                        slotProps={{
+                            listbox: {
+                                className: 'bg-[#1A1A2E] custom-scrollbar text-white', // Tailwind classes
+                            },
+                        }}
                     />
                     {
                         selectedDependeAPi.length > 0 &&
@@ -207,7 +224,7 @@ const ApiListTableRow = (props: TableRowProps) => {
                                 >
                                     <div className="text-sm text-red-400">
                                         {missing}
-                                        {index !== item.missing_schema_status_codes.length-1 && ','}
+                                        {index !== item.missing_schema_status_codes.length - 1 && ','}
                                     </div>
                                     {/* <button className="add-schema-btn cursor-pointer text-[#3B82F6] hover:text-[#2563EB]" title="Add JSON Schema"
                                     // onClick={() => handleSchema(item.id)}

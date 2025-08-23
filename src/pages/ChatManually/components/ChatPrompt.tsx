@@ -77,6 +77,9 @@ const ChatPrompt = () => {
                     }))
                     setIsSubmit(false)
                     setFile(null)
+                    if (uploadRef.current) {
+                        uploadRef.current.value = '';
+                    }
                     dispatch(setTestCases(response.data.response.test_cases))
                 }
             ).catch(e => {
@@ -94,13 +97,16 @@ const ChatPrompt = () => {
                 }))
                 setIsSubmit(false)
                 setFile(null)
+                if (uploadRef.current) {
+                    uploadRef.current.value = '';
+                }
             })
         }
 
     };
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-
+        console.log('fileCheck', e.target?.files)
         const files = e?.target?.files;
         const selectedFile = files && files.length > 0 ? files[0] : null;
         console.log('sele', selectedFile)
@@ -149,7 +155,23 @@ const ChatPrompt = () => {
                             onChange={handleFileChange}
                         />
                         {
-                            file && file.name
+                            file &&
+                            <div className='flex gap-3 items-center'>
+                                <span>{file.name}</span>
+                                <i
+                                    className="fa fa-times cursor-pointer"
+                                    aria-hidden="true"
+                                    onClick={() => {
+                                        setFile(null)
+                                        if (uploadRef.current) {
+                                            uploadRef.current.value = '';
+                                        }
+                                        // uploadRef(null)
+                                    }}
+
+                                ></i>
+                            </div>
+
                         }
                     </div>
                     <div className='w-full  flex gap-3 items-center'>

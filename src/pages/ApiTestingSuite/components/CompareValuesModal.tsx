@@ -79,6 +79,7 @@ const CompareValuesModal = ({ onClose, selectedEndpoint }: ModalProps) => {
                     console.log('resp',resp)
                     if(resp.status ===200){
                         toast.success('Saved Successfully!')
+                        onClose('compare')
                     }
                 }
             ).catch(()=>{
@@ -179,7 +180,7 @@ const CompareValuesModal = ({ onClose, selectedEndpoint }: ModalProps) => {
 
                         <div>
                             <label className="block text-sm font-medium text-[#FFFFFF] mb-2">Response Nodes</label>
-                            <div className="bg-[#0F0F23] border border-[#374151] rounded-lg p-4 max-h-60 overflow-y-auto">
+                            <div className="bg-[#0F0F23] border border-[#374151] rounded-lg p-4 h-60 max-h-60 overflow-y-auto">
                                 <div className="space-y-2">
                                     {
                                         nodes.length > 0 ?
