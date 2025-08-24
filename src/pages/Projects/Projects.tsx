@@ -16,6 +16,10 @@ import "react-toastify/dist/ReactToastify.css";
 const API_BASE_URL = "http://13.203.56.29/v1/api/projects";
 const userId = 1; // Replace with actual user ID from auth
 
+const MODAL_SHOWN_KEY = 'modalShownInSession';
+
+
+
 const Projects = () => {
   const [projects, setProjects] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -34,6 +38,7 @@ const handleProjectClick = (project: { id: string; name: string }) => {
     dispatch(setProjectName(project.name));
     dispatch(setActiveCollection(null));
     // navigate(`/project/manual-test-cases`); // dynamic route
+    localStorage.removeItem(MODAL_SHOWN_KEY)
      navigate("/dashboard");
   };
   // ✅ Fetch projects once on mount
