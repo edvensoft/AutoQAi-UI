@@ -125,6 +125,10 @@ const ReturnValueModal = ({ onClose, selectedEndpoint }: ModalProps) => {
     // }
 
     const handleSave = () => {
+        if(selectedNodes.length ===0) {
+            toast.warning('No Nodes Save')
+            return;
+        }
         const payload = {
             "api_endpoint_id": selectedEndpoint?.id,
             "return_value": [...selectedNodes]
@@ -133,6 +137,7 @@ const ReturnValueModal = ({ onClose, selectedEndpoint }: ModalProps) => {
             res => {
                 if (res.status === 201) {
                     toast.success("Saved Successfully")
+                    onClose('return')
                 }
             }
         )

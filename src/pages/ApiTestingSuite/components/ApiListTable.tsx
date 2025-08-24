@@ -33,6 +33,7 @@ interface Data {
     custom_instruction: string,
     description: string | null,
     id: number,
+    missing_schema_status_codes: Array<any>,
     is_selected: boolean,
     operation_id: string,
     project_id: string,

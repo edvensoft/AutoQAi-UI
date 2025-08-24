@@ -61,6 +61,10 @@ const ApiMapingModal = ({ onClose, setApiMappingStatus, apiMappingStatus, curren
     }
 
     const handleSave = () => {
+        if (mappingSummary.length === 0) {
+            toast.warning('No Mapping Summary')
+            return;
+        }
         let update = mappingSummary.map(item => {
             return {
                 "source_variable": item.res, "target_variable": item.req
@@ -76,10 +80,11 @@ const ApiMapingModal = ({ onClose, setApiMappingStatus, apiMappingStatus, curren
             // ]
             "mappings": [...update]
         }
-        axios.post(`${API_URL}/v1/api/projects/dependency-mappings/`,payload).then(
-            res=>{
-                if(res.status === 200){
+        axios.post(`${API_URL}/v1/api/projects/dependency-mappings/`, payload).then(
+            res => {
+                if (res.status === 200) {
                     toast.success('Saved Successfully!')
+                    onClose('api_map')
                 }
             }
         )
@@ -160,11 +165,11 @@ const ApiMapingModal = ({ onClose, setApiMappingStatus, apiMappingStatus, curren
                                 <label className="block text-sm font-medium text-[#FFFFFF] mb-2">
                                     Request Parameters
                                 </label>
+                                <div className="space-y-3 max-h-40 overflow-y-auto p-2">
 
-                                {
-                                    requestParam.length > 0 && responseVar.length > 0 ?
-                                        requestParam.map(item => (
-                                            <div className="space-y-3 max-h-40 overflow-y-auto p-2">
+                                    {
+                                        requestParam.length > 0 && responseVar.length > 0 ?
+                                            requestParam.map(item => (
                                                 <div className=" flex items-center space-x-3">
                                                     <div className="flex-1">
                                                         <input type="text"
@@ -193,14 +198,14 @@ const ApiMapingModal = ({ onClose, setApiMappingStatus, apiMappingStatus, curren
                                                         </select>
                                                     </div>
                                                 </div>
+
+                                            ))
+
+                                            : <div className="source-variable flex items-center justify-between p-2 bg-[#1A1A2E] rounded border">
+                                                <p className='text-red-500'>No Request Parameters</p>
                                             </div>
-                                        ))
-
-                                        : <div>
-                                            <p className='text-red-500'>No Request Parameters</p>
-                                        </div>
-                                }
-
+                                    }
+                                </div>
 
                             </div>
                         </div>
