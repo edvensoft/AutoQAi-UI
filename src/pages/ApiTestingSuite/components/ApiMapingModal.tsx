@@ -35,7 +35,8 @@ const ApiMapingModal = ({ onClose, setApiMappingStatus, apiMappingStatus, curren
             setSourceAPi(source)
             setDependentAPi(depend)
             // const nodes = Object.keys(source.response_schema).length > 0 ? extractSchemaPaths(source.response_schema.properties) : []
-            const nodes = Object.keys(source.response_schema).length > 0 && source.response_schema.hasOwnProperty('properties') ? extractSchemaPaths(source.response_schema.properties.data) : []
+            // const nodes = Object.keys(source.response_schema).length > 0 && source.response_schema.hasOwnProperty('properties') ? extractSchemaPaths(source.response_schema.properties.data) : []
+            const nodes = Object.keys(source.response_schema).length > 0 && source.response_schema.hasOwnProperty('properties') ? extractSchemaPaths(source.response_schema) : []
 
             console.log(depend, 'depend')
             const params = depend.path_variables
@@ -87,7 +88,9 @@ const ApiMapingModal = ({ onClose, setApiMappingStatus, apiMappingStatus, curren
                     onClose('api_map')
                 }
             }
-        )
+        ).catch((e)=>{
+            toast.error(`Error: ${e.response.data.error}`)
+        })
 
         // setApiMappingStatus((prev) => ({ ...prev, status: true }))
     }

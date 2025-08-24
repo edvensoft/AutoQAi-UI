@@ -20,7 +20,9 @@ const CompareValuesModal = ({ onClose, selectedEndpoint }: ModalProps) => {
     const [selectedNode, setselectedNode] = useState(null)
     const [selectedPair, setSelectedPair] = useState([])
 
-    const nodes = Object.keys(selectedEndpoint.response_schema).length > 0 && selectedEndpoint.response_schema.hasOwnProperty('properties') ? extractSchemaPaths(selectedEndpoint.response_schema.properties.data) : []
+    // const nodes = Object.keys(selectedEndpoint.response_schema).length > 0 && selectedEndpoint.response_schema.hasOwnProperty('properties') ? extractSchemaPaths(selectedEndpoint.response_schema.properties.data) : []
+    const nodes = Object.keys(selectedEndpoint.response_schema).length > 0 && selectedEndpoint.response_schema.hasOwnProperty('properties') ? extractSchemaPaths(selectedEndpoint.response_schema) : []
+
     // console.log(nodes, 'noses', selectedEndpoint);
 
     console.log('sele', selectedEndpoint, nodes, selectedPair)
@@ -73,17 +75,17 @@ const CompareValuesModal = ({ onClose, selectedEndpoint }: ModalProps) => {
                 // ]
                 "comparisons": [...updateSelected]
             }
-            console.log('payloa',payload)
-            axios.post(`${API_URL}/v1/api/projects/save-comparison-value/`,payload).then(
-                resp=>{
-                    console.log('resp',resp)
-                    if(resp.status ===200){
+            console.log('payloa', payload)
+            axios.post(`${API_URL}/v1/api/projects/save-comparison-value/`, payload).then(
+                resp => {
+                    console.log('resp', resp)
+                    if (resp.status === 200) {
                         toast.success('Saved Successfully!')
                         onClose('compare')
                     }
                 }
-            ).catch(()=>{
-                toast.error("Error Please try again")
+            ).catch((e) => {
+                toast.error(`Error: ${e.response.data.error}`)
             })
         } else {
             toast.warning('No Comparison matches')

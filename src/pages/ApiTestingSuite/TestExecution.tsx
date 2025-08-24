@@ -9,7 +9,7 @@ import { CircularProgress } from '@mui/material';
 import ExecutionLoader from './ExecutionLoader';
 import ExecutionTable from './components/ExecutionTable';
 import type { RootState } from '@/redux/store';
-import { ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 
 
 interface Data {
@@ -44,6 +44,7 @@ const TestExecution = () => {
 
     const handleExecuteCode = () => {
         // dispatch(nextStep())
+
         setIsExecutionLoad(true)
         console.log(selectedApis, 'sele')
         const payload = {
@@ -57,6 +58,7 @@ const TestExecution = () => {
                 console.log('Approval response:', response);
                 if (response.status === 200) {
                     // alert('Selected APIs approved successfully!');
+                    toast.success('Selected APIs approved successfully!')
                     setIsExecutionLoad(false)
                     setSelectedApis([]);
                     navigate(`/project/api-testing-suite/recent-reports/`)
@@ -66,7 +68,15 @@ const TestExecution = () => {
             })
             .catch((error) => {
                 console.error('Error approving selected APIs:', error);
-                alert('Failed to approve selected APIs. Please try again.');
+
+                setSelectedApis([]);
+                setIsExecutionLoad(false)
+                if (error.response.data.error) {
+                    toast.error(`Error: ${error.response.data.error}`)
+                } else {
+                    toast.error('Failed to execute selected APIs. Please try again.');
+                }
+
             });
 
     }

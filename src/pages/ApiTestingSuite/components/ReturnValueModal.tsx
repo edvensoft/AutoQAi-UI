@@ -1,7 +1,7 @@
 
 import { API_URL } from '@/config';
 import extractSchemaPaths from '@/utilities/extractSchemaNodes';
-
+import jsonBeautify from 'json-beautify';
 import { Editor } from '@monaco-editor/react';
 import CloseIcon from '@mui/icons-material/Close';
 import { Portal } from '@mui/material';
@@ -112,8 +112,12 @@ const ReturnValueModal = ({ onClose, selectedEndpoint }: ModalProps) => {
     console.log('sele', selectedEndpoint)
     // const parsed = dummyJson;
     // const nodes = extractSchemaNodes(dummyJson);
-    const nodes = Object.keys(selectedEndpoint.response_schema).length > 0 && selectedEndpoint.response_schema.hasOwnProperty('properties') ? extractSchemaPaths(selectedEndpoint.response_schema.properties.data) : []
+    const nodes = Object.keys(selectedEndpoint.response_schema).length > 0 && selectedEndpoint.response_schema.hasOwnProperty('properties') ? extractSchemaPaths(selectedEndpoint.response_schema) : []
+    // const nodes = Object.keys(selectedEndpoint.response_schema).length > 0 && selectedEndpoint.response_schema.hasOwnProperty('properties') ? extractAllSchemaNodes(selectedEndpoint.response_schema) : []
 
+    // const editValue = JSON.parse(parsed)
+
+    const editValue =  jsonBeautify(selectedEndpoint.response_schema.properties, null, 2, 80);
     console.log(nodes, 'noses', selectedEndpoint);
 
     const editorRef = useRef<any>(null);
@@ -125,7 +129,7 @@ const ReturnValueModal = ({ onClose, selectedEndpoint }: ModalProps) => {
     // }
 
     const handleSave = () => {
-        if(selectedNodes.length ===0) {
+        if (selectedNodes.length === 0) {
             toast.warning('No Nodes Save')
             return;
         }
@@ -140,7 +144,10 @@ const ReturnValueModal = ({ onClose, selectedEndpoint }: ModalProps) => {
                     onClose('return')
                 }
             }
-        )
+        ).catch((e) => {
+            toast.error(`Error: ${e.response.data.error}`)
+        })
+
     }
 
     const handleSection = (path) => {
@@ -169,7 +176,7 @@ const ReturnValueModal = ({ onClose, selectedEndpoint }: ModalProps) => {
         <Portal>
             <div id="return-values-modal"
                 // className='flex items-center justify-center mt-4'
-                className='fixed inset-0 bg-black/50 flex items-center justify-center z-50 overflow-y-auto'
+                className='fixed inset-0 bg-black/50 flex items-center justify-center z-50 custom-scrollbar overflow-y-auto'
 
             // className="fixed inset-0 bg-black/50 h-full  flex items-center justify-center z-50"
             >
@@ -186,14 +193,15 @@ const ReturnValueModal = ({ onClose, selectedEndpoint }: ModalProps) => {
 
                     <div className="mb-2 flex-1">
                         <label className="block text-sm font-medium text-[#FFFFFF] mb-2">Response JSON Schema</label>
-                        <div className="h-46 w-full overflow-auto overflow-y-auto">
+                        <div className="h-46 w-full custom-scrollbar  overflow-auto overflow-y-auto">
                             {
                                 nodes.length > 0 ?
                                     <Editor
                                         language="json"
-
                                         // value={JSON.stringify(dummyJson)}
-                                        value={JSON.stringify(selectedEndpoint.response_schema.properties)}
+                                        // value={JSON.stringify(selectedEndpoint.response_schema.properties)}
+                                        // value={JSON.stringify(formatJsonWithPrettier(selectedEndpoint.response_schema.properties))}
+                                        value={editValue}
                                         // defaultValue='{"ugly":true,"nested":{"thing":1}}'
                                         theme="vs-dark"
                                         options={{
@@ -216,7 +224,7 @@ const ReturnValueModal = ({ onClose, selectedEndpoint }: ModalProps) => {
                         nodes.length > 0 ?
                             <div className="mb-2">
                                 <label className="block text-sm font-medium text-[#FFFFFF] mb-2">Select Multiple Nodes to Return</label>
-                                <div className="space-y-2 max-h-60 overflow-y-auto bg-[#0F0F23] border border-[#374151] rounded-lg p-4">
+                                <div className="space-y-2 max-h-60 custom-scrollbar  overflow-y-auto bg-[#0F0F23] border border-[#374151] rounded-lg p-4">
                                     {
 
                                         nodes.map(

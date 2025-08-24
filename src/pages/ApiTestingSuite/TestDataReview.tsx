@@ -6,9 +6,9 @@ import TestCaseTable from './components/TestCaseTable';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { API_URL } from '@/config';
-import { CircularProgress } from '@mui/material';
+import { Backdrop, CircularProgress } from '@mui/material';
 import type { RootState } from '@/redux/store';
-import { ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 
 
 interface Data {
@@ -104,6 +104,8 @@ const TestDataReview = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const [apiData, setApiData] = useState<Data[] | []>([])
+    const [isApprove, setIsApprove] = useState(false)
+
     // const { projectId } = useParams();
     const projectId = useSelector((state: RootState) => state.appState.project_id);
 
@@ -124,6 +126,8 @@ const TestDataReview = () => {
     }
     const handleApproveCode = (id) => {
         console.log(selectedApis, 'sele')
+        setIsApprove(true)
+
         if (id) {
             const payload = {
                 "endpoint_ids": [id]
@@ -133,17 +137,29 @@ const TestDataReview = () => {
                 .then((response) => {
                     console.log('Approval response:', response);
                     if (response.status === 200) {
-                        alert('Selected APIs approved successfully!');
+                        // alert('Selected APIs approved successfully!');
+                        toast.success('Selected APIs approved successfully!')
+
                         setSelectedApis([]);
                         getEndpointsData()
+                        setIsApprove(false)
+
                         // navigate(`/project/api-testing-suite/test-execution/`)
 
                         // getEndpointsData();
                     }
-                })
-                .catch((error) => {
-                    console.error('Error approving selected APIs:', error);
-                    alert('Failed to approve selected APIs. Please try again.');
+                }).catch((error) => {
+                    setIsApprove(false)
+
+                    console.log('Error approving selected APIs:', error);
+                    // alert('Failed to approve selected APIs. Please try again.');
+                    if (error.response.data.error) {
+                        toast.error(`Error: ${error.response.data.error}`)
+                    } else {
+                        toast.error('Failed to approve selected APIs. Please try again.');
+                    }
+                    // toast.error('Failed to approve selected APIs. Please try again.');
+
                 });
         } else {
             const payload = {
@@ -154,9 +170,13 @@ const TestDataReview = () => {
                 .then((response) => {
                     console.log('Approval response:', response);
                     if (response.status === 200) {
-                        alert('Selected APIs approved successfully!');
+                        // alert('Selected APIs approved successfully!');
+                        toast.success('Selected APIs approved successfully!')
+
                         setSelectedApis([]);
                         getEndpointsData()
+                        setIsApprove(false)
+
                         // navigate(`/project/api-testing-suite/test-execution/`)
 
                         // getEndpointsData();
@@ -164,7 +184,16 @@ const TestDataReview = () => {
                 })
                 .catch((error) => {
                     console.error('Error approving selected APIs:', error);
-                    alert('Failed to approve selected APIs. Please try again.');
+                    // alert('Failed to approve selected APIs. Please try again.');
+                    setIsApprove(false)
+
+                    if (error.response.data.error) {
+                        toast.error(`Error: ${error.response.data.error}`)
+                    } else {
+                        toast.error('Failed to approve selected APIs. Please try again.');
+                    }
+                    // toast.error('Failed to approve selected APIs. Please try again.');
+
                 });
         }
 
@@ -281,6 +310,13 @@ const TestDataReview = () => {
                     <i className="fa-solid fa-arrow-right"></i>
                 </button>
             </div>
+            <Backdrop
+                sx={(theme) => ({ color: '#3b82f6', zIndex: theme.zIndex.drawer + 1 })}
+                open={isApprove}
+            // onClick={handleClose}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
         </div>
     )
 }

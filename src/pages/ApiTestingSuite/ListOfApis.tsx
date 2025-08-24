@@ -145,23 +145,46 @@ const ListOfApis = () => {
 
         try {
             setIsGeneratingCode(true);
-            const response = await axios.post(`${API_URL}/v1/api/endpoints/generate-test-cases/`, payload);
-            console.log('Code Generation Response:', response);
-            if (response?.status === 200) {
-                // alert('Code generated successfully!');
-                setSelectedApis([]);
-                setIsGeneratingCode(false)
-                // navigate(`/project/api-testing-suite/code-review/${projectId}`)
-                navigate(`/project/api-testing-suite/code-review/`)
+            // const response = await axios.post(`${API_URL}/v1/api//endpoints/generate-test-cases/`, payload);
+            // console.log('Code Generation Response:', response);
+            axios.post(`${API_URL}/v1/api/endpoints/generate-test-cases/`, payload).then(
+                response => {
+                    console.log('Code Generation Response:', response)
+                    if (response?.status === 200) {
+                        // alert('Code generated successfully!');
+                        setSelectedApis([]);
+                        // setIsGeneratingCode(false)
+                        // navigate(`/project/api-testing-suite/code-review/${projectId}`)
+                        navigate(`/project/api-testing-suite/code-review/`)
+                        // navigate(`/api-code-review/${id}/${encodeURIComponent(projectTitle)}`);
 
-                // navigate(`/api-code-review/${id}/${encodeURIComponent(projectTitle)}`);
+                    }
+                }
+            ).catch(
+                error => {
+                    console.log(error, 'err')
+                    // setLoading(false);
+                    setIsGeneratingCode(false);
+                    if (error.response.data.error) {
+                        toast.error(`Error: ${error.response.data.error}`)
+                    } else {
+                        toast.error('Failed to Generate code. Please try again.');
+                    }
+                }
+            )
 
-            }
         } catch (error) {
             console.error('Error generating code:', error);
-            toast.error(error)
+            // toast.error(error)
+            // if (error.response.data.error) {
+            // } else {
+            toast.error('Failed to Generate code. Please try again.');
+            // setLoading(false);
+            // }
         } finally {
             setLoading(false);
+            // setIsGeneratingCode(false);
+
         }
     }
 
@@ -169,7 +192,7 @@ const ListOfApis = () => {
     useEffect(() => {
         getAllApis();
         // console.log('API URL:', import.meta.env.VITE_API_URL);
-    }, []);
+    }, [loading]);
 
     return (
         <div id="api-list-content" className="max-w-7xl mx-auto p-4">
@@ -215,7 +238,6 @@ const ListOfApis = () => {
                             :
                             error ?
                                 <div className='flex justify-center items-center h-40'>
-
                                     <h3 className='text-red-500'>{error}</h3>
                                 </div>
                                 :
