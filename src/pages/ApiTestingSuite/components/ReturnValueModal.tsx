@@ -130,7 +130,7 @@ const ReturnValueModal = ({ onClose, selectedEndpoint }: ModalProps) => {
 
     const handleSave = () => {
         if (selectedNodes.length === 0) {
-            toast.warning('No Nodes Save')
+            toast.warning('No Nodes Selected')
             return;
         }
         const payload = {
