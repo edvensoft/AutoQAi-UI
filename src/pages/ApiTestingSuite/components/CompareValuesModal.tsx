@@ -1,7 +1,7 @@
 import { API_URL } from '@/config';
 import extractSchemaPaths from '@/utilities/extractSchemaNodes';
 import CloseIcon from '@mui/icons-material/Close';
-import { Portal } from '@mui/material';
+import { Backdrop, CircularProgress, Portal } from '@mui/material';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -19,6 +19,7 @@ const CompareValuesModal = ({ onClose, selectedEndpoint }: ModalProps) => {
     const [selectedParam, setselectedParam] = useState(null)
     const [selectedNode, setselectedNode] = useState(null)
     const [selectedPair, setSelectedPair] = useState([])
+    const [isSaving, setIsSaving] = useState(false)
 
     // const nodes = Object.keys(selectedEndpoint.response_schema).length > 0 && selectedEndpoint.response_schema.hasOwnProperty('properties') ? extractSchemaPaths(selectedEndpoint.response_schema.properties.data) : []
     const nodes = Object.keys(selectedEndpoint.response_schema).length > 0 && selectedEndpoint.response_schema.hasOwnProperty('properties') ? extractSchemaPaths(selectedEndpoint.response_schema) : []
@@ -61,6 +62,7 @@ const CompareValuesModal = ({ onClose, selectedEndpoint }: ModalProps) => {
 
     const SaveChanges = () => {
         if (selectedPair.length > 0) {
+            setIsSaving(true)
             let updateSelected = selectedPair.map((item) => {
                 return { input: item.param.title, output: item.node.path }
 
@@ -79,12 +81,15 @@ const CompareValuesModal = ({ onClose, selectedEndpoint }: ModalProps) => {
             axios.post(`${API_URL}/v1/api/projects/save-comparison-value/`, payload).then(
                 resp => {
                     console.log('resp', resp)
-                    if (resp.status === 200) {
+                    if (resp.status === 201) {
+                        setIsSaving(false)
                         toast.success('Saved Successfully!')
                         onClose('compare')
                     }
                 }
             ).catch((e) => {
+                setIsSaving(false)
+
                 toast.error(`Error: ${e.response.data.error}`)
             })
         } else {
@@ -342,6 +347,15 @@ const CompareValuesModal = ({ onClose, selectedEndpoint }: ModalProps) => {
                         </div>
                     </div>
                 </div>
+
+                <Backdrop
+                    sx={(theme) => ({ color: '#3b82f6', zIndex: theme.zIndex.drawer + 1 })}
+                    open={isSaving}
+                // onClick={handleClose}
+                >
+                    <CircularProgress color="inherit" />
+                </Backdrop>
+
             </div>
         </Portal >
     )
