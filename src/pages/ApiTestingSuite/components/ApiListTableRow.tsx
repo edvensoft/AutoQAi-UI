@@ -17,10 +17,10 @@ interface Data {
 }
 
 interface TableRowProps {
-    item: Data,
+    item: Data| any,
     selectedApis: any[],
     handleSelection: (e: any, apiId: number) => void,
-    currentItems: Data[],
+    currentItems: Data[] | any,
     handleAditionalActions: (e: React.ChangeEvent<HTMLInputElement>, action: string, id: number, item: object) => void,
     setIsApiMapingModal: React.Dispatch<React.SetStateAction<boolean>>,
     apiMappingStatus: boolean | any,
